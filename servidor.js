@@ -19,6 +19,7 @@ const oratoria = require("./lib/oratoria");
 const censo = require("./lib/censo");
 const trem = require("./lib/trem");
 const vagalumes = require("./lib/vagalumes");
+const memoria = require("./lib/memoria");
 const { estado, agendarGravacao, gravarAgora } = require("./lib/armazem");
 
 const PORTA = Number(process.env.PORT) || 3210;
@@ -31,10 +32,11 @@ const JOGOS = {
   termo: { nome: "Termo Interactiano" },
   censo: { nome: "Mais ou Menos do Censo" },
   vagalumes: { nome: "Vagalumes (SMI)" },
+  memoria: { nome: "Memória das Raízes" },
 };
 
 // Endereços limpos: /termo abre publico/termo.html.
-const PAGINAS = { "/": "index.html", "/termo": "termo.html", "/oratoria": "oratoria.html", "/censo": "censo.html", "/vagalumes": "vagalumes.html" };
+const PAGINAS = { "/": "index.html", "/termo": "termo.html", "/oratoria": "oratoria.html", "/censo": "censo.html", "/vagalumes": "vagalumes.html", "/memoria": "memoria.html" };
 
 const TIPOS = {
   ".html": "text/html; charset=utf-8",
@@ -267,6 +269,86 @@ function responderCenso(corpo) {
   return { partida: visaoCenso(partida, partida.dia) };
 }
 
+// ---------- Memória ----------
+
+function visaoMemoria(partida, dia) {
+  if (!partida) return { dia, comecou: false, terminou: false, cartas: [], pares: 0, tentativas: 0, totalPares: memoria.PARES };
+  return {
+    dia,
+    comecou: true,
+    terminou: partida.terminou,
+    // Só as cartas já reveladas (pares achados e a aberta agora) mostram a face.
+    cartas: partida.tabuleiro.map((face, i) => (partida.achadas[i] || partida.aberta === i ? face : null)),
+    achadas: partida.achadas,
+    aberta: partida.aberta,
+    pares: partida.pares,
+    tentativas: partida.tentativas,
+    totalPares: memoria.PARES,
+    inicio: partida.inicio,
+    duracaoMs: partida.terminou ? partida.fim - partida.inicio : null,
+    pontos: partida.terminou ? partida.pontos : null,
+  };
+}
+
+function comecarMemoria(corpo) {
+  const jogador = exigirJogador(corpo.jogador);
+  let partida = partidaDeHoje("memoria", jogador);
+  if (partida) return { partida: visaoMemoria(partida, partida.dia) };
+  partida = novaPartida("memoria", jogador, {
+    tabuleiro: memoria.novoTabuleiro(),
+    achadas: new Array(memoria.PARES * 2).fill(false),
+    aberta: null,
+    pares: 0,
+    tentativas: 0,
+  });
+  partida.inicio = null; // o relógio só dispara na primeira carta
+  agendarGravacao();
+  return { partida: visaoMemoria(partida, partida.dia) };
+}
+
+function virarCarta(corpo) {
+  const jogador = exigirJogador(corpo.jogador);
+  const partida = partidaDeHoje("memoria", jogador);
+  if (!partida) throw new ErroDeJogo(400, "Começa a partida primeiro.");
+  if (partida.terminou) throw new ErroDeJogo(409, "A partida de hoje já acabou. Pode treinar à vontade.");
+  const i = Number(corpo.indice);
+  if (!Number.isInteger(i) || i < 0 || i >= partida.tabuleiro.length) throw new ErroDeJogo(400, "Carta inválida.");
+  if (partida.achadas[i] || partida.aberta === i) throw new ErroDeJogo(400, "Essa carta já está virada.");
+  if (!partida.inicio) partida.inicio = Date.now();
+
+  const face = partida.tabuleiro[i];
+  let resultado;
+  if (partida.aberta === null) {
+    partida.aberta = i;
+    resultado = { indice: i, face, par: null };
+  } else {
+    const j = partida.aberta;
+    partida.tentativas += 1;
+    partida.aberta = null;
+    const bateu = partida.tabuleiro[j] === face;
+    if (bateu) {
+      partida.achadas[i] = partida.achadas[j] = true;
+      partida.pares += 1;
+    }
+    resultado = { indice: i, face, outra: j, faceOutra: partida.tabuleiro[j], par: bateu };
+    if (partida.pares >= memoria.PARES) {
+      encerrar(partida, jogador, true, memoria.kmPeloTempo(Date.now() - partida.inicio));
+    }
+  }
+  agendarGravacao();
+  return { virada: resultado, partida: visaoMemoria(partida, partida.dia) };
+}
+
+// Melhores tempos do dia, para a tela de fim.
+function temposDeHoje() {
+  const dia = calendario.numeroDoDia();
+  return Object.values(estado.partidas)
+    .filter((p) => p.jogo === "memoria" && p.dia === dia && p.terminou && estado.jogadores[p.jogador])
+    .map((p) => ({ nome: estado.jogadores[p.jogador].nome, distrito: p.distrito, duracaoMs: p.fim - p.inicio, tentativas: p.tentativas, pontos: p.pontos }))
+    .sort((a, b) => a.duracaoMs - b.duracaoMs)
+    .slice(0, 20);
+}
+
 // ---------- Vagalumes (SMI) ----------
 
 function projetar(lat, lon) {
@@ -442,6 +524,17 @@ async function api(req, res, url) {
 
     case "GET /api/oratoria/temas":
       return json(res, 200, temasDeOratoria(url.searchParams.get("exceto")));
+    case "GET /api/memoria/partida": {
+      const jogador = exigirJogador(url.searchParams.get("jogador"));
+      const dia = calendario.numeroDoDia();
+      return json(res, 200, { partida: visaoMemoria(partidaDeHoje("memoria", jogador), dia), tempos: temposDeHoje(), viraEmMs: calendario.msAteVirar() });
+    }
+    case "POST /api/memoria/comecar":
+      return json(res, 200, comecarMemoria(corpo));
+    case "POST /api/memoria/virar":
+      return json(res, 200, virarCarta(corpo));
+    case "GET /api/memoria/treino":
+      return json(res, 200, { tabuleiro: memoria.novoTabuleiro() });
     case "GET /api/vagalumes": {
       const id = url.searchParams.get("jogador");
       const jogador = id && estado.jogadores[id] ? estado.jogadores[id] : null;

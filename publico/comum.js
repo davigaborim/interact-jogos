@@ -77,6 +77,7 @@ window.Jogos = (() => {
               <option value="termo">Termo</option>
               <option value="censo">Censo</option>
               <option value="vagalumes">Vagalumes</option>
+              <option value="memoria">Memória</option>
             </select>
           </div>
           <div class="tabela-caixa"><table class="tabela" id="tabela-placar"></table></div>

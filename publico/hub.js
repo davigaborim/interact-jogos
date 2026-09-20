@@ -72,7 +72,7 @@
     const l = corrida.linhas.find((x) => x.distrito === j.distrito);
     $("#meu-trem").hidden = false;
     $("#meu-pos").textContent = l.km > 0 ? `${l.posicao}º` : "-";
-    $("#meu-nome").textContent = `${j.nome}, distrito ${j.distrito}`;
+    $("#meu-nome").textContent = `${j.nome} · distrito ${j.distrito}`;
     let frase;
     if (l.chegou) frase = `Seu trem já chegou em Sarzedo: ${formatar(l.km)} km.`;
     else if (l.km === 0) frase = "Seu trem ainda está na estação. Jogue hoje e ele sai.";
@@ -91,7 +91,7 @@
         else { estado.textContent = r.hoje ? "Aceso hoje" : "Acender hoje"; estado.className = r.hoje ? "estado feito" : "estado jogar"; }
         continue;
       }
-      if (r.terminou) { estado.textContent = `Feito: +${r.pontos} km`; estado.className = "estado feito"; }
+      if (r.terminou) { estado.textContent = `+${r.pontos} km`; estado.className = "estado feito"; }
       else if (r.comecou) { estado.textContent = "Continuar"; estado.className = "estado jogar"; }
       else { estado.textContent = "Jogar"; estado.className = "estado jogar"; }
     }
@@ -112,7 +112,6 @@
 
   Jogos.garantirJogador(async (jogador, dados) => {
     if (!dados) dados = await Jogos.api(`/api/eu?jogador=${encodeURIComponent(jogador.id)}`);
-    $("#numero-dia").textContent = `Dia ${dados.dia}`;
     Jogos.contagem($("#contagem"), dados.viraEmMs, () => location.reload());
     desenharEstados(dados.hoje);
     if (corrida) { desenharCorrida(); desenharMeuTrem(); }

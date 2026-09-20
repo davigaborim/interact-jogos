@@ -11,6 +11,7 @@ do distrito rumo a Sarzedo/MG (COMIC Nossas Raízes, 14 a 17 de janeiro de
 | **Termo Interactiano** | `/termo` | palavra de 5 letras do universo Interact, 6 tentativas | 10, 8, 6, 5, 4, 3 por tentativa; 1 se errar |
 | **Mais ou Menos do Censo** | `/censo` | dez duplas, "qual tem mais interactianos?", números reais do Censo 2023-24 | 1 por acerto |
 | **Vagalumes** | `/vagalumes` | Semana Mundial de Interact (30/10 a 05/11): antes, "meu clube vai participar" acende um vagalume fraco; na semana, uma frase por dia acende um forte no mapa do Brasil | 2 km pelo compromisso, 5 km por dia |
+| **Memória das Raízes** | `/memoria` | 4x4, oito pares de termos do Interact, ordem sorteada a cada partida; as cartas são reveladas pelo servidor, uma a uma, para o tempo valer | até 30 s vale 10; perde 1 a cada 8 s; mínimo 2. Uma por dia; "jogar de novo" é treino local |
 | **Treino de Oratória** | `/oratoria` | tema do dia ou aleatório, 45 s de preparo, fala de 1, 1,5 ou 2 min | **não vale ponto**, é treino para o CNO |
 
 Sem dependência nenhuma: só Node 18 ou mais novo. Sem `npm install`, sem
@@ -18,11 +19,12 @@ build, sem banco. Mesmo padrão do `velo-reservas`, pelo mesmo motivo: é o que
 menos dá errado na Hostinger.
 
 Identidade visual: cores do Brand Center do Rotary (Azure `#0067C8`, Royal
-Blue `#17458F`, Gold `#F7A81B`) e Open Sans; nos títulos, o eixo de largura
-condensada da própria Open Sans (`wdth 75`, peso 800), cara de placa de
-estação sem sair da marca. **Nenhum emoji** em lugar nenhum, nem no texto de
-compartilhar (usa blocos `▓▒░`). O logo oficial do Interact não está no
-site; se for entrar, é pelas regras do Brand Center.
+Blue `#17458F`, Gold `#F7A81B`). Tipografia da casa, a mesma da Velo:
+**Bricolage Grotesque** nos títulos, **Instrument Sans** no corpo, **DM Mono**
+nos números (o Brand Center pede Open Sans; o Davi achou feio e trocou em
+20/09). Pouco texto: cartão é título + botão. **Nenhum emoji** em lugar
+nenhum, nem no texto de compartilhar (usa blocos `▓▒░`). O logo oficial do
+Interact não está no site; se for entrar, é pelas regras do Brand Center.
 
 ## Rodar
 
@@ -39,6 +41,7 @@ PORT=4000 node servidor.js
 | `lib/calendario.js` | Dia de hoje em Brasília, número do dia desde `DATA_INICIAL`, embaralhador com semente. **`DATA_INICIAL`** é o dia 1: trocar depois de publicado reembaralha tudo |
 | `lib/termo.js` | Palavra do dia, avaliação do palpite, pontos |
 | `lib/oratoria.js` | Tema do dia e tema aleatório para o treino (sem partida, sem pontos) |
+| `lib/memoria.js` | Termos, tabuleiro sorteado, km pelo tempo |
 | `lib/vagalumes.js` | Datas e lemas dos 7 dias da SMI 2026, fase (antes/durante/depois), km |
 | `lib/trem.js` | Estações do trilho e a corrida (todos os 31 distritos ordenados por km) |
 | `lib/censo.js` | As dez comparações do dia (dez grupos diferentes, nunca empate) |
@@ -51,7 +54,7 @@ PORT=4000 node servidor.js
 | `dados/brasil.json` | Contorno do Brasil já projetado em SVG 400x400 (de johan/world.geo.json, equiretangular) |
 | `publico/comum.js` | O que toda página usa: jogador (localStorage), chamada à API, diálogo de entrada, placar, contagem |
 | `publico/index.html` + `hub.js` | O hub: a corrida (`/api/trem`), o cartão do seu trem, os cartões dos jogos com o estado do dia e a fila |
-| `publico/termo.*`, `censo.*`, `oratoria.*` | Cada jogo: uma página e um script |
+| `publico/termo.*`, `censo.*`, `memoria.*`, `vagalumes.*`, `oratoria.*` | Cada jogo: uma página e um script |
 | `ferramentas/semear-teste.js` | Enche o banco com 15 jogadores fictícios para demo (apaga o que existia; nunca no servidor publicado) |
 | `ferramentas/limpar-controle.js` | Troca caracteres de controle crus por `\uXXXX` num arquivo |
 
@@ -101,5 +104,4 @@ apaga sem querer: apagou, zera o placar e todo mundo entra de novo.
 - [ ] Lista de clubes por distrito (hoje é texto livre).
 - [ ] Sequência (streak) de dias seguidos.
 - [ ] Conferir as coordenadas marcadas `aprox` em `distritos.json` com alguém de cada distrito.
-- [ ] Próximos: Monta a Mesa, De Que Distrito É?, Memória das Raízes, Lema
-      Certo, Bingo da COMIC, Alerta Vermelho.
+- [ ] Próximos: Monta a Mesa, De Que Distrito É?, Lema Certo, Bingo da COMIC.

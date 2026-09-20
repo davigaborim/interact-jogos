@@ -15,7 +15,7 @@
   async function carregar() {
     const dados = await Jogos.api(`/api/censo/partida?jogador=${encodeURIComponent(Jogos.jogador.id)}`);
     partida = dados.partida;
-    $("#numero-dia").textContent = `#${partida.dia}`;
+    $("#numero-dia").textContent = `Dia ${partida.dia}`;
     $("#fonte").textContent = partida.fonte;
     if (!contagemLigada) {
       contagemLigada = true;

@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Treino de Oratória</title>
   <meta name="description" content="Treino para o CNO: tema sobre o Interact, 45 segundos de preparo e o discurso no cronômetro. Não vale ponto.">
-  <meta name="theme-color" content="#0d2450">
+  <meta name="theme-color" content="#0b1d3f">
   <link rel="icon" href="icone.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wdth,wght@75..100,400..800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="estilo.css?v=9">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,600..800&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilo.css?v=11">
 </head>
 <body>
   <header class="topo">
-    <a class="marca" href="/"><span class="faixa"></span>Jogos</a>
-    <span class="titulo">Treino de Oratória<span class="dia">Não vale ponto</span></span>
+    <a class="marca" href="/"><img src="icone.svg" alt="">Jogos do Interact</a>
     <button class="acao" type="button" id="btn-ajuda">Como funciona</button>
   </header>
+  <div class="contexto-pagina"><h1>Treino de Oratória</h1><span class="dia">Não vale ponto</span></div>
 
   <main class="jogo oratoria" id="jogo">
     <p class="selo" id="selo">Tema do dia</p>
-    <p class="tema placa" id="tema"></p>
+    <p class="tema" id="tema"></p>
 
     <div class="relogio" id="relogio">45</div>
     <p class="fase" id="fase">Escolha o tempo e comece. O preparo é sempre de 45 segundos.</p>
@@ -39,7 +39,7 @@
 
   <dialog id="dlg-ajuda" closedby="any" aria-labelledby="titulo-ajuda">
     <form method="dialog">
-      <h2 id="titulo-ajuda" class="placa">Como funciona</h2>
+      <h2 id="titulo-ajuda">Como funciona</h2>
       <p>É o formato da final do Concurso Nacional de Oratória: você descobre o tema e tem <strong>45 segundos</strong> para preparar. Depois o cronômetro do discurso começa.</p>
       <p><strong>Relâmpago</strong>: 1 minuto. <strong>Gonzaga</strong>: 1 minuto e meio. <strong>Final</strong>: 2 minutos.</p>
       <p>Não vale ponto. É treino, quantas vezes quiser, com o tema do dia ou com outro tema. Todo tema é sobre o Interact.</p>
@@ -47,7 +47,7 @@
     </form>
   </dialog>
 
-  <script src="comum.js?v=9"></script>
-  <script src="oratoria.js?v=9"></script>
+  <script src="comum.js?v=11"></script>
+  <script src="oratoria.js?v=11"></script>
 </body>
 </html>

@@ -18,7 +18,7 @@
   async function carregarPartida() {
     const dados = await Jogos.api(`/api/termo/partida?jogador=${encodeURIComponent(Jogos.jogador.id)}`);
     partida = dados.partida;
-    $("#numero-dia").textContent = `#${partida.dia}`;
+    $("#numero-dia").textContent = `Dia ${partida.dia}`;
     if (!contagemLigada) {
       contagemLigada = true;
       Jogos.contagem($("#contagem"), dados.viraEmMs, () => location.reload());

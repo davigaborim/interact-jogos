@@ -5,96 +5,74 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Jogos do Interact</title>
   <meta name="description" content="A corrida dos 31 distritos rumo à COMIC Nossas Raízes. Cada ponto é um quilômetro.">
-  <meta name="theme-color" content="#0d2450">
+  <meta name="theme-color" content="#0b1d3f">
   <meta property="og:title" content="Jogos do Interact">
   <meta property="og:description" content="Cada ponto é um quilômetro. Qual distrito chega primeiro em Sarzedo?">
   <link rel="icon" href="icone.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wdth,wght@75..100,400..800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="estilo.css?v=9">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,600..800&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilo.css?v=11">
 </head>
 <body>
   <header class="topo">
-    <a class="marca" href="/"><span class="faixa"></span>Jogos do Interact</a>
-    <span class="titulo"><span class="dia" id="numero-dia"></span></span>
+    <a class="marca" href="/"><img src="icone.svg" alt="">Jogos do Interact</a>
     <button class="acao" type="button" data-abrir-placar>Placar</button>
   </header>
 
   <section class="painel" aria-labelledby="titulo-corrida">
     <div class="miolo">
-      <p class="eyebrow">Trem das Raízes</p>
-      <h1 class="placa" id="titulo-corrida">Rumo a <span class="ouro">Sarzedo</span></h1>
-      <p class="sub">Cada ponto que alguém faz nos jogos é um quilômetro para o trem do distrito. As estações do caminho são as últimas COMICs. Chegada: 14 de janeiro de 2027.</p>
+      <p class="eyebrow">Trem das Raízes · XXVI COMIC</p>
+      <h1 id="titulo-corrida">Rumo a <span class="onda">Sarzedo</span></h1>
+      <p class="sub">Cada ponto é um quilômetro. Chegada: 14 de janeiro de 2027.</p>
       <div class="numeros">
         <span><b id="n-km">0</b>km rodados</span>
         <span><b id="n-jogadores">0</b>interactianos</span>
-        <span><b id="n-distritos">0</b>distritos em movimento</span>
+        <span><b id="n-distritos">0</b>distritos</span>
       </div>
-      <div class="corrida-caixa">
-        <div class="estacoes" id="estacoes"></div>
-        <ol class="corrida" id="corrida"><li class="vazio">Carregando a corrida</li></ol>
+      <div class="estacoes" id="estacoes"></div>
+      <ol class="corrida" id="corrida"><li class="vazio">Carregando a corrida</li></ol>
+      <div class="cta">
+        <button class="pill claro" type="button" id="btn-todos" hidden>Ver os 31 distritos</button>
+        <a class="pill ouro" href="https://www.e-inscricao.com/comicnossasraizes/inscricoes" target="_blank" rel="noopener">Garantir inscrição</a>
       </div>
-      <button class="ver-todos" type="button" id="btn-todos" hidden>Ver os 31 distritos</button>
     </div>
   </section>
 
   <main class="hub">
     <div class="meu-trem" id="meu-trem" hidden>
-      <div class="posicao"><span id="meu-pos">-</span><small>lugar</small></div>
+      <div class="posicao" id="meu-pos">-</div>
       <div class="texto"><strong id="meu-nome"></strong><span id="meu-detalhe"></span></div>
       <button type="button" id="btn-eu">Trocar</button>
     </div>
 
-    <h2 class="secao placa">Jogos de hoje <small>Palavra e perguntas novas toda meia-noite, horário de Brasília. Cada ponto vira quilômetro.</small></h2>
+    <h2 class="secao">Jogos de hoje</h2>
     <div class="cartoes duplo">
-      <a class="cartao" href="/termo" data-jogo="termo">
-        <p class="eyebrow">Até 10 km</p>
-        <h3 class="placa">Termo Interactiano</h3>
-        <p>Uma palavra de 5 letras do universo Interact. Seis tentativas.</p>
-        <span class="estado jogar">Jogar</span>
-      </a>
-      <a class="cartao" href="/censo" data-jogo="censo">
-        <p class="eyebrow">Até 10 km</p>
-        <h3 class="placa">Mais ou Menos do Censo</h3>
-        <p>Dez duplas. Qual tem mais interactianos? Números reais do Censo Nacional.</p>
-        <span class="estado jogar">Jogar</span>
-      </a>
+      <a class="cartao" href="/termo" data-jogo="termo"><h3>Termo <small>até 10 km</small></h3><span class="estado jogar">Jogar</span></a>
+      <a class="cartao" href="/censo" data-jogo="censo"><h3>Mais ou Menos <small>até 10 km</small></h3><span class="estado jogar">Jogar</span></a>
+      <a class="cartao" href="/memoria" data-jogo="memoria"><h3>Memória <small>até 10 km</small></h3><span class="estado jogar">Jogar</span></a>
+      <a class="cartao" href="/vagalumes" data-jogo="vagalumes"><h3>Vagalumes <small>Semana Mundial</small></h3><span class="estado jogar">Acender</span></a>
     </div>
 
-    <h2 class="secao placa">Semana Mundial <small>30 de outubro a 5 de novembro. O mapa do Brasil acende com o que os clubes fizerem.</small></h2>
+    <h2 class="secao">Treino</h2>
     <div class="cartoes">
-      <a class="cartao smi" href="/vagalumes" data-jogo="vagalumes">
-        <p class="eyebrow">2 km agora, 5 km por dia na semana</p>
-        <h3 class="placa">Vagalumes</h3>
-        <p>Diga que seu clube vai participar e um vagalume nasce no seu distrito. Na semana, cada ação acende uma luz forte.</p>
-        <span class="estado jogar">Acender</span>
-      </a>
+      <a class="cartao treino" href="/oratoria"><h3>Oratória <small>não vale ponto</small></h3><span class="estado">Treinar</span></a>
     </div>
 
-    <h2 class="secao placa">Treino <small>Não vale ponto. Vale para o CNO.</small></h2>
-    <div class="cartoes">
-      <a class="cartao treino" href="/oratoria">
-        <p class="eyebrow">Sem pontos</p>
-        <h3 class="placa">Treino de Oratória</h3>
-        <p>Tema sobre o Interact, 45 segundos de preparo e o discurso no cronômetro, como na final do CNO.</p>
-        <span class="estado">Treinar</span>
-      </a>
-    </div>
-
-    <h2 class="secao placa">Na fila <small>Vão entrando aqui, um por vez.</small></h2>
-    <ul class="breve">
-      <li><div><b>Monta a Mesa</b><span>Panóplia e mesa da presidência no lugar certo.</span></div><em>Em breve</em></li>
-      <li><div><b>De Que Distrito É?</b><span>Uma pista, um mapa, 31 distritos.</span></div><em>Em breve</em></li>
-      <li><div><b>Memória das Raízes</b><span>Projeto e clube que ganharam o CNP.</span></div><em>Em breve</em></li>
-      <li><div><b>Lema Certo</b><span>Lema presidencial e o ano dele.</span></div><em>Em breve</em></li>
-      <li><div><b>Bingo da COMIC</b><span>O que sempre acontece na COMIC.</span></div><em>Em breve</em></li>
+    <h2 class="secao">Na fila</h2>
+    <ul class="fila">
+      <li>Monta a Mesa</li><li>De Que Distrito É?</li><li>Lema Certo</li><li>Bingo da COMIC</li>
     </ul>
 
-    <p class="rodape">Feito por interactianos para o grupo da COMIC. O dia vira em <span id="contagem"></span>.</p>
+    <footer class="rodape">
+      <span>Feito por Davi Gaborim</span>
+      <a href="https://velocg.com.br" target="_blank" rel="noopener">Quer seu próprio site? velocg.com.br</a>
+      <a href="https://www.instagram.com/interactcg" target="_blank" rel="noopener">@interactcg</a>
+      <span class="mono" id="contagem-linha">O dia vira em <span id="contagem"></span></span>
+    </footer>
   </main>
 
-  <script src="comum.js?v=9"></script>
-  <script src="hub.js?v=9"></script>
+  <script src="comum.js?v=11"></script>
+  <script src="hub.js?v=11"></script>
 </body>
 </html>
