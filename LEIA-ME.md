@@ -1,6 +1,6 @@
 # Jogos do Interact
 
-Dois em um: o **site do Interact Club de Campo Grande Universitário** em `/`
+Dois em um: o **site do Interact Club de Campo Grande-Universidade** em `/`
 (pasta `site/`) e o **hub de jogos** em `/jogos/` (pasta `publico/`), no
 mesmo servidor. O site tem botão para os jogos; os jogos linkam de volta.
 
@@ -12,14 +12,19 @@ adaptada: Montserrat, mesmas seções, mais o botão "Jogar" no hero, o item
 
 | O que | Onde | Trocar por |
 |---|---|---|
-| Logo no topo | `site/index.html`, `.logo-box` | `images/logo-rotary-cgu.png` e `images/logo-interact-cgu.png`, uma `.logo-box` cada (como no Bela Vista) |
+| Logo do Rotary padrinho no topo do site | `site/index.html`, `.logo-container` | hoje só tem a do Interact (`images/logo-ic-preta.png`); se o clube quiser a do Rotary ao lado, é mais uma `.logo-box` |
 | Fotos de grupo e de projetos | `site/images/foto-grupo*.jpg`, `projeto-*.jpg` | fotos do IC CGU, mesmos nomes |
 | Contato | botão "Contate-nos" e rodapé | hoje vai para o Instagram; trocar por `wa.me/…` se o clube quiser |
 | Data de fundação | primeiro parágrafo do `.sobre-bloco` | não está no texto porque não sei |
 
 ## Jogos
 
-Hub de jogos diários para o Interact brasileiro. A página abre nos **jogos**
+Hub de jogos diários para o Interact brasileiro. O topo segue o padrão
+das barras da Vercel, Linear e Stripe: 64px, branco, linha fina embaixo, a
+logo do clube (`publico/logo-ic-preta.png`, recortada do PNG que ele mandou;
+a branca está ao lado) à esquerda, links pequenos e um botão. A logo leva
+para o site do clube (`/`). No Trem das Raízes, o trilho de cada distrito
+fica dourado do km 0 até o trem e a coluna da direita diz só `252/3.000 km`. A página abre nos **jogos**
 (um cartão por jogo: ícone, nome e o botão, dourado se ainda dá para jogar,
 azul se já jogou); logo abaixo vem o **Trem das Raízes** com o ranking do
 lado; embaixo de tudo, o treino. Cada ponto que alguém faz é um quilômetro

@@ -10,12 +10,21 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,600..800&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="estilo.css?v=12">
+  <link rel="stylesheet" href="estilo.css?v=17">
 </head>
 <body data-jogo="termo">
   <header class="topo">
-    <a class="marca" href="./"><img src="icone.svg" alt="">Jogos do Interact</a>
-    <button class="acao" type="button" id="btn-ajuda">Como jogar</button>
+    <div class="topo__pilula">
+      <a class="marca" href="/" title="Site do clube"><img src="logo-ic-preta.png" alt="Interact Club de Campo Grande Universidade"></a>
+      <span class="divisor" aria-hidden="true"></span>
+      <a class="secao" href="./">Jogos</a>
+      <nav class="menu" aria-label="Seções">
+        <a href="./">Jogos de hoje</a>
+        <a href="./#trem">Trem das Raízes</a>
+        <a href="/" class="externo">Site do clube <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 11.5l7-7M6 4.5h5.5V10"/></svg></a>
+      </nav>
+      <button class="acao" type="button" id="btn-ajuda"><i class="pulso" aria-hidden="true"></i>Como jogar</button>
+    </div>
   </header>
 
   <div class="pagina">
@@ -61,7 +70,7 @@
     </form>
   </dialog>
 
-  <script src="comum.js?v=12"></script>
-  <script src="termo.js?v=12"></script>
+  <script src="comum.js?v=17"></script>
+  <script src="termo.js?v=17"></script>
 </body>
 </html>

@@ -79,8 +79,8 @@ window.Jogos = (() => {
       <dialog id="dlg-instagram" class="instagram" closedby="any" aria-labelledby="titulo-instagram">
         <form method="dialog">
           <div class="selo-ig" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.8"/><circle cx="17.3" cy="6.7" r="0.9" fill="currentColor" stroke="none"/></svg></div>
-          <h2 id="titulo-instagram" class="placa">Siga o Interact de Campo Grande</h2>
-          <p class="mudo">Os jogos são do Interact Club de Campo Grande Universitário. Acompanhe os projetos do clube no Instagram.</p>
+          <h2 id="titulo-instagram" class="placa">Siga o Interact Campo Grande-Universidade</h2>
+          <p class="mudo">Os jogos são do Interact Club de Campo Grande-Universidade. Acompanhe os projetos do clube no Instagram.</p>
           <p class="arroba">@interactcg</p>
           <div class="acoes">
             <a class="botao primario" href="https://www.instagram.com/interactcg" target="_blank" rel="noopener">Seguir no Instagram</a>
@@ -331,9 +331,20 @@ window.Jogos = (() => {
     alvos.forEach((a) => obs.observe(a));
   }
 
+  // ---------- topo: sombra depois que a página rola ----------
+
+  function sombraDoTopo() {
+    const topo = document.querySelector(".topo");
+    if (!topo) return;
+    const marcar = () => topo.classList.toggle("rolou", window.scrollY > 8);
+    marcar();
+    window.addEventListener("scroll", marcar, { passive: true });
+  }
+
   // ---------- início ----------
 
   montarDialogo();
+  sombraDoTopo();
   document.querySelectorAll(".icone[data-icone]").forEach((el) => { el.innerHTML = icone(el.dataset.icone); });
   document.querySelectorAll("[data-ranking]").forEach(criarRanking);
   revelar();

@@ -12,19 +12,29 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,600..800&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="estilo.css?v=12">
+  <link rel="stylesheet" href="estilo.css?v=17">
 </head>
 <body>
   <header class="topo">
-    <a class="marca" href="./"><img src="icone.svg" alt="">Jogos do Interact<small>Interact Club de Campo Grande Universitário</small></a>
-    <button class="acao quem" type="button" id="btn-quem"><i></i><b id="quem-nome">Entrar</b></button>
+    <div class="topo__pilula">
+      <a class="marca" href="/" title="Site do clube"><img src="logo-ic-preta.png" alt="Interact Club de Campo Grande Universidade"></a>
+      <span class="divisor" aria-hidden="true"></span>
+      <a class="secao" href="./">Jogos</a>
+      <nav class="menu" aria-label="Seções">
+        <a href="./" class="ativo">Jogos de hoje</a>
+        <a href="./#trem">Trem das Raízes</a>
+        <a href="/" class="externo">Site do clube <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 11.5l7-7M6 4.5h5.5V10"/></svg></a>
+      </nav>
+      <button class="acao quem" type="button" id="btn-quem"><i id="quem-letra" hidden></i><b id="quem-nome">Entrar</b></button>
+    </div>
   </header>
 
   <section class="abertura" id="jogos" aria-labelledby="titulo-jogos">
+    <div class="fundo" aria-hidden="true"></div>
     <canvas id="bolinhas" aria-hidden="true"></canvas>
     <div class="miolo">
       <h1 id="titulo-jogos">Jogos do <span class="onda">Interact</span></h1>
-      <p class="sub">Um jogo novo toda meia-noite. Cada partida puxa o trem do seu distrito rumo à COMIC.</p>
+      <p class="sub">Aprenda sobre o Interact com jogos interativos e ganhe km para seu distrito!!</p>
 
       <div class="jogos">
         <a class="jogo-cartao" href="termo" data-jogo="termo">
@@ -55,26 +65,19 @@
     </div>
   </section>
 
-  <div class="faixa" aria-hidden="true"><div id="faixa-texto"></div></div>
-
   <section class="painel" id="trem" aria-labelledby="titulo-corrida">
     <div class="miolo">
       <div>
         <h2 class="titulo revelar" id="titulo-corrida">Rumo a <span class="onda">Sarzedo</span></h2>
-        <p class="sub revelar" data-atraso="1">O Trem das Raízes: cada ponto é um quilômetro até a XXVI COMIC, em 14 de janeiro de 2027.</p>
-        <div class="numeros revelar" data-atraso="2">
-          <span><b id="n-km" data-conta>0</b>km rodados</span>
-          <span><b id="n-jogadores" data-conta>0</b>interactianos</span>
-          <span><b id="n-distritos" data-conta>0</b>distritos</span>
-        </div>
+        <p class="sub revelar" data-atraso="1">Cada ponto é um quilômetro. Chegada: 14 de janeiro de 2027.</p>
         <div class="estacoes" id="estacoes"></div>
         <ol class="corrida" id="corrida"><li class="vazio">Carregando a corrida</li></ol>
         <div class="cta">
-          <button class="pill claro" type="button" id="btn-todos" hidden>Ver os 31 distritos</button>
+          <button class="pill" type="button" id="btn-todos" hidden>Ver os 31 distritos</button>
           <a class="pill ouro" href="https://www.e-inscricao.com/comicnossasraizes/inscricoes" target="_blank" rel="noopener">Garantir inscrição</a>
         </div>
       </div>
-      <aside class="lateral escuro">
+      <aside class="lateral">
         <div class="meu-trem revelar" id="meu-trem" hidden>
           <div class="posicao" id="meu-pos">-</div>
           <div class="texto"><strong id="meu-nome"></strong><span id="meu-detalhe"></span></div>
@@ -105,7 +108,7 @@
       </div>
 
       <footer class="rodape">
-        <a href="/">Interact Club de Campo Grande Universitário</a>
+        <a href="/">Interact Club de Campo Grande-Universidade</a>
         <span>Feito por Davi Gaborim</span>
         <a href="https://velocg.com.br" target="_blank" rel="noopener">Quer seu próprio site? velocg.com.br</a>
         <a href="https://www.instagram.com/interactcg" target="_blank" rel="noopener">@interactcg</a>
@@ -114,7 +117,7 @@
     </div>
   </main>
 
-  <script src="comum.js?v=12"></script>
-  <script src="hub.js?v=12"></script>
+  <script src="comum.js?v=17"></script>
+  <script src="hub.js?v=17"></script>
 </body>
 </html>

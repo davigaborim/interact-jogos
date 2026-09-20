@@ -44,11 +44,6 @@ body {
   display: block;
 }
 
-/* enquanto as logos do clube não chegam: emblema genérico + nome em texto */
-.logo-box .logo-emblema {
-  width: 90px;
-  margin-bottom: 8px;
-}
 
 .logo-box span {
   color: #1B2C5D;

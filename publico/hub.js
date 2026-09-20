@@ -9,15 +9,16 @@
   const reduzido = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const LINHAS_VISIVEIS = 8;
 
-  // Locomotiva em SVG: 30 x 20. Branca; a do líder ganha farol dourado via CSS.
+  // Locomotiva em SVG: 30 x 20. Azul-marinho sobre o trilho claro; a do
+  // líder ganha farol dourado via CSS.
   const LOCOMOTIVA = `<svg viewBox="0 0 30 20" aria-hidden="true">
-    <rect x="1" y="7" width="20" height="8" rx="1.5" fill="#fff"/>
-    <rect x="14" y="3" width="8" height="6" rx="1" fill="#fff"/>
-    <rect x="21" y="9" width="6" height="6" rx="1" fill="#fff"/>
-    <rect x="4" y="2" width="3" height="5" fill="#fff"/>
+    <rect x="1" y="7" width="20" height="8" rx="1.5" fill="#17458f"/>
+    <rect x="14" y="3" width="8" height="6" rx="1" fill="#17458f"/>
+    <rect x="21" y="9" width="6" height="6" rx="1" fill="#17458f"/>
+    <rect x="4" y="2" width="3" height="5" fill="#17458f"/>
     <circle cx="27.5" cy="12" r="1.6" fill="#f7a81b"/>
-    <circle cx="6" cy="17" r="2.2" fill="#fff"/><circle cx="12" cy="17" r="2.2" fill="#fff"/><circle cx="19" cy="17" r="2.2" fill="#fff"/>
-    <circle cx="6" cy="17" r="0.8" fill="#0d2450"/><circle cx="12" cy="17" r="0.8" fill="#0d2450"/><circle cx="19" cy="17" r="0.8" fill="#0d2450"/>
+    <circle cx="6" cy="17" r="2.2" fill="#17458f"/><circle cx="12" cy="17" r="2.2" fill="#17458f"/><circle cx="19" cy="17" r="2.2" fill="#17458f"/>
+    <circle cx="6" cy="17" r="0.8" fill="#fff"/><circle cx="12" cy="17" r="0.8" fill="#fff"/><circle cx="19" cy="17" r="0.8" fill="#fff"/>
   </svg>`;
 
   let corrida = null;
@@ -126,28 +127,23 @@
     }
   }
 
-  // ---------- números que contam ----------
+  // ---------- o azul vira branco ----------
+  // Conforme a abertura sobe, o fundo azul e o conteúdo dela esmaecem e o
+  // branco da página aparece por trás. Só um número, --saida, de 0 a 1.
 
-  function contar(el, ate) {
-    const de = Number(el.dataset.valor || 0);
-    el.dataset.valor = ate;
-    if (reduzido || de === ate) { el.textContent = formatar(ate); return; }
-    const inicio = performance.now();
-    const passo = (agora) => {
-      const t = Math.min(1, (agora - inicio) / 1100);
-      const suave = 1 - Math.pow(1 - t, 3);
-      el.textContent = formatar(Math.round(de + (ate - de) * suave));
-      if (t < 1) requestAnimationFrame(passo);
+  function esmaecerAbertura() {
+    const abertura = $(".abertura");
+    let pedido = 0;
+    const medir = () => {
+      pedido = 0;
+      const alcance = abertura.offsetHeight * 0.85;
+      const saida = Math.min(1, Math.max(0, window.scrollY / alcance));
+      abertura.style.setProperty("--saida", saida.toFixed(3));
     };
-    requestAnimationFrame(passo);
-  }
-
-  // ---------- faixa ----------
-
-  function faixa() {
-    const itens = ["Termo", "Mais ou Menos do Censo", "Memória", "Vagalumes", "Trem das Raízes", "COMIC Nossas Raízes", "Sarzedo, 14 a 17 de janeiro"];
-    const meio = itens.map((i) => `<span>${i}</span>`).join("");
-    $("#faixa-texto").innerHTML = meio + meio;
+    const marcar = () => { if (!pedido) pedido = requestAnimationFrame(medir); };
+    window.addEventListener("scroll", marcar, { passive: true });
+    window.addEventListener("resize", marcar, { passive: true });
+    medir();
   }
 
   // ---------- corrida ----------
@@ -159,6 +155,8 @@
       .join("");
   }
 
+  // Cada linha: o distrito, o trilho (a parte já andada fica dourada, o trem
+  // na ponta) e "252/3.000 km". Só isso.
   function desenharCorrida() {
     const lista = $("#corrida");
     const eu = Jogos.jogador ? Jogos.jogador.distrito : null;
@@ -177,21 +175,17 @@
         const classes = [l.distrito === eu ? "eu" : "", l.posicao === 1 && l.km > 0 ? "lider" : "", l.chegou ? "chegou" : ""].filter(Boolean).join(" ");
         return `<li class="${classes}">
           <span class="nome"><span class="pos">${l.posicao}</span><span><span class="num">${l.distrito}</span>${l.onde ? `<span class="onde">${Jogos.esc(l.onde)}</span>` : ""}</span></span>
-          <span class="trilho"><i></i><i></i><i></i><i></i><span class="trem" style="--p:0">${LOCOMOTIVA}</span></span>
-          <span class="km">${formatar(l.km)}<small>km</small>${l.kmHoje ? `<span class="hoje">+${l.kmHoje} hoje</span>` : ""}</span>
+          <span class="trilho" style="--p:0"><i></i><i></i><i></i><i></i><span class="feito"></span><span class="trem">${LOCOMOTIVA}</span></span>
+          <span class="km">${formatar(l.km)}<small>/${formatar(corrida.totalKm)} km</small></span>
         </li>`;
       }).join("");
       // Os trens saem da estação e correm até a posição: uma animação só, na carga.
       requestAnimationFrame(() => requestAnimationFrame(() => {
         lista.querySelectorAll("li").forEach((li, i) => {
-          const l = linhas[i];
-          li.querySelector(".trem").style.setProperty("--p", Math.min(1, l.km / corrida.totalKm));
+          li.querySelector(".trilho").style.setProperty("--p", Math.min(1, linhas[i].km / corrida.totalKm));
         });
       }));
     }
-    contar($("#n-km"), corrida.linhas.reduce((s, l) => s + l.km, 0));
-    contar($("#n-jogadores"), corrida.totalJogadores);
-    contar($("#n-distritos"), emMovimento);
     const btn = $("#btn-todos");
     btn.hidden = corrida.linhas.length <= LINHAS_VISIVEIS || !emMovimento;
     btn.textContent = mostrandoTodos ? "Mostrar só o pelotão da frente" : "Ver os 31 distritos";
@@ -244,6 +238,14 @@
   function desenharQuem() {
     const j = Jogos.jogador;
     $("#quem-nome").textContent = j ? `${j.nome} · ${j.distrito}` : "Entrar";
+    const letra = $("#quem-letra");
+    letra.hidden = !j;
+    if (j) letra.textContent = j.nome.trim().charAt(0).toUpperCase();
+  }
+
+  // O link "Jogos" do menu: já estamos aqui, então só sobe, sem recarregar.
+  for (const a of document.querySelectorAll(".menu a.ativo")) {
+    a.addEventListener("click", (e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); });
   }
 
   async function carregarCorrida() {
@@ -261,7 +263,7 @@
 
   bolinhas();
   inclinar();
-  faixa();
+  if (!reduzido) esmaecerAbertura();
 
   // A corrida aparece para todo mundo, mesmo antes de entrar.
   carregarCorrida();
