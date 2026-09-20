@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Termo Interactiano</title>
+  <meta name="description" content="Uma palavra do Interact por dia. Seis tentativas. Placar por distrito.">
+  <meta name="theme-color" content="#f6efe4">
+  <meta property="og:title" content="Termo Interactiano">
+  <meta property="og:description" content="Uma palavra do Interact por dia. Seis tentativas. Teu distrito no placar.">
+  <link rel="icon" href="icone.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilo.css?v=1">
+</head>
+<body>
+  <header class="topo">
+    <button class="icone" id="btn-ajuda" aria-label="Como jogar" title="Como jogar">?</button>
+    <h1><span class="marca">Termo</span> <span class="sub">Interactiano</span> <span class="dia" id="numero-dia"></span></h1>
+    <button class="icone" id="btn-placar" aria-label="Placar" title="Placar">🏆</button>
+  </header>
+
+  <main class="jogo" id="jogo" hidden>
+    <p class="aviso" id="aviso" role="status" aria-live="polite"></p>
+    <div class="grade" id="grade" aria-label="Tentativas"></div>
+    <div class="teclado" id="teclado" aria-label="Teclado"></div>
+  </main>
+
+  <!-- Entrada: nome, distrito e clube. Vira o "quem sou eu" do placar. -->
+  <dialog id="dlg-entrar" closedby="none" aria-labelledby="titulo-entrar">
+    <form id="form-entrar" method="dialog">
+      <h2 id="titulo-entrar">Quem é você?</h2>
+      <p class="mudo">Isso é só pra você aparecer no placar e somar pontos pro seu distrito. Sem senha, sem e-mail.</p>
+      <label>Seu nome
+        <input name="nome" required minlength="2" maxlength="24" autocomplete="given-name" placeholder="Como te chamam no clube">
+      </label>
+      <label>Distrito
+        <select name="distrito" required id="sel-distrito">
+          <option value="">Escolhe…</option>
+        </select>
+      </label>
+      <label>Clube <span class="mudo">(opcional)</span>
+        <input name="clube" maxlength="40" placeholder="Interact Club de …">
+      </label>
+      <p class="erro" id="erro-entrar"></p>
+      <button class="primario" type="submit">Entrar e jogar</button>
+    </form>
+  </dialog>
+
+  <!-- Como jogar -->
+  <dialog id="dlg-ajuda" closedby="any" aria-labelledby="titulo-ajuda">
+    <form method="dialog">
+      <h2 id="titulo-ajuda">Como jogar</h2>
+      <p>Descubra a palavra do dia em até <strong>6 tentativas</strong>. Toda palavra tem 5 letras e tem a ver com o Interact: protocolo, concursos, COMIC, projetos que ganharam o CNP, o censo…</p>
+      <div class="exemplo">
+        <div class="fileira"><span class="celula certa">C</span><span class="celula">L</span><span class="celula">U</span><span class="celula">B</span><span class="celula">E</span></div>
+        <p><strong>Verde</strong>: letra certa no lugar certo.</p>
+        <div class="fileira"><span class="celula">P</span><span class="celula perto">O</span><span class="celula">S</span><span class="celula">S</span><span class="celula">E</span></div>
+        <p><strong>Laranja</strong>: a letra existe, mas em outro lugar.</p>
+        <div class="fileira"><span class="celula">M</span><span class="celula">E</span><span class="celula fora">T</span><span class="celula">A</span><span class="celula">S</span></div>
+        <p><strong>Apagada</strong>: essa letra não está na palavra.</p>
+      </div>
+      <p>Acentos não contam: <em>PÓLIO</em> se escreve <code>POLIO</code>. Qualquer palavra do dicionário vale como palpite.</p>
+      <p><strong>Pontos:</strong> 10 · 8 · 6 · 5 · 4 · 3 conforme a tentativa em que você acerta. Errou as seis? Ganha 1 por ter jogado. Os pontos de todo mundo somam para o <strong>distrito</strong>.</p>
+      <p class="mudo">Palavra nova toda meia-noite (horário de Brasília).</p>
+      <button class="primario" type="submit">Beleza</button>
+    </form>
+  </dialog>
+
+  <!-- Fim da partida -->
+  <dialog id="dlg-fim" closedby="any" aria-labelledby="titulo-fim">
+    <form method="dialog">
+      <h2 id="titulo-fim"></h2>
+      <p class="palavra-revelada"><span id="fim-palavra"></span></p>
+      <p class="dica" id="fim-dica"></p>
+      <p class="pontos" id="fim-pontos"></p>
+      <div class="acoes">
+        <button class="primario" type="button" id="btn-compartilhar">Mandar no grupo</button>
+        <button type="button" id="btn-ver-placar">Ver placar</button>
+      </div>
+      <p class="mudo">Próxima palavra em <span id="contagem"></span></p>
+    </form>
+  </dialog>
+
+  <!-- Placar -->
+  <dialog id="dlg-placar" closedby="any" aria-labelledby="titulo-placar">
+    <form method="dialog">
+      <h2 id="titulo-placar">Placar</h2>
+      <div class="abas" role="tablist">
+        <button type="button" role="tab" data-periodo="hoje" aria-selected="true">Hoje</button>
+        <button type="button" role="tab" data-periodo="geral" aria-selected="false">Geral</button>
+        <span class="separador"></span>
+        <button type="button" role="tab" data-grupo="distritos" aria-selected="true">Distritos</button>
+        <button type="button" role="tab" data-grupo="jogadores" aria-selected="false">Jogadores</button>
+      </div>
+      <div class="tabela-caixa"><table class="tabela" id="tabela-placar"></table></div>
+      <p class="mudo" id="rodape-placar"></p>
+      <div class="acoes">
+        <button type="submit">Fechar</button>
+        <button type="button" class="discreto" id="btn-trocar">Trocar nome/distrito</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="app.js?v=1"></script>
+</body>
+</html>

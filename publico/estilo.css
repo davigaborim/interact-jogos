@@ -1,0 +1,285 @@
+/* Termo Interactiano — paleta da COMIC Nossas Raízes: creme, marrom,
+   terracota e verde folha. Celular primeiro. */
+
+:root {
+  --fundo: #f6efe4;
+  --papel: #fffaf2;
+  --tinta: #3a281c;
+  --tinta-fraca: #8a7460;
+  --linha: #d9c9b4;
+  --certa: #3f8a4a;
+  --perto: #e0782a;
+  --fora: #b3a28f;
+  --tecla: #e9dcc8;
+  --tecla-tinta: #3a281c;
+  --acento: #e0782a;
+  --acento-escuro: #b85d1c;
+  --sombra: 0 10px 30px rgba(58, 40, 28, 0.18);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fundo: #1d1612;
+    --papel: #27201a;
+    --tinta: #f3e9da;
+    --tinta-fraca: #b39a80;
+    --linha: #463a2f;
+    --certa: #4f9c5a;
+    --perto: #e6863a;
+    --fora: #4a3e33;
+    --tecla: #3a2f26;
+    --tecla-tinta: #f3e9da;
+    --sombra: 0 10px 30px rgba(0, 0, 0, 0.5);
+    color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--fundo);
+  color: var(--tinta);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-bottom: env(safe-area-inset-bottom);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.topo {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  padding: 10px 12px 6px;
+  border-bottom: 1px solid var(--linha);
+}
+
+.topo h1 {
+  margin: 0;
+  text-align: center;
+  font-family: Fraunces, Georgia, serif;
+  font-weight: 800;
+  font-size: 1.35rem;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+.topo .marca { color: var(--acento); }
+.topo .sub { font-weight: 600; }
+.topo .dia { display: block; font: 600 0.7rem Inter, sans-serif; color: var(--tinta-fraca); letter-spacing: 0.08em; }
+
+.icone {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--linha);
+  background: var(--papel);
+  color: var(--tinta);
+  font: 700 1rem Inter, sans-serif;
+  cursor: pointer;
+}
+
+.jogo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 8px 6px;
+  max-width: 520px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.aviso {
+  min-height: 1.4em;
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--acento-escuro);
+  text-align: center;
+  transition: opacity 0.2s;
+}
+.aviso:empty { opacity: 0; }
+
+/* ---- grade ---- */
+
+.grade {
+  display: grid;
+  grid-template-rows: repeat(6, 1fr);
+  gap: 6px;
+  width: min(100%, 340px);
+  aspect-ratio: 5 / 6;
+  flex: 0 1 auto;
+  max-height: 46dvh;
+}
+
+.fileira {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+
+.celula {
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--linha);
+  border-radius: 8px;
+  font: 700 clamp(1.1rem, 6vw, 1.7rem) Inter, sans-serif;
+  text-transform: uppercase;
+  background: var(--papel);
+  color: var(--tinta);
+  aspect-ratio: 1;
+  transition: transform 0.1s;
+}
+.celula.digitando { border-color: var(--tinta-fraca); transform: scale(1.04); }
+.celula.certa, .celula.perto, .celula.fora { color: #fff; border-color: transparent; }
+.celula.certa { background: var(--certa); }
+.celula.perto { background: var(--perto); }
+.celula.fora { background: var(--fora); }
+
+.fileira.revelando .celula { animation: virar 0.5s ease both; }
+.fileira.revelando .celula:nth-child(2) { animation-delay: 0.1s; }
+.fileira.revelando .celula:nth-child(3) { animation-delay: 0.2s; }
+.fileira.revelando .celula:nth-child(4) { animation-delay: 0.3s; }
+.fileira.revelando .celula:nth-child(5) { animation-delay: 0.4s; }
+@keyframes virar {
+  0% { transform: rotateX(0); }
+  50% { transform: rotateX(90deg); }
+  100% { transform: rotateX(0); }
+}
+
+.fileira.tremendo { animation: tremer 0.4s; }
+@keyframes tremer {
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+/* ---- teclado ---- */
+
+.teclado {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  user-select: none;
+}
+.teclado .linha {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+.tecla {
+  flex: 1 1 0;
+  max-width: 46px;
+  height: 52px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--tecla);
+  color: var(--tecla-tinta);
+  font: 700 0.95rem Inter, sans-serif;
+  text-transform: uppercase;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.tecla.larga { flex: 1.6 1 0; max-width: 74px; font-size: 0.75rem; }
+.tecla:active { filter: brightness(0.9); }
+.tecla.certa { background: var(--certa); color: #fff; }
+.tecla.perto { background: var(--perto); color: #fff; }
+.tecla.fora { background: var(--fora); color: #fff; opacity: 0.8; }
+
+/* ---- diálogos ---- */
+
+dialog {
+  border: 0;
+  border-radius: 16px;
+  background: var(--papel);
+  color: var(--tinta);
+  padding: 22px 20px;
+  width: min(92vw, 440px);
+  max-height: 88dvh;
+  box-shadow: var(--sombra);
+}
+dialog::backdrop { background: rgba(30, 20, 12, 0.55); backdrop-filter: blur(2px); }
+dialog h2 {
+  margin: 0 0 8px;
+  font-family: Fraunces, Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+dialog p { margin: 8px 0; line-height: 1.45; font-size: 0.95rem; }
+dialog label { display: block; margin: 12px 0 4px; font-size: 0.85rem; font-weight: 600; }
+dialog input, dialog select {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 10px 12px;
+  font: 400 1rem Inter, sans-serif;
+  border: 1px solid var(--linha);
+  border-radius: 10px;
+  background: var(--fundo);
+  color: var(--tinta);
+}
+dialog button {
+  font: 700 0.95rem Inter, sans-serif;
+  padding: 11px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--linha);
+  background: var(--fundo);
+  color: var(--tinta);
+  cursor: pointer;
+}
+dialog button.primario { background: var(--acento); border-color: var(--acento); color: #fff; }
+dialog button.primario:hover { background: var(--acento-escuro); }
+dialog button.discreto { border: 0; background: none; color: var(--tinta-fraca); font-weight: 600; }
+dialog form > button.primario { width: 100%; margin-top: 14px; }
+.acoes { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.acoes button { flex: 1 1 auto; }
+.mudo { color: var(--tinta-fraca); font-size: 0.85rem; }
+.erro { color: #b8321e; font-weight: 600; min-height: 1.2em; margin: 6px 0 0; }
+.erro:empty { display: none; }
+
+.exemplo .fileira { width: 200px; margin: 10px 0 4px; }
+.exemplo .celula { font-size: 1rem; }
+
+.palavra-revelada {
+  font-family: Fraunces, Georgia, serif;
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-align: center;
+  color: var(--acento);
+  margin: 4px 0 !important;
+}
+.dica { text-align: center; }
+.pontos { text-align: center; font-weight: 700; font-size: 1.1rem; }
+
+/* ---- placar ---- */
+
+.abas { display: flex; gap: 6px; align-items: center; margin: 6px 0 10px; flex-wrap: wrap; }
+.abas .separador { width: 1px; height: 22px; background: var(--linha); margin: 0 4px; }
+.abas [role="tab"] { padding: 6px 12px; font-size: 0.8rem; border-radius: 999px; }
+.abas [role="tab"][aria-selected="true"] { background: var(--tinta); color: var(--papel); border-color: var(--tinta); }
+
+.tabela-caixa { max-height: 46dvh; overflow: auto; border: 1px solid var(--linha); border-radius: 10px; }
+.tabela { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.tabela th, .tabela td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--linha); }
+.tabela th { font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tinta-fraca); position: sticky; top: 0; background: var(--papel); }
+.tabela td.num, .tabela th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.tabela tr.eu td { background: rgba(224, 120, 42, 0.14); font-weight: 700; }
+.tabela .pos { color: var(--tinta-fraca); width: 2.2em; }
+.tabela .sub { display: block; font-size: 0.75rem; color: var(--tinta-fraca); font-weight: 400; }
+.tabela .vazio { text-align: center; color: var(--tinta-fraca); padding: 24px 10px; }
+
+@media (max-height: 640px) {
+  .tecla { height: 44px; }
+  .grade { max-height: 40dvh; }
+}

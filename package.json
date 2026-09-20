@@ -1,0 +1,10 @@
+{
+  "name": "interact-jogos",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Jogos para o Interact brasileiro. Por enquanto: Termo Interactiano.",
+  "main": "servidor.js",
+  "engines": { "node": ">=18" },
+  "scripts": { "start": "node servidor.js" },
+  "dependencies": {}
+}
