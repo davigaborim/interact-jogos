@@ -1,6 +1,7 @@
 // Jogos do Interact — servidor.
-// Serve a pasta publico/ e a API de todos os jogos. Sem dependências: só
-// Node 18+.
+// Serve o site do Interact Club de Campo Grande Universitário (site/) em /,
+// os jogos (publico/) em /jogos/ e a API de todos os jogos. Sem
+// dependências: só Node 18+.
 //
 //   node servidor.js            sobe em PORT ou 3210
 //
@@ -24,6 +25,7 @@ const { estado, agendarGravacao, gravarAgora } = require("./lib/armazem");
 
 const PORTA = Number(process.env.PORT) || 3210;
 const PUBLICO = path.join(__dirname, "publico");
+const SITE = path.join(__dirname, "site");
 const DISTRITOS = JSON.parse(fs.readFileSync(path.join(__dirname, "dados", "distritos.json"), "utf8"));
 const NUMEROS_DE_DISTRITO = new Set(DISTRITOS.map((d) => d.n));
 const BRASIL = JSON.parse(fs.readFileSync(path.join(__dirname, "dados", "brasil.json"), "utf8"));
@@ -35,7 +37,7 @@ const JOGOS = {
   memoria: { nome: "Memória das Raízes" },
 };
 
-// Endereços limpos: /termo abre publico/termo.html.
+// Endereços limpos dos jogos: /jogos/termo abre publico/termo.html.
 const PAGINAS = { "/": "index.html", "/termo": "termo.html", "/oratoria": "oratoria.html", "/censo": "censo.html", "/vagalumes": "vagalumes.html", "/memoria": "memoria.html" };
 
 const TIPOS = {
@@ -45,6 +47,9 @@ const TIPOS = {
   ".json": "application/json; charset=utf-8",
   ".svg": "image/svg+xml",
   ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".webp": "image/webp",
   ".ico": "image/x-icon",
   ".webmanifest": "application/manifest+json",
 };
@@ -79,9 +84,22 @@ function lerCorpo(req) {
 
 function servirArquivo(res, caminhoPedido) {
   let relativo = decodeURIComponent(caminhoPedido.split("?")[0]);
-  if (PAGINAS[relativo]) relativo = "/" + PAGINAS[relativo];
-  const alvo = path.normalize(path.join(PUBLICO, relativo));
-  if (!alvo.startsWith(PUBLICO)) return json(res, 403, { erro: "fora da pasta" });
+  // /jogos sem barra no fim quebraria os caminhos relativos (estilo.css
+  // cairia na raiz do site), então manda para /jogos/.
+  if (relativo === "/jogos") {
+    res.writeHead(301, { Location: "/jogos/" });
+    return res.end();
+  }
+  let raiz = SITE;
+  if (relativo.startsWith("/jogos/")) {
+    raiz = PUBLICO;
+    relativo = relativo.slice("/jogos".length);
+    if (PAGINAS[relativo]) relativo = "/" + PAGINAS[relativo];
+  } else if (relativo === "/") {
+    relativo = "/index.html";
+  }
+  const alvo = path.normalize(path.join(raiz, relativo));
+  if (!alvo.startsWith(raiz)) return json(res, 403, { erro: "fora da pasta" });
   fs.readFile(alvo, (erro, conteudo) => {
     if (erro) return json(res, 404, { erro: "não encontrado" });
     const ext = path.extname(alvo).toLowerCase();

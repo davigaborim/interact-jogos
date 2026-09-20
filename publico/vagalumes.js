@@ -72,7 +72,6 @@
     texto.hidden = true;
     botao.disabled = false;
     if (!Jogos.jogador) {
-      $("#acender-eyebrow").textContent = "Sua luz";
       $("#acender-titulo").textContent = "Entre para acender";
       $("#acender-texto").textContent = "Nome e distrito, sem senha. É só para o vagalume saber onde nascer.";
       botao.textContent = "Entrar";
@@ -80,7 +79,6 @@
       return;
     }
     if (dados.fase === "antes") {
-      $("#acender-eyebrow").textContent = `Sua luz, distrito ${Jogos.jogador.distrito}`;
       if (meu.compromisso) {
         $("#acender-titulo").textContent = "Seu vagalume já está lá";
         $("#acender-texto").textContent = "Fraquinho, esperando 30 de outubro. Traz o resto do clube.";
@@ -93,7 +91,6 @@
         botao.onclick = () => acender();
       }
     } else if (dados.fase === "durante") {
-      $("#acender-eyebrow").textContent = `Dia ${dados.hojeIndice + 1} de 7, distrito ${Jogos.jogador.distrito}`;
       if (meu.hoje) {
         $("#acender-titulo").textContent = "Aceso por hoje";
         $("#acender-texto").textContent = "Amanhã tem outro lema e outro vagalume. Manda no grupo pra mais gente acender.";
@@ -107,7 +104,6 @@
         botao.onclick = () => acender(texto.value);
       }
     } else {
-      $("#acender-eyebrow").textContent = "Semana encerrada";
       $("#acender-titulo").textContent = "Obrigado por acender";
       $("#acender-texto").textContent = "O mapa fica assim. A próxima Semana Mundial é em 2027.";
       botao.textContent = "Mandar o mapa no grupo";
@@ -136,8 +132,8 @@
   async function compartilhar() {
     const t = dados.totais;
     const texto = dados.fase === "antes"
-      ? `Vagalumes da Semana Mundial de Interact\n${t.compromissos} clube${t.compromissos === 1 ? "" : "s"} já se comprometeram, em ${t.distritos} distrito${t.distritos === 1 ? "" : "s"}. Acende o seu: ${location.origin}/vagalumes`
-      : `Vagalumes da Semana Mundial de Interact\n${t.acesos} luz${t.acesos === 1 ? "" : "es"} acesa${t.acesos === 1 ? "" : "s"} em ${t.distritos} distrito${t.distritos === 1 ? "" : "s"}. Distrito ${Jogos.jogador ? Jogos.jogador.distrito : ""}: ${location.origin}/vagalumes`;
+      ? `Vagalumes da Semana Mundial de Interact\n${t.compromissos} clube${t.compromissos === 1 ? "" : "s"} já se comprometeram, em ${t.distritos} distrito${t.distritos === 1 ? "" : "s"}. Acende o seu: ${location.origin}/jogos/vagalumes`
+      : `Vagalumes da Semana Mundial de Interact\n${t.acesos} luz${t.acesos === 1 ? "" : "es"} acesa${t.acesos === 1 ? "" : "s"} em ${t.distritos} distrito${t.distritos === 1 ? "" : "s"}. Distrito ${Jogos.jogador ? Jogos.jogador.distrito : ""}: ${location.origin}/jogos/vagalumes`;
     const botao = $("#btn-acender");
     try {
       if (navigator.share) { await navigator.share({ text: texto }); return; }

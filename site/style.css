@@ -1,0 +1,654 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: #ffffff;
+  color: #1B2C5D;
+}
+
+/* HEADER */
+
+.top-bar {
+  background-color: #ffffff;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 80px;
+  margin-bottom: 15px;
+}
+
+.logo-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo-box img {
+  width: 300px;
+  height: auto;
+  display: block;
+}
+
+/* enquanto as logos do clube não chegam: emblema genérico + nome em texto */
+.logo-box .logo-emblema {
+  width: 90px;
+  margin-bottom: 8px;
+}
+
+.logo-box span {
+  color: #1B2C5D;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  margin-top: 10px;
+}
+
+nav a {
+  text-decoration: none;
+  color: #1B2C5D;
+  font-weight: 600;
+  font-size: 16px;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 5px;
+  transition: border-color 0.3s;
+}
+
+nav a.active,
+nav a:hover {
+  border-bottom: 2px solid #1B2C5D;
+}
+
+/* HERO SECTION */
+
+.hero {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 30px auto;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 600px;
+}
+
+.hero-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.4);
+}
+
+.hero-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.hero-text h1 {
+  font-size: 56px;
+  font-weight: 700;
+}
+
+.hero-btn {
+  display: inline-block;
+  margin-top: 28px;
+  background-color: #FCD02F;
+  color: #1B2C5D;
+  padding: 14px 28px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 18px;
+  text-decoration: none;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.hero-btn:hover {
+  background-color: #ffb800;
+  transform: translateY(-2px);
+}
+
+/* JOGOS SECTION */
+
+.jogos-bloco {
+  background-color: #1B2C5D;
+  color: #ffffff;
+  padding: 60px 20px;
+}
+
+.jogos-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 50px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.jogos-textos {
+  flex: 1 1 480px;
+}
+
+.jogos-textos h2 {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.jogos-textos p {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.jogos-btn {
+  display: inline-block;
+  margin-top: 6px;
+  background-color: #FCD02F;
+  color: #1B2C5D;
+  padding: 14px 32px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 18px;
+  text-decoration: none;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.jogos-btn:hover {
+  background-color: #ffb800;
+  transform: translateY(-2px);
+}
+
+.jogos-cartoes {
+  flex: 1 1 320px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  max-width: 440px;
+}
+
+.jogos-cartoes span {
+  display: block;
+  background-color: #1976D2;
+  border-radius: 14px;
+  padding: 34px 18px;
+  font-weight: 700;
+  font-size: 20px;
+  text-align: center;
+  transition: transform 0.3s, background-color 0.3s;
+}
+
+.jogos-cartoes span:nth-child(2n) {
+  background-color: #0055A4;
+}
+
+.jogos-cartoes span:hover {
+  transform: translateY(-6px);
+  background-color: #FCD02F;
+  color: #1B2C5D;
+}
+
+/* QUEM SOMOS SECTION */
+
+.quem-somos-texto {
+  max-width: 1200px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+.quem-somos-texto .content {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.interact-logo-texto {
+  width: 200px;
+  flex-shrink: 0;
+}
+
+.quem-somos-texto .textos p {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.final-text {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 40px;
+  font-weight: 600;
+}
+
+/* SOBRE SECTION */
+
+.sobre-bloco {
+  background-color: #1976D2;
+  padding: 50px 20px;
+  margin-top: 50px;
+  color: #ffffff;
+}
+
+.sobre-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.sobre-textos {
+  flex: 1 1 500px;
+}
+
+.sobre-textos p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  text-align: justify;
+  line-height: 1.6;
+}
+
+.sobre-imagem img {
+  width: 500px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+/* PROJETOS SECTION */
+
+.projetos {
+  background-color: #0055A4;
+  padding: 50px 20px;
+  text-align: center;
+  color: #ffffff;
+  overflow-x: auto;
+}
+
+.projetos h2 {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 60px;
+}
+
+.projetos-fotos {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  gap: 0;
+  padding-bottom: 60px;
+}
+
+.projetos-fotos img {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 6px solid #ffffff;
+  margin-left: -80px;
+  transition: transform 0.3s;
+}
+
+.projetos-fotos img:first-child {
+  margin-left: 0;
+  transform: translateY(0);
+}
+
+.projetos-fotos img:nth-child(2) {
+  transform: translateY(50px);
+}
+
+.projetos-fotos img:nth-child(3) {
+  transform: translateY(0);
+}
+
+.projetos-fotos img:nth-child(4) {
+  transform: translateY(50px);
+}
+
+.projetos-fotos img:hover {
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+/* ENCONTRE SECTION */
+
+.encontre {
+  background-color: #ffffff;
+  color: #1B2C5D;
+  padding: 60px 20px;
+}
+
+.encontre-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 50px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.encontre-textos {
+  flex: 1 1 500px;
+}
+
+.encontre-textos h2 {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+.encontre-textos p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.encontre-side {
+  flex: 1 1 300px;
+  text-align: center;
+}
+
+.encontre-side img {
+  width: 150px;
+  margin-bottom: 20px;
+}
+
+.encontre-side p {
+  font-size: 16px;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+/* BANNER SECTION */
+
+.encontre-banner {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.encontre-banner-images {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.encontre-banner-images img {
+  width: 50%;
+  height: 110%;
+  object-fit: cover;
+}
+
+.banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.banner-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #ffffff;
+  padding: 0 20px;
+}
+
+.banner-text h2 {
+  font-size: 72px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.banner-text p {
+  font-size: 20px;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+/* CONTATO BARRA */
+
+.contato-barra {
+  background-color: #ffffff;
+  padding: 20px 0;
+  border-top: 1px solid #ccc;
+}
+
+.nav-footer ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-footer a {
+  text-decoration: none;
+  color: #0055A4;
+  font-weight: 600;
+  font-size: 16px;
+  border-right: 1px solid #ccc;
+  padding: 0 10px;
+}
+
+.nav-footer li:last-child a {
+  border-right: none;
+}
+
+.contato-btn-container {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.contate-btn {
+  background-color: #FCD02F;
+  color: #1B2C5D !important;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-weight: 700;
+  display: inline-block;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.contate-btn:hover {
+  background-color: #ffb800;
+}
+
+/* FOOTER */
+
+.footer {
+  background-color: #004aad;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.footer-icons a {
+  margin: 0 15px;
+}
+
+.footer-icons img {
+  width: 40px;
+  height: 40px;
+  transition: transform 0.3s;
+}
+
+.footer-icons img:hover {
+  transform: scale(1.1);
+}
+@media (max-width: 768px) {
+  .logo-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .logo-box img {
+    width: 100px;
+  }
+
+  nav ul {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .hero {
+    height: 300px;
+  }
+
+  .hero-text h1 {
+    font-size: 32px;
+  }
+
+  .hero-btn {
+    margin-top: 16px;
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+
+  .jogos-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .jogos-textos h2 {
+    font-size: 28px;
+  }
+
+  .jogos-cartoes span {
+    padding: 22px 12px;
+    font-size: 16px;
+  }
+
+  .quem-somos-texto .content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .interact-logo-texto {
+    width: 120px;
+    margin-bottom: 20px;
+  }
+
+  .sobre-container {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .sobre-imagem img {
+    width: 100%;
+    max-width: 350px;
+  }
+
+  .projetos-fotos {
+    flex-wrap: wrap;
+    margin-left: 0;
+    justify-content: center;
+    gap: 30px;
+    padding-bottom: 30px;
+  }
+
+  .projetos-fotos img {
+    width: 180px;
+    height: 180px;
+    margin-left: 0;
+    transform: none !important;
+  }
+
+  .encontre-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .encontre-side img {
+    width: 100px;
+  }
+
+  .encontre-textos h2 {
+    font-size: 28px;
+  }
+
+  .encontre-banner {
+    height: 250px;
+  }
+
+  .banner-text h2 {
+    font-size: 36px;
+  }
+
+  .banner-text p {
+    font-size: 14px;
+  }
+
+  .nav-footer ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer-icons img {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-text h1 {
+    font-size: 24px;
+  }
+
+  .projetos h2 {
+    font-size: 28px;
+  }
+
+  .banner-text h2 {
+    font-size: 28px;
+  }
+
+  .banner-text p {
+    font-size: 12px;
+  }
+}
+.footer-credit {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 10px;
+}

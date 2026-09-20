@@ -68,15 +68,6 @@ button { font-family: inherit; }
   letter-spacing: -0.03em;
   line-height: 0.98;
 }
-.eyebrow {
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin: 0 0 8px;
-}
 .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 
 /* sublinhado ondulado, como na Velo */
@@ -146,6 +137,8 @@ button { font-family: inherit; }
   color: #fff; text-decoration: none;
   font-family: var(--display); font-weight: 800; font-size: 1.05rem; letter-spacing: -0.02em;
 }
+.topo .marca { flex-wrap: wrap; row-gap: 0; }
+.topo .marca small { flex-basis: 100%; padding-left: 36px; font: 500 0.62rem var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255, 255, 255, 0.55); }
 .topo .marca img { width: 26px; height: 26px; border-radius: 7px; transition: transform 0.4s var(--mola); }
 .topo .marca:hover img { transform: rotate(90deg); }
 .topo .acao { border: 1.5px solid rgba(255, 255, 255, 0.35); background: transparent; color: #fff; border-radius: 999px; padding: 8px 16px; font: 600 0.85rem var(--corpo); cursor: pointer; transition: background 0.15s, transform 0.15s var(--mola); }
@@ -187,8 +180,7 @@ button { font-family: inherit; }
 .abertura .miolo { position: relative; max-width: 1040px; margin: 0 auto; }
 .abertura h1 { font-size: clamp(3rem, 13vw, 5.6rem); margin: 0; color: #fff; animation: subir 0.8s var(--suave) both; }
 .abertura .sub { margin: 14px 0 0; color: rgba(255, 255, 255, 0.72); font-size: 1.05rem; max-width: 44ch; animation: subir 0.8s 0.1s var(--suave) both; }
-.abertura .eyebrow { animation: subir 0.8s var(--suave) both; }
-
+.abertura 
 .jogos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 30px; }
 .jogo-cartao {
   --tilt-x: 0deg; --tilt-y: 0deg;
@@ -663,6 +655,20 @@ dialog form > .botao.primario { width: 100%; margin-top: 14px; }
 .exemplo .celula { font-size: 1rem; }
 .dica { text-align: center; }
 .pontos { text-align: center; font: 500 1rem var(--mono); color: var(--royal); }
+
+/* o convite do Instagram, depois de terminar uma partida */
+.instagram { text-align: center; padding-top: 30px; }
+.instagram .selo-ig {
+  width: 64px; height: 64px; margin: 0 auto 14px; border-radius: 20px; display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--azure), var(--sky)); color: #fff; box-shadow: 0 12px 30px rgba(0, 103, 200, 0.35);
+  animation: flutuar 3s ease-in-out infinite;
+}
+.instagram .selo-ig svg { width: 32px; height: 32px; }
+.instagram h2 { font-size: 1.9rem; }
+.instagram .arroba { font: 500 1.05rem var(--mono); color: var(--azure); margin: 4px 0 12px; }
+.instagram .acoes { flex-direction: column; }
+.instagram .acoes .botao.primario { background: var(--gold); border-color: var(--gold); color: var(--tinta); }
+.instagram .acoes .botao.primario:hover { background: #ffb63a; }
 
 /* tabela (resultado do censo) */
 .tabela-caixa { max-height: 46dvh; overflow: auto; border: 1px solid var(--linha); border-radius: 12px; }

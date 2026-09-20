@@ -66,7 +66,7 @@
       grade.children[partida.tentativas.length - 1].classList.add("revelando");
       await new Promise((r) => setTimeout(r, 1000));
       pintarTeclado();
-      if (partida.terminou) mostrarFim();
+      if (partida.terminou) mostrarFim(true);
     } catch (erro) {
       Jogos.avisar(aviso, erro.message);
       tremerFileira();
@@ -139,16 +139,16 @@
   function textoParaCompartilhar() {
     const n = partida.venceu ? partida.tentativas.length : "X";
     const linhas = partida.tentativas.map((t) => t.resultado.map((r) => BLOCO[r]).join("")).join("\n");
-    return `Termo Interactiano #${partida.dia} - ${n}/${MAX}\n${linhas}\nDistrito ${Jogos.jogador.distrito} - ${location.origin}/termo`;
+    return `Termo Interactiano #${partida.dia} - ${n}/${MAX}\n${linhas}\nDistrito ${Jogos.jogador.distrito} - ${location.origin}/jogos/termo`;
   }
 
-  function mostrarFim() {
+  function mostrarFim(recemTerminou) {
     const n = partida.tentativas.length;
     $("#titulo-fim").textContent = !partida.venceu ? "Hoje não foi." : n === 1 ? "De primeira." : n <= 3 ? "Mandou bem." : n <= 5 ? "Fechou." : "Na última.";
     $("#fim-palavra").textContent = partida.mostra;
     $("#fim-dica").textContent = partida.dica;
     $("#fim-pontos").textContent = `O trem do distrito ${Jogos.jogador.distrito} andou ${partida.pontos} km.`;
-    Jogos.mostrarResultado();
+    Jogos.mostrarResultado(recemTerminou);
   }
 
   $("#btn-compartilhar").addEventListener("click", () => Jogos.compartilhar($("#btn-compartilhar"), textoParaCompartilhar()));

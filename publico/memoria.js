@@ -103,7 +103,7 @@
             const dados = await Jogos.api(`/api/memoria/partida?jogador=${encodeURIComponent(Jogos.jogador.id)}`);
             $("#btn-treino").hidden = false;
             $("#nota").textContent = "";
-            mostrarFim(dados.tempos);
+            mostrarFim(dados.tempos, true);
           }
         } else {
           carta.classList.add("errou"); outra.classList.add("errou");
@@ -167,7 +167,7 @@
 
   // ---------- fim ----------
 
-  function mostrarFim(tempos) {
+  function mostrarFim(tempos, recemTerminou) {
     const s = partida.duracaoMs / 1000;
     $("#titulo-fim").textContent = s <= 30 ? "Rápido demais" : s <= 60 ? "Boa memória" : "Fechou";
     $("#fim-pontos").textContent = `${formatarTempo(partida.duracaoMs)} em ${partida.tentativas} jogadas. O trem do distrito ${Jogos.jogador.distrito} andou ${partida.pontos} km.`;
@@ -175,11 +175,11 @@
       const eu = t.nome === Jogos.jogador.nome && t.distrito === Jogos.jogador.distrito ? ' class="eu-linha"' : "";
       return `<li${eu}><span class="pos">${i + 1}</span><span>${Jogos.esc(t.nome)} <span class="mudo">D. ${t.distrito}</span></span><span class="t">${formatarTempo(t.duracaoMs)}</span></li>`;
     }).join("") || `<li><span class="pos">-</span><span class="mudo">Você foi o primeiro de hoje.</span><span></span></li>`;
-    Jogos.mostrarResultado();
+    Jogos.mostrarResultado(recemTerminou);
   }
 
   $("#btn-compartilhar").addEventListener("click", () => {
-    Jogos.compartilhar($("#btn-compartilhar"), `Memória das Raízes #${partida.dia} - ${formatarTempo(partida.duracaoMs)} em ${partida.tentativas} jogadas\nDistrito ${Jogos.jogador.distrito} - ${location.origin}/memoria`);
+    Jogos.compartilhar($("#btn-compartilhar"), `Memória das Raízes #${partida.dia} - ${formatarTempo(partida.duracaoMs)} em ${partida.tentativas} jogadas\nDistrito ${Jogos.jogador.distrito} - ${location.origin}/jogos/memoria`);
   });
 
   $("#btn-treino").addEventListener("click", comecarTreino);

@@ -9,6 +9,7 @@
 
   let partida = null;
   let travado = false;
+  let acabouAgora = false;
   let contagemLigada = false;
 
   async function carregar() {
@@ -94,6 +95,7 @@
       $("#veredito").textContent = r.certo ? "Acertou." : "Não foi dessa vez.";
       $("#veredito").className = `veredito ${r.certo ? "certo" : "errado"}`;
       partida = nova;
+      acabouAgora = nova.terminou;
       desenharProgresso();
       await new Promise((res) => setTimeout(res, 1700));
       desenhar();
@@ -114,13 +116,14 @@
       partida.respostas
         .map((r) => `<tr class="${r.certo ? "" : "eu-linha"}"><td>${Jogos.esc(r.a.t)}<span class="sub">ou ${Jogos.esc(r.b.t)}</span></td><td class="num">${formatar(r.a.n)}</td><td class="num">${formatar(r.b.n)}</td></tr>`)
         .join("");
-    Jogos.mostrarResultado();
+    Jogos.mostrarResultado(acabouAgora);
+    acabouAgora = false;
   }
 
   $("#btn-compartilhar").addEventListener("click", () => {
     const acertos = partida.respostas.filter((r) => r.certo).length;
     const trilha = partida.respostas.map((r) => (r.certo ? "▓" : "░")).join("");
-    Jogos.compartilhar($("#btn-compartilhar"), `Mais ou Menos do Censo #${partida.dia} - ${acertos}/${partida.total}\n${trilha}\nDistrito ${Jogos.jogador.distrito} - ${location.origin}/censo`);
+    Jogos.compartilhar($("#btn-compartilhar"), `Mais ou Menos do Censo #${partida.dia} - ${acertos}/${partida.total}\n${trilha}\nDistrito ${Jogos.jogador.distrito} - ${location.origin}/jogos/censo`);
   });
 
   $("#opcao-a").addEventListener("click", () => responder("a"));

@@ -4,7 +4,9 @@
 // contagem para o dia virar.
 //
 // Expõe window.Jogos = { api, jogador, garantirJogador, abrirEntrada,
-// montarRanking, atualizarRanking, icone, contagem, esc, avisar, revelar }.
+// montarRanking, atualizarRanking, mostrarResultado, compartilhar, icone,
+// contagem, esc, avisar, revelar }. Quando uma partida termina, o resultado
+// aparece na lateral e um convite para seguir o clube no Instagram abre.
 // Cada jogo usa o que precisa.
 
 window.Jogos = (() => {
@@ -72,6 +74,18 @@ window.Jogos = (() => {
           </label>
           <p class="erro" id="erro-entrar"></p>
           <button class="botao primario" type="submit">Entrar</button>
+        </form>
+      </dialog>
+      <dialog id="dlg-instagram" class="instagram" closedby="any" aria-labelledby="titulo-instagram">
+        <form method="dialog">
+          <div class="selo-ig" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.8"/><circle cx="17.3" cy="6.7" r="0.9" fill="currentColor" stroke="none"/></svg></div>
+          <h2 id="titulo-instagram" class="placa">Siga o Interact de Campo Grande</h2>
+          <p class="mudo">Os jogos são do Interact Club de Campo Grande Universitário. Acompanhe os projetos do clube no Instagram.</p>
+          <p class="arroba">@interactcg</p>
+          <div class="acoes">
+            <a class="botao primario" href="https://www.instagram.com/interactcg" target="_blank" rel="noopener">Seguir no Instagram</a>
+            <button class="botao discreto" type="submit">Agora não</button>
+          </div>
         </form>
       </dialog>`;
     document.body.append(...molde.children);
@@ -243,15 +257,26 @@ window.Jogos = (() => {
   // a lateral fica embaixo do jogo, então rola até ela — só quando a partida
   // acabou de terminar, não ao abrir a página de uma partida já fechada.
 
-  function mostrarResultado() {
+  // `recemTerminou` é true quando a partida acabou agora (não ao abrir a
+  // página de uma partida já fechada): aí rola até o resultado e, logo
+  // depois, convida a seguir o clube no Instagram.
+
+  function mostrarResultado(recemTerminou) {
     const caixa = $("#resultado");
     if (!caixa) return;
-    const primeiraVez = caixa.hidden;
     caixa.hidden = false;
     atualizarRanking();
-    if (primeiraVez && performance.now() > 4000 && !matchMedia("(min-width: 900px)").matches) {
+    if (!recemTerminou) return;
+    if (!matchMedia("(min-width: 900px)").matches) {
       setTimeout(() => caixa.scrollIntoView({ behavior: "smooth", block: "start" }), 250);
     }
+    setTimeout(convidarInstagram, 1600);
+  }
+
+  function convidarInstagram() {
+    const dlg = $("#dlg-instagram");
+    if (!dlg || dlg.open || document.querySelector("dialog[open]")) return;
+    dlg.showModal();
   }
 
   // ---------- compartilhar ----------
