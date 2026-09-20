@@ -1,5 +1,5 @@
 // Termo Interactiano — lado do navegador. O servidor sabe a palavra e
-// avalia cada palpite; aqui só tem grade, teclado e a tela de fim.
+// avalia cada palpite; aqui só tem grade, teclado e o resultado na lateral.
 
 (() => {
   const MAX = 6;
@@ -8,7 +8,6 @@
   const teclado = $("#teclado");
   const aviso = $("#aviso");
   const dlgAjuda = $("#dlg-ajuda");
-  const dlgFim = $("#dlg-fim");
 
   let partida = null;
   let atual = "";
@@ -148,27 +147,11 @@
     $("#titulo-fim").textContent = !partida.venceu ? "Hoje não foi." : n === 1 ? "De primeira." : n <= 3 ? "Mandou bem." : n <= 5 ? "Fechou." : "Na última.";
     $("#fim-palavra").textContent = partida.mostra;
     $("#fim-dica").textContent = partida.dica;
-    $("#fim-pontos").textContent = `+${partida.pontos} km para o trem do distrito ${Jogos.jogador.distrito}`;
-    if (!dlgFim.open) dlgFim.showModal();
+    $("#fim-pontos").textContent = `O trem do distrito ${Jogos.jogador.distrito} andou ${partida.pontos} km.`;
+    Jogos.mostrarResultado();
   }
 
-  $("#btn-compartilhar").addEventListener("click", async () => {
-    const texto = textoParaCompartilhar();
-    const botao = $("#btn-compartilhar");
-    try {
-      if (navigator.share) { await navigator.share({ text: texto }); return; }
-      await navigator.clipboard.writeText(texto);
-    } catch {
-      const area = document.createElement("textarea");
-      area.value = texto; document.body.appendChild(area); area.select();
-      try { document.execCommand("copy"); } catch { /* nada */ }
-      area.remove();
-    }
-    botao.textContent = "Copiado. Cola no grupo";
-    setTimeout(() => { botao.textContent = "Mandar no grupo"; }, 2500);
-  });
-
-  $("#btn-ver-placar").addEventListener("click", () => { dlgFim.close(); Jogos.abrirPlacar("termo"); });
+  $("#btn-compartilhar").addEventListener("click", () => Jogos.compartilhar($("#btn-compartilhar"), textoParaCompartilhar()));
   $("#btn-ajuda").addEventListener("click", () => dlgAjuda.showModal());
 
   // ---------- início ----------

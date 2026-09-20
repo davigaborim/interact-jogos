@@ -10,57 +10,60 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,600..800&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="estilo.css?v=11">
+  <link rel="stylesheet" href="estilo.css?v=12">
 </head>
 <body data-jogo="censo">
   <header class="topo">
     <a class="marca" href="/"><img src="icone.svg" alt="">Jogos do Interact</a>
     <button class="acao" type="button" id="btn-ajuda">Como jogar</button>
   </header>
-  <div class="contexto-pagina"><h1>Mais ou Menos</h1><span class="dia" id="numero-dia"></span></div>
 
-  <main class="jogo censo" id="jogo" hidden>
-    <div class="progresso" id="progresso" aria-label="Progresso"></div>
+  <div class="pagina">
+    <main class="jogo censo" id="jogo" hidden>
+      <div class="contexto-pagina"><h1><span class="icone" data-icone="censo"></span>Mais ou Menos</h1><span class="dia" id="numero-dia"></span></div>
+      <div class="progresso" id="progresso" aria-label="Progresso"></div>
 
-    <div class="pergunta" id="pergunta">
-      <p class="contador" id="contador"></p>
-      <h2>Qual tem mais interactianos?</h2>
-      <p class="contexto" id="contexto"></p>
-      <button class="opcao" type="button" id="opcao-a"><span class="t"></span><span class="n"></span></button>
-      <div class="ou">OU</div>
-      <button class="opcao" type="button" id="opcao-b"><span class="t"></span><span class="n"></span></button>
-      <p class="veredito" id="veredito"></p>
-    </div>
+      <div class="pergunta" id="pergunta">
+        <p class="contador" id="contador"></p>
+        <h2>Qual tem mais interactianos?</h2>
+        <p class="contexto" id="contexto"></p>
+        <button class="opcao" type="button" id="opcao-a"><span class="t"></span><span class="n"></span></button>
+        <div class="ou">OU</div>
+        <button class="opcao" type="button" id="opcao-b"><span class="t"></span><span class="n"></span></button>
+        <p class="veredito" id="veredito"></p>
+      </div>
 
-    <p class="aviso" id="aviso" role="status" aria-live="polite"></p>
-    <p class="fonte" id="fonte"></p>
-  </main>
+      <p class="aviso" id="aviso" role="status" aria-live="polite"></p>
+      <p class="fonte" id="fonte"></p>
+    </main>
+
+    <aside class="lateral">
+      <section class="resultado" id="resultado" hidden aria-live="polite">
+        <h2 id="titulo-fim"></h2>
+        <p class="pontos" id="fim-pontos"></p>
+        <div class="tabela-caixa"><table class="tabela" id="tabela-respostas"></table></div>
+        <div class="acoes">
+          <button class="botao primario" type="button" id="btn-compartilhar">Mandar no grupo</button>
+          <a class="botao" href="/#trem">Ver o trem</a>
+        </div>
+        <p class="mudo">Próximas perguntas em <span id="contagem"></span>.</p>
+      </section>
+      <div data-ranking data-ranking-jogo="censo"></div>
+    </aside>
+  </div>
 
   <dialog id="dlg-ajuda" closedby="any" aria-labelledby="titulo-ajuda">
     <form method="dialog">
       <h2 id="titulo-ajuda">Como jogar</h2>
       <p>Todo número aqui é de verdade: vem do <strong>Censo Nacional Interactiano 2023-24</strong>, que 4.864 interactianos de 31 distritos responderam.</p>
       <p>Aparecem dois grupos. Toque no que você acha que tem <strong>mais interactianos</strong>. Os dois números aparecem na hora.</p>
-      <p>São <strong>dez</strong> por dia, um ponto por acerto. Cada ponto é um quilômetro para o trem do seu distrito.</p>
+      <p>São <strong>dez</strong> por dia. Cada acerto faz o trem do seu distrito andar.</p>
       <p class="mudo">Perguntas novas toda meia-noite, horário de Brasília.</p>
       <button class="botao primario" type="submit">Entendi</button>
     </form>
   </dialog>
 
-  <dialog id="dlg-fim" closedby="any" aria-labelledby="titulo-fim">
-    <form method="dialog">
-      <h2 id="titulo-fim"></h2>
-      <p class="pontos" id="fim-pontos"></p>
-      <div class="tabela-caixa"><table class="tabela" id="tabela-respostas"></table></div>
-      <div class="acoes">
-        <button class="botao primario" type="button" id="btn-compartilhar">Mandar no grupo</button>
-        <button class="botao" type="button" id="btn-ver-placar">Ver placar</button>
-      </div>
-      <p class="mudo">Próximas perguntas em <span id="contagem"></span>. <a href="/">Ver a corrida</a></p>
-    </form>
-  </dialog>
-
-  <script src="comum.js?v=11"></script>
-  <script src="censo.js?v=11"></script>
+  <script src="comum.js?v=12"></script>
+  <script src="censo.js?v=12"></script>
 </body>
 </html>

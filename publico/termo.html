@@ -4,26 +4,43 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Termo Interactiano</title>
-  <meta name="description" content="Uma palavra do Interact por dia. Seis tentativas. Placar por distrito.">
+  <meta name="description" content="Uma palavra do Interact por dia. Seis tentativas. Ranking por distrito.">
   <meta name="theme-color" content="#0b1d3f">
   <link rel="icon" href="icone.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,600..800&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="estilo.css?v=11">
+  <link rel="stylesheet" href="estilo.css?v=12">
 </head>
 <body data-jogo="termo">
   <header class="topo">
     <a class="marca" href="/"><img src="icone.svg" alt="">Jogos do Interact</a>
     <button class="acao" type="button" id="btn-ajuda">Como jogar</button>
   </header>
-  <div class="contexto-pagina"><h1>Termo</h1><span class="dia" id="numero-dia"></span></div>
 
-  <main class="jogo termo" id="jogo" hidden>
-    <p class="aviso" id="aviso" role="status" aria-live="polite"></p>
-    <div class="grade" id="grade" aria-label="Tentativas"></div>
-    <div class="teclado" id="teclado" aria-label="Teclado"></div>
-  </main>
+  <div class="pagina">
+    <main class="jogo termo" id="jogo" hidden>
+      <div class="contexto-pagina"><h1><span class="icone" data-icone="termo"></span>Termo</h1><span class="dia" id="numero-dia"></span></div>
+      <p class="aviso" id="aviso" role="status" aria-live="polite"></p>
+      <div class="grade" id="grade" aria-label="Tentativas"></div>
+      <div class="teclado" id="teclado" aria-label="Teclado"></div>
+    </main>
+
+    <aside class="lateral">
+      <section class="resultado" id="resultado" hidden aria-live="polite">
+        <h2 id="titulo-fim"></h2>
+        <p class="palavra-revelada" id="fim-palavra"></p>
+        <p class="dica" id="fim-dica"></p>
+        <p class="pontos" id="fim-pontos"></p>
+        <div class="acoes">
+          <button class="botao primario" type="button" id="btn-compartilhar">Mandar no grupo</button>
+          <a class="botao" href="/#trem">Ver o trem</a>
+        </div>
+        <p class="mudo">Próxima palavra em <span id="contagem"></span>.</p>
+      </section>
+      <div data-ranking data-ranking-jogo="termo"></div>
+    </aside>
+  </div>
 
   <dialog id="dlg-ajuda" closedby="any" aria-labelledby="titulo-ajuda">
     <form method="dialog">
@@ -38,27 +55,13 @@
         <p><strong>Cinza</strong>: essa letra não está na palavra.</p>
       </div>
       <p>Acentos não contam: <em>PÓLIO</em> se escreve <code>POLIO</code>. Qualquer palavra do dicionário vale como palpite.</p>
-      <p><strong>Pontos:</strong> 10, 8, 6, 5, 4 ou 3 conforme a tentativa em que você acerta. Errou as seis? Ganha 1 por ter jogado. Cada ponto é um quilômetro para o trem do seu <strong>distrito</strong>.</p>
+      <p>Quanto antes acertar, mais o trem do seu <strong>distrito</strong> anda. Errou as seis? O trem anda um pouquinho mesmo assim.</p>
       <p class="mudo">Palavra nova toda meia-noite, horário de Brasília.</p>
       <button class="botao primario" type="submit">Entendi</button>
     </form>
   </dialog>
 
-  <dialog id="dlg-fim" closedby="any" aria-labelledby="titulo-fim">
-    <form method="dialog">
-      <h2 id="titulo-fim"></h2>
-      <p class="palavra-revelada"><span id="fim-palavra"></span></p>
-      <p class="dica" id="fim-dica"></p>
-      <p class="pontos" id="fim-pontos"></p>
-      <div class="acoes">
-        <button class="botao primario" type="button" id="btn-compartilhar">Mandar no grupo</button>
-        <button class="botao" type="button" id="btn-ver-placar">Ver placar</button>
-      </div>
-      <p class="mudo">Próxima palavra em <span id="contagem"></span>. <a href="/">Ver a corrida</a></p>
-    </form>
-  </dialog>
-
-  <script src="comum.js?v=11"></script>
-  <script src="termo.js?v=11"></script>
+  <script src="comum.js?v=12"></script>
+  <script src="termo.js?v=12"></script>
 </body>
 </html>

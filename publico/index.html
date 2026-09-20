@@ -4,75 +4,118 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Jogos do Interact</title>
-  <meta name="description" content="A corrida dos 31 distritos rumo à COMIC Nossas Raízes. Cada ponto é um quilômetro.">
+  <meta name="description" content="Um jogo por dia para o Interact brasileiro. Cada partida puxa o trem do seu distrito rumo à COMIC Nossas Raízes.">
   <meta name="theme-color" content="#0b1d3f">
   <meta property="og:title" content="Jogos do Interact">
-  <meta property="og:description" content="Cada ponto é um quilômetro. Qual distrito chega primeiro em Sarzedo?">
+  <meta property="og:description" content="Um jogo por dia. Qual distrito chega primeiro em Sarzedo?">
   <link rel="icon" href="icone.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,600..800&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="estilo.css?v=11">
+  <link rel="stylesheet" href="estilo.css?v=12">
 </head>
 <body>
   <header class="topo">
     <a class="marca" href="/"><img src="icone.svg" alt="">Jogos do Interact</a>
-    <button class="acao" type="button" data-abrir-placar>Placar</button>
+    <button class="acao quem" type="button" id="btn-quem"><i></i><b id="quem-nome">Entrar</b></button>
   </header>
 
-  <section class="painel" aria-labelledby="titulo-corrida">
+  <section class="abertura" id="jogos" aria-labelledby="titulo-jogos">
+    <canvas id="bolinhas" aria-hidden="true"></canvas>
     <div class="miolo">
-      <p class="eyebrow">Trem das Raízes · XXVI COMIC</p>
-      <h1 id="titulo-corrida">Rumo a <span class="onda">Sarzedo</span></h1>
-      <p class="sub">Cada ponto é um quilômetro. Chegada: 14 de janeiro de 2027.</p>
-      <div class="numeros">
-        <span><b id="n-km">0</b>km rodados</span>
-        <span><b id="n-jogadores">0</b>interactianos</span>
-        <span><b id="n-distritos">0</b>distritos</span>
-      </div>
-      <div class="estacoes" id="estacoes"></div>
-      <ol class="corrida" id="corrida"><li class="vazio">Carregando a corrida</li></ol>
-      <div class="cta">
-        <button class="pill claro" type="button" id="btn-todos" hidden>Ver os 31 distritos</button>
-        <a class="pill ouro" href="https://www.e-inscricao.com/comicnossasraizes/inscricoes" target="_blank" rel="noopener">Garantir inscrição</a>
+      <p class="eyebrow">Interact Brasil · um jogo por dia</p>
+      <h1 id="titulo-jogos">Jogos do <span class="onda">Interact</span></h1>
+      <p class="sub">Toda meia-noite tem jogo novo. Cada partida puxa o trem do seu distrito.</p>
+
+      <div class="jogos">
+        <a class="jogo-cartao" href="/termo" data-jogo="termo">
+          <span class="marca-feito" aria-hidden="true"></span>
+          <span class="icone" data-icone="termo"></span>
+          <h3>Termo</h3>
+          <span class="estado jogar">Jogar</span>
+        </a>
+        <a class="jogo-cartao" href="/censo" data-jogo="censo">
+          <span class="marca-feito" aria-hidden="true"></span>
+          <span class="icone" data-icone="censo"></span>
+          <h3>Mais ou Menos</h3>
+          <span class="estado jogar">Jogar</span>
+        </a>
+        <a class="jogo-cartao" href="/memoria" data-jogo="memoria">
+          <span class="marca-feito" aria-hidden="true"></span>
+          <span class="icone" data-icone="memoria"></span>
+          <h3>Memória</h3>
+          <span class="estado jogar">Jogar</span>
+        </a>
+        <a class="jogo-cartao" href="/vagalumes" data-jogo="vagalumes">
+          <span class="marca-feito" aria-hidden="true"></span>
+          <span class="icone" data-icone="vagalumes"></span>
+          <h3>Vagalumes</h3>
+          <span class="estado jogar">Acender</span>
+        </a>
       </div>
     </div>
   </section>
 
-  <main class="hub">
-    <div class="meu-trem" id="meu-trem" hidden>
-      <div class="posicao" id="meu-pos">-</div>
-      <div class="texto"><strong id="meu-nome"></strong><span id="meu-detalhe"></span></div>
-      <button type="button" id="btn-eu">Trocar</button>
+  <div class="faixa" aria-hidden="true"><div id="faixa-texto"></div></div>
+
+  <section class="painel" id="trem" aria-labelledby="titulo-corrida">
+    <div class="miolo">
+      <div>
+        <p class="eyebrow revelar">Trem das Raízes · XXVI COMIC</p>
+        <h2 class="titulo revelar" id="titulo-corrida" data-atraso="1">Rumo a <span class="onda">Sarzedo</span></h2>
+        <p class="sub revelar" data-atraso="2">Cada ponto é um quilômetro. Chegada: 14 de janeiro de 2027.</p>
+        <div class="numeros revelar" data-atraso="3">
+          <span><b id="n-km" data-conta>0</b>km rodados</span>
+          <span><b id="n-jogadores" data-conta>0</b>interactianos</span>
+          <span><b id="n-distritos" data-conta>0</b>distritos</span>
+        </div>
+        <div class="estacoes" id="estacoes"></div>
+        <ol class="corrida" id="corrida"><li class="vazio">Carregando a corrida</li></ol>
+        <div class="cta">
+          <button class="pill claro" type="button" id="btn-todos" hidden>Ver os 31 distritos</button>
+          <a class="pill ouro" href="https://www.e-inscricao.com/comicnossasraizes/inscricoes" target="_blank" rel="noopener">Garantir inscrição</a>
+        </div>
+      </div>
+      <aside class="lateral escuro">
+        <div class="meu-trem revelar" id="meu-trem" hidden>
+          <div class="posicao" id="meu-pos">-</div>
+          <div class="texto"><strong id="meu-nome"></strong><span id="meu-detalhe"></span></div>
+          <button type="button" id="btn-eu">Trocar</button>
+        </div>
+        <div class="revelar" data-atraso="1" data-ranking data-ranking-grupo="jogadores"></div>
+      </aside>
     </div>
+  </section>
 
-    <h2 class="secao">Jogos de hoje</h2>
-    <div class="cartoes duplo">
-      <a class="cartao" href="/termo" data-jogo="termo"><h3>Termo <small>até 10 km</small></h3><span class="estado jogar">Jogar</span></a>
-      <a class="cartao" href="/censo" data-jogo="censo"><h3>Mais ou Menos <small>até 10 km</small></h3><span class="estado jogar">Jogar</span></a>
-      <a class="cartao" href="/memoria" data-jogo="memoria"><h3>Memória <small>até 10 km</small></h3><span class="estado jogar">Jogar</span></a>
-      <a class="cartao" href="/vagalumes" data-jogo="vagalumes"><h3>Vagalumes <small>Semana Mundial</small></h3><span class="estado jogar">Acender</span></a>
+  <main class="chao">
+    <div class="miolo">
+      <div class="treino-grade">
+        <div>
+          <h2 class="secao revelar">Treino<small>não vale ponto</small></h2>
+          <a class="cartao-treino revelar" data-atraso="1" href="/oratoria">
+            <span class="icone" data-icone="oratoria"></span>
+            <h3>Oratória</h3>
+            <span class="estado">Treinar</span>
+          </a>
+        </div>
+        <div>
+          <h2 class="secao revelar">Na fila<small>os próximos jogos</small></h2>
+          <ul class="fila revelar" data-atraso="1">
+            <li>Monta a Mesa</li><li>De Que Distrito É?</li><li>Lema Certo</li><li>Bingo da COMIC</li>
+          </ul>
+        </div>
+      </div>
+
+      <footer class="rodape">
+        <span>Feito por Davi Gaborim</span>
+        <a href="https://velocg.com.br" target="_blank" rel="noopener">Quer seu próprio site? velocg.com.br</a>
+        <a href="https://www.instagram.com/interactcg" target="_blank" rel="noopener">@interactcg</a>
+        <span class="mono" id="contagem-linha">O dia vira em <span id="contagem"></span></span>
+      </footer>
     </div>
-
-    <h2 class="secao">Treino</h2>
-    <div class="cartoes">
-      <a class="cartao treino" href="/oratoria"><h3>Oratória <small>não vale ponto</small></h3><span class="estado">Treinar</span></a>
-    </div>
-
-    <h2 class="secao">Na fila</h2>
-    <ul class="fila">
-      <li>Monta a Mesa</li><li>De Que Distrito É?</li><li>Lema Certo</li><li>Bingo da COMIC</li>
-    </ul>
-
-    <footer class="rodape">
-      <span>Feito por Davi Gaborim</span>
-      <a href="https://velocg.com.br" target="_blank" rel="noopener">Quer seu próprio site? velocg.com.br</a>
-      <a href="https://www.instagram.com/interactcg" target="_blank" rel="noopener">@interactcg</a>
-      <span class="mono" id="contagem-linha">O dia vira em <span id="contagem"></span></span>
-    </footer>
   </main>
 
-  <script src="comum.js?v=11"></script>
-  <script src="hub.js?v=11"></script>
+  <script src="comum.js?v=12"></script>
+  <script src="hub.js?v=12"></script>
 </body>
 </html>

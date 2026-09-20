@@ -4,7 +4,6 @@
 (() => {
   const $ = (sel) => document.querySelector(sel);
   const aviso = $("#aviso");
-  const dlgFim = $("#dlg-fim");
   const formatar = (n) => n.toLocaleString("pt-BR");
   const reduzido = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -109,31 +108,23 @@
   function mostrarFim() {
     const acertos = partida.respostas.filter((r) => r.certo).length;
     $("#titulo-fim").textContent = acertos === partida.total ? "Dez de dez" : acertos >= 7 ? "Conhece o Interact" : acertos >= 5 ? "Metade pra cima" : "O censo surpreende";
-    $("#fim-pontos").textContent = `${acertos} de ${partida.total}. +${partida.pontos} km para o trem do distrito ${Jogos.jogador.distrito}`;
+    $("#fim-pontos").textContent = `${acertos} de ${partida.total}. O trem do distrito ${Jogos.jogador.distrito} andou ${partida.pontos} km.`;
     $("#tabela-respostas").innerHTML =
       `<tr><th>Dupla</th><th class="num">A</th><th class="num">B</th></tr>` +
       partida.respostas
         .map((r) => `<tr class="${r.certo ? "" : "eu-linha"}"><td>${Jogos.esc(r.a.t)}<span class="sub">ou ${Jogos.esc(r.b.t)}</span></td><td class="num">${formatar(r.a.n)}</td><td class="num">${formatar(r.b.n)}</td></tr>`)
         .join("");
-    if (!dlgFim.open) dlgFim.showModal();
+    Jogos.mostrarResultado();
   }
 
-  $("#btn-compartilhar").addEventListener("click", async () => {
+  $("#btn-compartilhar").addEventListener("click", () => {
     const acertos = partida.respostas.filter((r) => r.certo).length;
     const trilha = partida.respostas.map((r) => (r.certo ? "▓" : "░")).join("");
-    const texto = `Mais ou Menos do Censo #${partida.dia} - ${acertos}/${partida.total}\n${trilha}\nDistrito ${Jogos.jogador.distrito} - ${location.origin}/censo`;
-    const botao = $("#btn-compartilhar");
-    try {
-      if (navigator.share) { await navigator.share({ text: texto }); return; }
-      await navigator.clipboard.writeText(texto);
-    } catch { /* clipboard bloqueado: segue */ }
-    botao.textContent = "Copiado. Cola no grupo";
-    setTimeout(() => { botao.textContent = "Mandar no grupo"; }, 2500);
+    Jogos.compartilhar($("#btn-compartilhar"), `Mais ou Menos do Censo #${partida.dia} - ${acertos}/${partida.total}\n${trilha}\nDistrito ${Jogos.jogador.distrito} - ${location.origin}/censo`);
   });
 
   $("#opcao-a").addEventListener("click", () => responder("a"));
   $("#opcao-b").addEventListener("click", () => responder("b"));
-  $("#btn-ver-placar").addEventListener("click", () => { dlgFim.close(); Jogos.abrirPlacar("censo"); });
   $("#btn-ajuda").addEventListener("click", () => $("#dlg-ajuda").showModal());
 
   Jogos.garantirJogador(async (jogador, dados) => {

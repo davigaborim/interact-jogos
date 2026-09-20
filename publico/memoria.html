@@ -4,58 +4,61 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Memória das Raízes</title>
-  <meta name="description" content="Jogo da memória 4x4 com termos do Interact. Placar por tempo.">
+  <meta name="description" content="Jogo da memória 4x4 com termos do Interact. Ranking por tempo.">
   <meta name="theme-color" content="#0b1d3f">
   <link rel="icon" href="icone.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,600..800&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="estilo.css?v=11">
+  <link rel="stylesheet" href="estilo.css?v=12">
 </head>
 <body data-jogo="memoria">
   <header class="topo">
     <a class="marca" href="/"><img src="icone.svg" alt="">Jogos do Interact</a>
     <button class="acao" type="button" id="btn-ajuda">Como jogar</button>
   </header>
-  <div class="contexto-pagina"><h1>Memória</h1><span class="dia" id="numero-dia"></span></div>
 
-  <main class="jogo memoria" id="jogo" hidden>
-    <div class="placar-vivo">
-      <span>Tempo<b id="tempo" class="mono">0:00</b></span>
-      <span>Pares<b id="pares" class="mono">0/8</b></span>
-      <span>Jogadas<b id="jogadas" class="mono">0</b></span>
-    </div>
-    <div class="tabuleiro" id="tabuleiro" aria-label="Tabuleiro"></div>
-    <p class="aviso" id="aviso" role="status" aria-live="polite"></p>
-    <p class="nota" id="nota"></p>
-    <button class="pill" type="button" id="btn-treino" hidden>Jogar de novo, sem pontos</button>
-  </main>
+  <div class="pagina">
+    <main class="jogo memoria" id="jogo" hidden>
+      <div class="contexto-pagina"><h1><span class="icone" data-icone="memoria"></span>Memória</h1><span class="dia" id="numero-dia"></span></div>
+      <div class="placar-vivo">
+        <span>Tempo<b id="tempo" class="mono">0:00</b></span>
+        <span>Pares<b id="pares" class="mono">0/8</b></span>
+        <span>Jogadas<b id="jogadas" class="mono">0</b></span>
+      </div>
+      <div class="tabuleiro" id="tabuleiro" aria-label="Tabuleiro"></div>
+      <p class="aviso" id="aviso" role="status" aria-live="polite"></p>
+      <p class="nota" id="nota"></p>
+      <button class="pill" type="button" id="btn-treino" hidden>Jogar de novo, sem pontos</button>
+    </main>
+
+    <aside class="lateral">
+      <section class="resultado" id="resultado" hidden aria-live="polite">
+        <h2 id="titulo-fim"></h2>
+        <p class="pontos" id="fim-pontos"></p>
+        <p class="mudo">Melhores tempos de hoje</p>
+        <ol class="tempos" id="tempos"></ol>
+        <div class="acoes">
+          <button class="botao primario" type="button" id="btn-compartilhar">Mandar no grupo</button>
+          <a class="botao" href="/#trem">Ver o trem</a>
+        </div>
+        <p class="mudo">Nova partida que vale em <span id="contagem"></span>.</p>
+      </section>
+      <div data-ranking data-ranking-jogo="memoria"></div>
+    </aside>
+  </div>
 
   <dialog id="dlg-ajuda" closedby="any" aria-labelledby="titulo-ajuda">
     <form method="dialog">
       <h2 id="titulo-ajuda">Como jogar</h2>
       <p>Dezesseis cartas, oito pares de termos do Interact. Vire duas por vez; par certo fica aberto.</p>
-      <p>O relógio começa na primeira carta. Até 30 segundos vale 10 km; depois perde 1 km a cada 8 segundos, até o mínimo de 2.</p>
+      <p>O relógio começa na primeira carta. Quanto mais rápido, mais o trem do seu distrito anda.</p>
       <p>A ordem das cartas é sorteada a cada partida. Conta uma por dia; o resto é treino.</p>
       <button class="botao primario" type="submit">Entendi</button>
     </form>
   </dialog>
 
-  <dialog id="dlg-fim" closedby="any" aria-labelledby="titulo-fim">
-    <form method="dialog">
-      <h2 id="titulo-fim"></h2>
-      <p class="pontos" id="fim-pontos"></p>
-      <p class="mudo">Melhores tempos de hoje</p>
-      <ol class="tempos" id="tempos"></ol>
-      <div class="acoes">
-        <button class="botao primario" type="button" id="btn-compartilhar">Mandar no grupo</button>
-        <button class="botao" type="button" id="btn-ver-placar">Ver placar</button>
-      </div>
-      <p class="mudo">Nova partida que vale em <span id="contagem"></span>. <a href="/">Ver a corrida</a></p>
-    </form>
-  </dialog>
-
-  <script src="comum.js?v=11"></script>
-  <script src="memoria.js?v=11"></script>
+  <script src="comum.js?v=12"></script>
+  <script src="memoria.js?v=12"></script>
 </body>
 </html>

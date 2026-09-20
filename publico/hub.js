@@ -1,9 +1,12 @@
-// O hub: a corrida dos distritos (Trem das Raízes), o cartão do seu trem e o
-// estado dos jogos de hoje.
+// O hub: os jogos de hoje (com o estado de cada um), a corrida dos distritos
+// (Trem das Raízes) com o seu trem e o ranking do lado, e o treino. Mais o
+// que dá vida à página: as bolinhas que fogem do dedo, os cartões que
+// inclinam, os números que contam.
 
 (() => {
   const $ = (s) => document.querySelector(s);
   const formatar = (n) => n.toLocaleString("pt-BR");
+  const reduzido = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const LINHAS_VISIVEIS = 8;
 
   // Locomotiva em SVG: 30 x 20. Branca; a do líder ganha farol dourado via CSS.
@@ -19,6 +22,135 @@
 
   let corrida = null;
   let mostrandoTodos = false;
+
+  // ---------- bolinhas na abertura ----------
+  // Pontos nas cores do Interact flutuando devagar; perto do dedo ou do
+  // mouse eles se afastam, e voltam quando ele sai.
+
+  function bolinhas() {
+    const canvas = $("#bolinhas");
+    const secao = canvas.parentElement;
+    const ctx = canvas.getContext("2d");
+    const CORES = ["0,162,224", "0,103,200", "247,168,27", "255,255,255"];
+    let pontos = [];
+    let largura = 0, altura = 0, dpr = 1;
+    const dedo = { x: -9999, y: -9999, ativo: false };
+
+    function medir() {
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      largura = secao.clientWidth; altura = secao.clientHeight;
+      canvas.width = largura * dpr; canvas.height = altura * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const alvo = Math.round((largura * altura) / 14000);
+      while (pontos.length < alvo) pontos.push(novoPonto(true));
+      pontos.length = Math.min(pontos.length, alvo);
+    }
+
+    function novoPonto(qualquerLugar) {
+      const r = 1.2 + Math.random() * 2.6;
+      return {
+        x: Math.random() * largura,
+        y: qualquerLugar ? Math.random() * altura : altura + r,
+        r,
+        vx: (Math.random() - 0.5) * 0.18,
+        vy: -(0.08 + Math.random() * 0.22),
+        cor: CORES[Math.floor(Math.random() * CORES.length)],
+        alfa: 0.25 + Math.random() * 0.45,
+        fase: Math.random() * Math.PI * 2,
+      };
+    }
+
+    function quadro(t) {
+      ctx.clearRect(0, 0, largura, altura);
+      for (const p of pontos) {
+        p.x += p.vx + Math.sin(t / 1400 + p.fase) * 0.12;
+        p.y += p.vy;
+        if (dedo.ativo) {
+          const dx = p.x - dedo.x, dy = p.y - dedo.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < 130 * 130 && d2 > 0.01) {
+            const d = Math.sqrt(d2);
+            const forca = (130 - d) / 130;
+            p.x += (dx / d) * forca * 4;
+            p.y += (dy / d) * forca * 4;
+          }
+        }
+        if (p.y < -p.r * 2 || p.x < -20 || p.x > largura + 20) Object.assign(p, novoPonto(false));
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(${p.cor},${p.alfa})`;
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      requestAnimationFrame(quadro);
+    }
+
+    function quadroParado() {
+      ctx.clearRect(0, 0, largura, altura);
+      for (const p of pontos) {
+        ctx.beginPath(); ctx.fillStyle = `rgba(${p.cor},${p.alfa})`; ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+
+    const mover = (x, y) => {
+      const r = secao.getBoundingClientRect();
+      dedo.x = x - r.left; dedo.y = y - r.top; dedo.ativo = true;
+      secao.style.setProperty("--mx", `${dedo.x}px`);
+      secao.style.setProperty("--my", `${dedo.y}px`);
+    };
+    secao.addEventListener("pointermove", (e) => mover(e.clientX, e.clientY));
+    secao.addEventListener("pointerleave", () => { dedo.ativo = false; });
+    secao.addEventListener("touchmove", (e) => mover(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+    secao.addEventListener("touchend", () => { dedo.ativo = false; });
+    window.addEventListener("resize", () => { medir(); if (reduzido) quadroParado(); });
+
+    medir();
+    if (reduzido) quadroParado(); else requestAnimationFrame(quadro);
+  }
+
+  // ---------- cartões que inclinam ----------
+
+  function inclinar() {
+    if (reduzido || !matchMedia("(hover: hover)").matches) return;
+    for (const cartao of document.querySelectorAll(".jogo-cartao")) {
+      cartao.addEventListener("pointermove", (e) => {
+        const r = cartao.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        cartao.style.setProperty("--tilt-y", `${px * 10}deg`);
+        cartao.style.setProperty("--tilt-x", `${-py * 10}deg`);
+      });
+      cartao.addEventListener("pointerleave", () => {
+        cartao.style.setProperty("--tilt-y", "0deg");
+        cartao.style.setProperty("--tilt-x", "0deg");
+      });
+    }
+  }
+
+  // ---------- números que contam ----------
+
+  function contar(el, ate) {
+    const de = Number(el.dataset.valor || 0);
+    el.dataset.valor = ate;
+    if (reduzido || de === ate) { el.textContent = formatar(ate); return; }
+    const inicio = performance.now();
+    const passo = (agora) => {
+      const t = Math.min(1, (agora - inicio) / 1100);
+      const suave = 1 - Math.pow(1 - t, 3);
+      el.textContent = formatar(Math.round(de + (ate - de) * suave));
+      if (t < 1) requestAnimationFrame(passo);
+    };
+    requestAnimationFrame(passo);
+  }
+
+  // ---------- faixa ----------
+
+  function faixa() {
+    const itens = ["Termo", "Mais ou Menos do Censo", "Memória", "Vagalumes", "Trem das Raízes", "COMIC Nossas Raízes", "Sarzedo, 14 a 17 de janeiro"];
+    const meio = itens.map((i) => `<span>${i}</span>`).join("");
+    $("#faixa-texto").innerHTML = meio + meio;
+  }
+
+  // ---------- corrida ----------
 
   function desenharEstacoes() {
     const caixa = $("#estacoes");
@@ -43,7 +175,6 @@
     } else {
       lista.innerHTML = linhas.map((l) => {
         const classes = [l.distrito === eu ? "eu" : "", l.posicao === 1 && l.km > 0 ? "lider" : "", l.chegou ? "chegou" : ""].filter(Boolean).join(" ");
-        const p = Math.min(1, l.km / corrida.totalKm);
         return `<li class="${classes}">
           <span class="nome"><span class="pos">${l.posicao}</span><span><span class="num">${l.distrito}</span>${l.onde ? `<span class="onde">${Jogos.esc(l.onde)}</span>` : ""}</span></span>
           <span class="trilho"><i></i><i></i><i></i><i></i><span class="trem" style="--p:0">${LOCOMOTIVA}</span></span>
@@ -58,9 +189,9 @@
         });
       }));
     }
-    $("#n-km").textContent = formatar(corrida.linhas.reduce((s, l) => s + l.km, 0));
-    $("#n-jogadores").textContent = formatar(corrida.totalJogadores);
-    $("#n-distritos").textContent = formatar(emMovimento);
+    contar($("#n-km"), corrida.linhas.reduce((s, l) => s + l.km, 0));
+    contar($("#n-jogadores"), corrida.totalJogadores);
+    contar($("#n-distritos"), emMovimento);
     const btn = $("#btn-todos");
     btn.hidden = corrida.linhas.length <= LINHAS_VISIVEIS || !emMovimento;
     btn.textContent = mostrandoTodos ? "Mostrar só o pelotão da frente" : "Ver os 31 distritos";
@@ -70,7 +201,9 @@
     const j = Jogos.jogador;
     if (!j || !corrida) return;
     const l = corrida.linhas.find((x) => x.distrito === j.distrito);
-    $("#meu-trem").hidden = false;
+    const caixa = $("#meu-trem");
+    caixa.hidden = false;
+    caixa.classList.add("visivel");
     $("#meu-pos").textContent = l.km > 0 ? `${l.posicao}º` : "-";
     $("#meu-nome").textContent = `${j.nome} · distrito ${j.distrito}`;
     let frase;
@@ -81,20 +214,36 @@
     $("#meu-detalhe").textContent = frase;
   }
 
+  // ---------- estado dos cartões ----------
+  // Dourado: ainda dá para jogar hoje. Azul: já jogou. Só isso.
+
+  function marcar(cartao, texto, jogado) {
+    const estado = cartao.querySelector(".estado");
+    estado.textContent = texto;
+    estado.className = `estado ${jogado ? "feito" : "jogar"}`;
+    cartao.classList.toggle("jogado", jogado);
+    cartao.querySelector(".marca-feito").innerHTML = jogado ? Jogos.icone("certo") : "";
+  }
+
   function desenharEstados(hoje) {
     for (const [jogo, r] of Object.entries(hoje)) {
-      const estado = document.querySelector(`[data-jogo="${jogo}"] .estado`);
-      if (!estado) continue;
+      const cartao = document.querySelector(`[data-jogo="${jogo}"]`);
+      if (!cartao) continue;
       if (jogo === "vagalumes") {
-        if (r.fase === "depois") { estado.textContent = "Ver o mapa"; estado.className = "estado"; }
-        else if (r.fase === "antes") { estado.textContent = r.compromisso ? "Comprometido" : "Acender"; estado.className = r.compromisso ? "estado feito" : "estado jogar"; }
-        else { estado.textContent = r.hoje ? "Aceso hoje" : "Acender hoje"; estado.className = r.hoje ? "estado feito" : "estado jogar"; }
+        if (r.fase === "depois") marcar(cartao, "Ver o mapa", false);
+        else if (r.fase === "antes") marcar(cartao, r.compromisso ? "Comprometido" : "Acender", !!r.compromisso);
+        else marcar(cartao, r.hoje ? "Aceso hoje" : "Acender", !!r.hoje);
         continue;
       }
-      if (r.terminou) { estado.textContent = `+${r.pontos} km`; estado.className = "estado feito"; }
-      else if (r.comecou) { estado.textContent = "Continuar"; estado.className = "estado jogar"; }
-      else { estado.textContent = "Jogar"; estado.className = "estado jogar"; }
+      if (r.terminou) marcar(cartao, "Jogado", true);
+      else if (r.comecou) marcar(cartao, "Continuar", false);
+      else marcar(cartao, "Jogar", false);
     }
+  }
+
+  function desenharQuem() {
+    const j = Jogos.jogador;
+    $("#quem-nome").textContent = j ? `${j.nome} · ${j.distrito}` : "Entrar";
   }
 
   async function carregarCorrida() {
@@ -106,6 +255,13 @@
 
   $("#btn-todos").addEventListener("click", () => { mostrandoTodos = !mostrandoTodos; desenharCorrida(); });
   $("#btn-eu").addEventListener("click", () => Jogos.abrirEntrada(Jogos.jogador));
+  $("#btn-quem").addEventListener("click", () => Jogos.abrirEntrada(Jogos.jogador));
+
+  // ---------- início ----------
+
+  bolinhas();
+  inclinar();
+  faixa();
 
   // A corrida aparece para todo mundo, mesmo antes de entrar.
   carregarCorrida();
@@ -113,6 +269,7 @@
   Jogos.garantirJogador(async (jogador, dados) => {
     if (!dados) dados = await Jogos.api(`/api/eu?jogador=${encodeURIComponent(jogador.id)}`);
     Jogos.contagem($("#contagem"), dados.viraEmMs, () => location.reload());
+    desenharQuem();
     desenharEstados(dados.hoje);
     if (corrida) { desenharCorrida(); desenharMeuTrem(); }
     else await carregarCorrida();

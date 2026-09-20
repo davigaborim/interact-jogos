@@ -1,20 +1,32 @@
 // O que toda página dos Jogos do Interact compartilha: quem é o jogador
 // (nome + distrito, salvo no localStorage), a chamada à API, o diálogo de
-// entrada, o placar e a contagem para o dia virar.
+// entrada, o ranking (um painel, nunca modal), os ícones dos jogos e a
+// contagem para o dia virar.
 //
-// Expõe window.Jogos = { api, jogador, entrar, garantirJogador, abrirPlacar,
-// contagem, esc, avisar }. Cada jogo usa o que precisa.
+// Expõe window.Jogos = { api, jogador, garantirJogador, abrirEntrada,
+// montarRanking, atualizarRanking, icone, contagem, esc, avisar, revelar }.
+// Cada jogo usa o que precisa.
 
 window.Jogos = (() => {
   const CHAVE_JOGADOR = "jogos-interact.jogador";
   const $ = (sel) => document.querySelector(sel);
 
   let jogador = null;
-  let placar = null;
-  let placarPeriodo = "hoje";
-  let placarGrupo = "distritos";
-  let placarJogo = document.body.dataset.jogo || "";
   let aoEntrar = () => {};
+  const rankings = [];
+
+  // ---------- ícones (SVG de linha, sem emoji) ----------
+
+  const ICONES = {
+    termo: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="7" height="10" rx="1.5"/><rect x="12.5" y="11" width="7" height="10" rx="1.5" fill="currentColor" stroke="none"/><rect x="22" y="11" width="7" height="10" rx="1.5"/></svg>`,
+    censo: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 27h24"/><rect x="6" y="17" width="5" height="8" rx="1"/><rect x="13.5" y="10" width="5" height="15" rx="1" fill="currentColor" stroke="none"/><rect x="21" y="5" width="5" height="20" rx="1"/></svg>`,
+    memoria: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="13" height="18" rx="2.5"/><rect x="15" y="7" width="13" height="18" rx="2.5" fill="currentColor" stroke="none"/><circle cx="21.5" cy="16" r="2.6" fill="#0b1d3f" stroke="none"/></svg>`,
+    vagalumes: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="16" r="4.5" fill="currentColor" stroke="none"/><path d="M16 3v4M16 25v4M3 16h4M25 16h4M6.8 6.8l2.8 2.8M22.4 22.4l2.8 2.8M25.2 6.8l-2.8 2.8M9.6 22.4l-2.8 2.8"/></svg>`,
+    oratoria: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="11.5" y="3" width="9" height="15" rx="4.5" fill="currentColor" stroke="none"/><path d="M7 14a9 9 0 0 0 18 0M16 23v5M11 28h10"/></svg>`,
+    trem: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="9" width="18" height="11" rx="2"/><path d="M22 13h4l3 4v3h-7z"/><rect x="7" y="4" width="4" height="5"/><circle cx="9" cy="24" r="2.5"/><circle cx="16" cy="24" r="2.5"/><circle cx="24" cy="24" r="2.5"/></svg>`,
+    certo: `<svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3L13 4.5"/></svg>`,
+  };
+  const icone = (nome) => ICONES[nome] || "";
 
   // ---------- rede ----------
 
@@ -41,14 +53,14 @@ window.Jogos = (() => {
     try { localStorage.setItem(CHAVE_JOGADOR, JSON.stringify(j)); } catch { /* modo anônimo, segue sem salvar */ }
   }
 
-  // Os diálogos são iguais em todas as páginas, então vêm daqui.
-  function montarDialogos() {
+  // O diálogo de entrada é igual em todas as páginas, então vem daqui.
+  function montarDialogo() {
     const molde = document.createElement("div");
     molde.innerHTML = `
       <dialog id="dlg-entrar" closedby="none" aria-labelledby="titulo-entrar">
         <form id="form-entrar" method="dialog">
           <h2 id="titulo-entrar" class="placa">Quem é você?</h2>
-          <p class="mudo">Só para você aparecer no placar e puxar o trem do seu distrito. Sem senha, sem e-mail.</p>
+          <p class="mudo">Só para você aparecer no ranking e puxar o trem do seu distrito. Sem senha, sem e-mail.</p>
           <label>Seu nome
             <input name="nome" required minlength="2" maxlength="24" autocomplete="given-name" placeholder="Como te chamam no clube">
           </label>
@@ -60,32 +72,6 @@ window.Jogos = (() => {
           </label>
           <p class="erro" id="erro-entrar"></p>
           <button class="botao primario" type="submit">Entrar</button>
-        </form>
-      </dialog>
-      <dialog id="dlg-placar" closedby="any" aria-labelledby="titulo-placar">
-        <form method="dialog">
-          <h2 id="titulo-placar" class="placa">Placar</h2>
-          <div class="abas" role="tablist">
-            <button type="button" role="tab" data-periodo="hoje" aria-selected="true">Hoje</button>
-            <button type="button" role="tab" data-periodo="geral" aria-selected="false">Geral</button>
-            <span class="separador"></span>
-            <button type="button" role="tab" data-grupo="distritos" aria-selected="true">Distritos</button>
-            <button type="button" role="tab" data-grupo="jogadores" aria-selected="false">Jogadores</button>
-            <span class="separador"></span>
-            <select id="sel-placar-jogo" aria-label="Jogo">
-              <option value="">Todos os jogos</option>
-              <option value="termo">Termo</option>
-              <option value="censo">Censo</option>
-              <option value="vagalumes">Vagalumes</option>
-              <option value="memoria">Memória</option>
-            </select>
-          </div>
-          <div class="tabela-caixa"><table class="tabela" id="tabela-placar"></table></div>
-          <p class="mudo" id="rodape-placar"></p>
-          <div class="acoes">
-            <button class="botao" type="submit">Fechar</button>
-            <button type="button" class="botao discreto" id="btn-trocar">Trocar nome ou distrito</button>
-          </div>
         </form>
       </dialog>`;
     document.body.append(...molde.children);
@@ -102,37 +88,12 @@ window.Jogos = (() => {
         });
         salvarJogador(saida.jogador);
         $("#dlg-entrar").close();
+        rankings.forEach((r) => r.desenhar());
         aoEntrar(jogador);
       } catch (erro) {
         $("#erro-entrar").textContent = erro.message;
       }
     });
-
-    for (const aba of document.querySelectorAll("#dlg-placar [role=tab]")) {
-      aba.addEventListener("click", () => {
-        if (aba.dataset.periodo) placarPeriodo = aba.dataset.periodo;
-        if (aba.dataset.grupo) placarGrupo = aba.dataset.grupo;
-        for (const outra of document.querySelectorAll("#dlg-placar [role=tab]")) {
-          if (outra.dataset.periodo) outra.setAttribute("aria-selected", outra.dataset.periodo === placarPeriodo);
-          if (outra.dataset.grupo) outra.setAttribute("aria-selected", outra.dataset.grupo === placarGrupo);
-        }
-        desenharPlacar();
-      });
-    }
-    $("#sel-placar-jogo").value = placarJogo;
-    $("#sel-placar-jogo").addEventListener("change", (e) => { placarJogo = e.target.value; carregarPlacar(); });
-    $("#btn-trocar").addEventListener("click", () => { $("#dlg-placar").close(); abrirEntrada(jogador); });
-
-    // Navegador sem closedby="any" (Safari): clique no fundo fecha.
-    if (!("closedBy" in HTMLDialogElement.prototype)) {
-      document.addEventListener("click", (evento) => {
-        const dlg = evento.target;
-        if (!(dlg instanceof HTMLDialogElement) || dlg.getAttribute("closedby") !== "any") return;
-        const r = dlg.getBoundingClientRect();
-        const dentro = r.top <= evento.clientY && evento.clientY <= r.bottom && r.left <= evento.clientX && evento.clientX <= r.right;
-        if (!dentro) dlg.close();
-      });
-    }
   }
 
   async function carregarDistritos() {
@@ -168,6 +129,7 @@ window.Jogos = (() => {
       try {
         const dados = await api(`/api/eu?jogador=${encodeURIComponent(salvo.id)}`);
         salvarJogador(dados.jogador);
+        rankings.forEach((r) => r.desenhar());
         quandoPronto(jogador, dados);
         return;
       } catch { /* id morreu (servidor zerado): pede de novo, já preenchido */ }
@@ -176,56 +138,143 @@ window.Jogos = (() => {
     abrirEntrada(salvo);
   }
 
-  // ---------- placar ----------
-
-  async function carregarPlacar() {
-    try { placar = await api(`/api/placar${placarJogo ? `?jogo=${placarJogo}` : ""}`); } catch { placar = null; }
-    if ($("#dlg-placar").open) desenharPlacar();
-  }
-
-  async function abrirPlacar(jogo) {
-    if (typeof jogo === "string") { placarJogo = jogo; $("#sel-placar-jogo").value = jogo; }
-    const dlg = $("#dlg-placar");
-    if (!dlg.open) dlg.showModal();
-    placar = null;
-    desenharPlacar();
-    await carregarPlacar();
-  }
-
   function esc(texto) {
     return String(texto).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   }
 
-  function desenharPlacar() {
-    const tabela = $("#tabela-placar");
-    if (!placar) { tabela.innerHTML = `<tr><td class="vazio">Carregando</td></tr>`; return; }
-    const lista = placar[placarPeriodo][placarGrupo];
-    const cab = placarGrupo === "distritos"
-      ? `<tr><th class="pos">#</th><th>Distrito</th><th class="num">Jog.</th><th class="num">Pontos</th></tr>`
-      : `<tr><th class="pos">#</th><th>Quem</th><th class="num">Partidas</th><th class="num">Pontos</th></tr>`;
-    if (!lista.length) {
-      tabela.innerHTML = cab + `<tr><td class="vazio" colspan="4">Ninguém ainda${placarPeriodo === "hoje" ? " hoje" : ""}. Manda o link no grupo.</td></tr>`;
-      $("#rodape-placar").textContent = "";
-      return;
-    }
-    const linhas = lista.map((item, i) => {
-      if (placarGrupo === "distritos") {
-        const eu = jogador && item.distrito === jogador.distrito ? ' class="eu-linha"' : "";
-        return `<tr${eu}><td class="pos">${i + 1}</td><td>${item.distrito}${item.onde ? `<span class="sub">${esc(item.onde)}</span>` : ""}</td><td class="num">${item.jogadores}</td><td class="num">${item.pontos}</td></tr>`;
+  // ---------- ranking ----------
+  //
+  // <div data-ranking data-ranking-jogo="termo" data-ranking-grupo="jogadores"></div>
+  // Sem data-ranking-jogo é o ranking de todos os jogos. Fica sempre
+  // visível; "Hoje/Geral" e "Interactianos/Distritos" trocam na hora.
+
+  const VISIVEIS = 10;
+
+  function criarRanking(el) {
+    const jogo = el.dataset.rankingJogo || "";
+    let periodo = "hoje";
+    let grupo = el.dataset.rankingGrupo || "jogadores";
+    let dados = null;
+
+    el.innerHTML = `
+      <section class="ranking" aria-label="Ranking">
+        <header class="ranking-cabeca">
+          <h3><i></i>Ranking</h3>
+          <div class="segmento" role="tablist" aria-label="Período">
+            <button type="button" role="tab" data-periodo="hoje" aria-selected="true">Hoje</button>
+            <button type="button" role="tab" data-periodo="geral" aria-selected="false">Geral</button>
+          </div>
+        </header>
+        <div class="segmento largo" role="tablist" aria-label="Agrupar por">
+          <button type="button" role="tab" data-grupo="jogadores" aria-selected="false">Interactianos</button>
+          <button type="button" role="tab" data-grupo="distritos" aria-selected="false">Distritos</button>
+        </div>
+        <ol class="ranking-lista"><li class="vazio">Carregando</li></ol>
+        <footer class="ranking-pe"><span class="nota"></span><button type="button" class="link" data-trocar>Trocar nome ou distrito</button></footer>
+      </section>`;
+
+    const lista = el.querySelector(".ranking-lista");
+    const nota = el.querySelector(".nota");
+
+    function marcarAbas() {
+      for (const aba of el.querySelectorAll("[role=tab]")) {
+        if (aba.dataset.periodo) aba.setAttribute("aria-selected", aba.dataset.periodo === periodo);
+        if (aba.dataset.grupo) aba.setAttribute("aria-selected", aba.dataset.grupo === grupo);
       }
-      const eu = jogador && item.id === jogador.id ? ' class="eu-linha"' : "";
-      const sub = [item.clube, `D. ${item.distrito}`].filter(Boolean).join(" - ");
-      return `<tr${eu}><td class="pos">${i + 1}</td><td>${esc(item.nome)}<span class="sub">${esc(sub)}</span></td><td class="num">${item.partidas}</td><td class="num">${item.pontos}</td></tr>`;
-    });
-    tabela.innerHTML = cab + linhas.join("");
-    $("#rodape-placar").textContent = placarGrupo === "distritos"
-      ? "Cada ponto é um quilômetro do trem. O distrito soma todo mundo: quanto mais gente, mais longe."
-      : `${placar.totalJogadores} pessoa${placar.totalJogadores === 1 ? "" : "s"} já entraram.`;
+    }
+
+    function linha(item, i, maximo) {
+      const p = maximo ? item.pontos / maximo : 0;
+      if (grupo === "distritos") {
+        const eu = jogador && item.distrito === jogador.distrito ? " eu" : "";
+        return `<li class="${eu}" style="--p:${p.toFixed(3)}"><span class="pos">${i + 1}</span><span class="quem"><b>Distrito ${item.distrito}</b><small>${item.onde ? `${esc(item.onde)} · ` : ""}${item.jogadores} ${item.jogadores === 1 ? "pessoa" : "pessoas"}</small></span><span class="pts">${item.pontos}<small>km</small></span></li>`;
+      }
+      const eu = jogador && item.id === jogador.id ? " eu" : "";
+      const sub = [item.clube, `D. ${item.distrito}`].filter(Boolean).join(" · ");
+      return `<li class="${eu}" style="--p:${p.toFixed(3)}"><span class="pos">${i + 1}</span><span class="quem"><b>${esc(item.nome)}</b><small>${esc(sub)}</small></span><span class="pts">${item.pontos}<small>km</small></span></li>`;
+    }
+
+    function desenhar() {
+      marcarAbas();
+      if (!dados) return;
+      const todos = dados[periodo][grupo];
+      if (!todos.length) {
+        lista.innerHTML = `<li class="vazio">Ninguém ainda${periodo === "hoje" ? " hoje" : ""}. Manda o link no grupo.</li>`;
+        nota.textContent = "";
+        return;
+      }
+      const maximo = todos[0].pontos;
+      const topo = todos.slice(0, VISIVEIS);
+      const html = topo.map((item, i) => linha(item, i, maximo));
+      const souEu = (item) => jogador && (grupo === "distritos" ? item.distrito === jogador.distrito : item.id === jogador.id);
+      const minha = todos.findIndex(souEu);
+      if (minha >= VISIVEIS) html.push(`<li class="salto">···</li>`, linha(todos[minha], minha, maximo));
+      lista.innerHTML = html.join("");
+      nota.textContent = grupo === "distritos"
+        ? "O distrito soma todo mundo."
+        : `${dados.totalJogadores} ${dados.totalJogadores === 1 ? "interactiano" : "interactianos"} no jogo.`;
+    }
+
+    async function carregar() {
+      try { dados = await api(`/api/placar${jogo ? `?jogo=${jogo}` : ""}`); } catch { dados = null; }
+      desenhar();
+    }
+
+    for (const aba of el.querySelectorAll("[role=tab]")) {
+      aba.addEventListener("click", () => {
+        if (aba.dataset.periodo) periodo = aba.dataset.periodo;
+        if (aba.dataset.grupo) grupo = aba.dataset.grupo;
+        desenhar();
+      });
+    }
+    el.querySelector("[data-trocar]").addEventListener("click", () => abrirEntrada(jogador));
+
+    const r = { el, carregar, desenhar };
+    rankings.push(r);
+    carregar();
+    return r;
+  }
+
+  function montarRanking(el) { return criarRanking(el); }
+  function atualizarRanking() { return Promise.all(rankings.map((r) => r.carregar())); }
+
+  // ---------- resultado (o que era o modal de fim) ----------
+  // Mostra a caixa #resultado na lateral e recarrega o ranking. No celular
+  // a lateral fica embaixo do jogo, então rola até ela — só quando a partida
+  // acabou de terminar, não ao abrir a página de uma partida já fechada.
+
+  function mostrarResultado() {
+    const caixa = $("#resultado");
+    if (!caixa) return;
+    const primeiraVez = caixa.hidden;
+    caixa.hidden = false;
+    atualizarRanking();
+    if (primeiraVez && performance.now() > 4000 && !matchMedia("(min-width: 900px)").matches) {
+      setTimeout(() => caixa.scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    }
+  }
+
+  // ---------- compartilhar ----------
+
+  async function compartilhar(botao, texto) {
+    try {
+      if (navigator.share) { await navigator.share({ text: texto }); return; }
+      await navigator.clipboard.writeText(texto);
+    } catch {
+      const area = document.createElement("textarea");
+      area.value = texto; document.body.appendChild(area); area.select();
+      try { document.execCommand("copy"); } catch { /* nada */ }
+      area.remove();
+    }
+    const antes = botao.textContent;
+    botao.textContent = "Copiado. Cola no grupo";
+    setTimeout(() => { botao.textContent = antes; }, 2500);
   }
 
   // ---------- contagem para virar o dia ----------
 
   function contagem(elemento, viraEmMs, aoVirar) {
+    if (!elemento) return;
     const alvo = Date.now() + viraEmMs;
     const tique = () => {
       const resta = Math.max(0, alvo - Date.now());
@@ -245,11 +294,24 @@ window.Jogos = (() => {
     if (ms) elemento._timer = setTimeout(() => { elemento.textContent = ""; }, ms);
   }
 
+  // ---------- aparecer ao rolar ----------
+
+  function revelar() {
+    const alvos = document.querySelectorAll(".revelar");
+    if (!alvos.length) return;
+    if (!("IntersectionObserver" in window)) { alvos.forEach((a) => a.classList.add("visivel")); return; }
+    const obs = new IntersectionObserver((entradas) => {
+      for (const e of entradas) if (e.isIntersecting) { e.target.classList.add("visivel"); obs.unobserve(e.target); }
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+    alvos.forEach((a) => obs.observe(a));
+  }
+
   // ---------- início ----------
 
-  montarDialogos();
-  const btnPlacar = document.querySelector("[data-abrir-placar]");
-  if (btnPlacar) btnPlacar.addEventListener("click", () => abrirPlacar());
+  montarDialogo();
+  document.querySelectorAll(".icone[data-icone]").forEach((el) => { el.innerHTML = icone(el.dataset.icone); });
+  document.querySelectorAll("[data-ranking]").forEach(criarRanking);
+  revelar();
 
   return {
     api,
@@ -257,10 +319,14 @@ window.Jogos = (() => {
     temJogadorSalvo: () => { const s = jogadorSalvo(); return !!(s && s.id); },
     garantirJogador,
     abrirEntrada,
-    abrirPlacar,
-    carregarPlacar,
+    montarRanking,
+    atualizarRanking,
+    mostrarResultado,
+    compartilhar,
+    icone,
     contagem,
     avisar,
+    revelar,
     esc,
   };
 })();

@@ -6,7 +6,6 @@
   const $ = (s) => document.querySelector(s);
   const tabuleiro = $("#tabuleiro");
   const aviso = $("#aviso");
-  const dlgFim = $("#dlg-fim");
   const TOTAL = 16;
 
   let partida = null; // a que vale (do servidor)
@@ -126,7 +125,6 @@
   async function comecarTreino() {
     const { tabuleiro: faces } = await Jogos.api("/api/memoria/treino");
     treino = { faces, achadas: new Array(TOTAL).fill(false), aberta: null, inicio: null, pares: 0, jogadas: 0 };
-    dlgFim.close();
     montarTabuleiro(new Array(TOTAL).fill(null), treino.achadas, null);
     atualizarPlacarVivo(0, 0);
     ligarRelogio(null);
@@ -172,26 +170,18 @@
   function mostrarFim(tempos) {
     const s = partida.duracaoMs / 1000;
     $("#titulo-fim").textContent = s <= 30 ? "Rápido demais" : s <= 60 ? "Boa memória" : "Fechou";
-    $("#fim-pontos").textContent = `${formatarTempo(partida.duracaoMs)} em ${partida.tentativas} jogadas. +${partida.pontos} km para o distrito ${Jogos.jogador.distrito}`;
+    $("#fim-pontos").textContent = `${formatarTempo(partida.duracaoMs)} em ${partida.tentativas} jogadas. O trem do distrito ${Jogos.jogador.distrito} andou ${partida.pontos} km.`;
     $("#tempos").innerHTML = (tempos || []).map((t, i) => {
       const eu = t.nome === Jogos.jogador.nome && t.distrito === Jogos.jogador.distrito ? ' class="eu-linha"' : "";
       return `<li${eu}><span class="pos">${i + 1}</span><span>${Jogos.esc(t.nome)} <span class="mudo">D. ${t.distrito}</span></span><span class="t">${formatarTempo(t.duracaoMs)}</span></li>`;
     }).join("") || `<li><span class="pos">-</span><span class="mudo">Você foi o primeiro de hoje.</span><span></span></li>`;
-    if (!dlgFim.open) dlgFim.showModal();
+    Jogos.mostrarResultado();
   }
 
-  $("#btn-compartilhar").addEventListener("click", async () => {
-    const texto = `Memória das Raízes #${partida.dia} - ${formatarTempo(partida.duracaoMs)} em ${partida.tentativas} jogadas\nDistrito ${Jogos.jogador.distrito} - ${location.origin}/memoria`;
-    const botao = $("#btn-compartilhar");
-    try {
-      if (navigator.share) { await navigator.share({ text: texto }); return; }
-      await navigator.clipboard.writeText(texto);
-    } catch { /* segue */ }
-    botao.textContent = "Copiado. Cola no grupo";
-    setTimeout(() => { botao.textContent = "Mandar no grupo"; }, 2500);
+  $("#btn-compartilhar").addEventListener("click", () => {
+    Jogos.compartilhar($("#btn-compartilhar"), `Memória das Raízes #${partida.dia} - ${formatarTempo(partida.duracaoMs)} em ${partida.tentativas} jogadas\nDistrito ${Jogos.jogador.distrito} - ${location.origin}/memoria`);
   });
 
-  $("#btn-ver-placar").addEventListener("click", () => { dlgFim.close(); Jogos.abrirPlacar("memoria"); });
   $("#btn-treino").addEventListener("click", comecarTreino);
   $("#btn-ajuda").addEventListener("click", () => $("#dlg-ajuda").showModal());
 

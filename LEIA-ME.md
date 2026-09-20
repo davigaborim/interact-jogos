@@ -1,10 +1,18 @@
 # Jogos do Interact
 
-Hub de jogos diários para o Interact brasileiro. A primeira coisa da tela é
-o **Trem das Raízes**: cada ponto que alguém faz é um quilômetro para o trem
-do distrito rumo a Sarzedo/MG (COMIC Nossas Raízes, 14 a 17 de janeiro de
-2027). O trilho tem 3.000 km; as estações do caminho são as últimas COMICs
-(Uberaba 750, Bento Gonçalves 1.500, Foz do Iguaçu 2.250, Sarzedo 3.000).
+Hub de jogos diários para o Interact brasileiro. A página abre nos **jogos**
+(um cartão por jogo: ícone, nome e o botão, dourado se ainda dá para jogar,
+azul se já jogou); logo abaixo vem o **Trem das Raízes** com o ranking do
+lado; embaixo de tudo, o treino. Cada ponto que alguém faz é um quilômetro
+para o trem do distrito rumo a Sarzedo/MG (COMIC Nossas Raízes, 14 a 17 de
+janeiro de 2027). O trilho tem 3.000 km; as estações do caminho são as
+últimas COMICs (Uberaba 750, Bento Gonçalves 1.500, Foz do Iguaçu 2.250,
+Sarzedo 3.000).
+
+O objetivo é que as pessoas joguem, não que disputem pontos: o cartão não
+mostra quanto vale cada jogo, e o **ranking nunca é modal** — fica sempre
+visível, do lado do jogo no computador e embaixo no celular. O resultado da
+partida aparece no mesmo lugar, em vez de janela.
 
 | Jogo | Endereço | Regra | Km |
 |---|---|---|---|
@@ -22,7 +30,10 @@ Identidade visual: cores do Brand Center do Rotary (Azure `#0067C8`, Royal
 Blue `#17458F`, Gold `#F7A81B`). Tipografia da casa, a mesma da Velo:
 **Bricolage Grotesque** nos títulos, **Instrument Sans** no corpo, **DM Mono**
 nos números (o Brand Center pede Open Sans; o Davi achou feio e trocou em
-20/09). Pouco texto: cartão é título + botão. **Nenhum emoji** em lugar
+20/09). Pouco texto: cartão é ícone + título + botão. Os ícones são SVG de
+linha em `comum.js` (`Jogos.icone`). A abertura tem bolinhas em canvas que
+fogem do dedo, os cartões inclinam com o mouse e as seções aparecem ao rolar
+(`.revelar`); tudo desliga com `prefers-reduced-motion`. **Nenhum emoji** em lugar
 nenhum, nem no texto de compartilhar (usa blocos `▓▒░`). O logo oficial do
 Interact não está no site; se for entrar, é pelas regras do Brand Center.
 
@@ -52,8 +63,8 @@ PORT=4000 node servidor.js
 | `dados/censo.json` | Os números do censo em grupos comparáveis |
 | `dados/distritos.json` | Os 31 distritos; `onde` só preenchido onde tinha fonte; `lat`/`lon` da cidade de referência, **`aprox: true` onde foi chute** (usado só para pôr o vagalume no mapa) |
 | `dados/brasil.json` | Contorno do Brasil já projetado em SVG 400x400 (de johan/world.geo.json, equiretangular) |
-| `publico/comum.js` | O que toda página usa: jogador (localStorage), chamada à API, diálogo de entrada, placar, contagem |
-| `publico/index.html` + `hub.js` | O hub: a corrida (`/api/trem`), o cartão do seu trem, os cartões dos jogos com o estado do dia e a fila |
+| `publico/comum.js` | O que toda página usa: jogador (localStorage), chamada à API, diálogo de entrada, o ranking (qualquer `<div data-ranking data-ranking-jogo="termo">` vira um painel com Hoje/Geral e Interactianos/Distritos), ícones, `mostrarResultado`, `compartilhar`, contagem |
+| `publico/index.html` + `hub.js` | O hub: os cartões dos jogos com o estado do dia, a corrida (`/api/trem`) com o seu trem e o ranking do lado, o treino e a fila. As bolinhas, a inclinação dos cartões e os números que contam também moram aqui |
 | `publico/termo.*`, `censo.*`, `memoria.*`, `vagalumes.*`, `oratoria.*` | Cada jogo: uma página e um script |
 | `ferramentas/semear-teste.js` | Enche o banco com 15 jogadores fictícios para demo (apaga o que existia; nunca no servidor publicado) |
 | `ferramentas/limpar-controle.js` | Troca caracteres de controle crus por `\uXXXX` num arquivo |
