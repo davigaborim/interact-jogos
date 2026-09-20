@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mais ou Menos do Censo</title>
+  <meta name="description" content="Dez comparações por dia tiradas do Censo Nacional Interactiano. Um ponto por acerto.">
+  <meta name="theme-color" content="#17458f">
+  <link rel="icon" href="icone.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilo.css?v=3">
+</head>
+<body data-jogo="censo">
+  <header class="topo">
+    <a class="marca" href="/"><span class="faixa"></span>Jogos</a>
+    <span class="titulo">Mais ou Menos do Censo<span class="dia" id="numero-dia"></span></span>
+    <button class="acao" type="button" id="btn-ajuda">Como jogar</button>
+  </header>
+
+  <main class="jogo censo" id="jogo" hidden>
+    <div class="progresso" id="progresso" aria-label="Progresso"></div>
+
+    <div class="pergunta" id="pergunta">
+      <p class="rotulo" id="rotulo"></p>
+      <div class="lado">
+        <div class="quem" id="a-quem"></div>
+        <div class="numero" id="a-numero"></div>
+      </div>
+      <div class="versus">TEM MAIS OU MENOS QUE</div>
+      <div class="lado">
+        <div class="quem" id="b-quem"></div>
+        <div class="numero escondido" id="b-numero">?</div>
+      </div>
+      <div class="escolhas">
+        <button class="botao primario" type="button" id="btn-mais">Mais</button>
+        <button class="botao primario" type="button" id="btn-menos">Menos</button>
+      </div>
+      <p class="veredito" id="veredito"></p>
+    </div>
+
+    <p class="aviso" id="aviso" role="status" aria-live="polite"></p>
+    <p class="fonte" id="fonte"></p>
+  </main>
+
+  <dialog id="dlg-ajuda" closedby="any" aria-labelledby="titulo-ajuda">
+    <form method="dialog">
+      <h2 id="titulo-ajuda">Como jogar</h2>
+      <p>Todo número aqui é de verdade: vem do <strong>Censo Nacional Interactiano 2023-24</strong>, que 4.864 interactianos de 31 distritos responderam.</p>
+      <p>Você vê um grupo com o número dele e precisa dizer se o outro grupo tem <strong>mais</strong> ou <strong>menos</strong> gente.</p>
+      <p>São <strong>dez</strong> por dia, um ponto por acerto. Os pontos somam para o seu distrito.</p>
+      <p class="mudo">Perguntas novas toda meia-noite, horário de Brasília.</p>
+      <button class="botao primario" type="submit">Entendi</button>
+    </form>
+  </dialog>
+
+  <dialog id="dlg-fim" closedby="any" aria-labelledby="titulo-fim">
+    <form method="dialog">
+      <h2 id="titulo-fim"></h2>
+      <p class="pontos" id="fim-pontos"></p>
+      <div class="tabela-caixa"><table class="tabela" id="tabela-respostas"></table></div>
+      <div class="acoes">
+        <button class="botao primario" type="button" id="btn-compartilhar">Mandar no grupo</button>
+        <button class="botao" type="button" id="btn-ver-placar">Ver placar</button>
+      </div>
+      <p class="mudo">Próximas perguntas em <span id="contagem"></span>. <a href="/">Outros jogos</a></p>
+    </form>
+  </dialog>
+
+  <script src="comum.js?v=3"></script>
+  <script src="censo.js?v=3"></script>
+</body>
+</html>

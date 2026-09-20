@@ -2,7 +2,7 @@
   "name": "interact-jogos",
   "version": "0.1.0",
   "private": true,
-  "description": "Jogos para o Interact brasileiro. Por enquanto: Termo Interactiano.",
+  "description": "Hub de jogos diarios para o Interact brasileiro: Termo, Oratoria Relampago e Mais ou Menos do Censo, com placar por distrito.",
   "main": "servidor.js",
   "engines": { "node": ">=18" },
   "scripts": { "start": "node servidor.js" },

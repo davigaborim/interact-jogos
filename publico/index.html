@@ -3,106 +3,91 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Termo Interactiano</title>
-  <meta name="description" content="Uma palavra do Interact por dia. Seis tentativas. Placar por distrito.">
-  <meta name="theme-color" content="#f6efe4">
-  <meta property="og:title" content="Termo Interactiano">
-  <meta property="og:description" content="Uma palavra do Interact por dia. Seis tentativas. Teu distrito no placar.">
+  <title>Jogos do Interact</title>
+  <meta name="description" content="Jogos diários para o Interact brasileiro. Placar por distrito. Rumo à COMIC Nossas Raízes.">
+  <meta name="theme-color" content="#17458f">
+  <meta property="og:title" content="Jogos do Interact">
+  <meta property="og:description" content="Uma palavra, um discurso e dez perguntas por dia. Teu distrito no placar.">
   <link rel="icon" href="icone.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="estilo.css?v=1">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilo.css?v=3">
 </head>
 <body>
   <header class="topo">
-    <button class="icone" id="btn-ajuda" aria-label="Como jogar" title="Como jogar">?</button>
-    <h1><span class="marca">Termo</span> <span class="sub">Interactiano</span> <span class="dia" id="numero-dia"></span></h1>
-    <button class="icone" id="btn-placar" aria-label="Placar" title="Placar">🏆</button>
+    <a class="marca" href="/"><span class="faixa"></span>Jogos do Interact</a>
+    <span class="titulo"><span class="dia" id="numero-dia"></span></span>
+    <button class="acao" type="button" data-abrir-placar>Placar</button>
   </header>
 
-  <main class="jogo" id="jogo" hidden>
-    <p class="aviso" id="aviso" role="status" aria-live="polite"></p>
-    <div class="grade" id="grade" aria-label="Tentativas"></div>
-    <div class="teclado" id="teclado" aria-label="Teclado"></div>
+  <main class="hub">
+    <section class="abertura">
+      <h1>Um pouco de <span>Interact</span> por dia, rumo à COMIC.</h1>
+      <p>Cada jogo vale pontos para você e para o seu distrito. Palavra, tema e perguntas novas toda meia-noite.</p>
+    </section>
+
+    <div class="eu" id="eu" hidden>
+      <div><strong id="eu-nome"></strong><span id="eu-detalhe"></span></div>
+      <button type="button" id="btn-eu">Trocar</button>
+    </div>
+
+    <div class="cartoes">
+      <a class="cartao" href="/termo" data-jogo="termo">
+        <h2>Termo Interactiano</h2>
+        <p>Uma palavra de 5 letras do universo Interact. Seis tentativas. Até 10 pontos.</p>
+        <span class="estado">Jogar</span>
+      </a>
+      <a class="cartao" href="/oratoria" data-jogo="oratoria">
+        <h2>Oratória Relâmpago</h2>
+        <p>Tema do dia, 45 segundos de preparo e o discurso no cronômetro, como no CNO. 5 ou 8 pontos.</p>
+        <span class="estado">Jogar</span>
+      </a>
+      <a class="cartao" href="/censo" data-jogo="censo">
+        <h2>Mais ou Menos do Censo</h2>
+        <p>Dez comparações tiradas do Censo Nacional Interactiano. Um ponto por acerto.</p>
+        <span class="estado">Jogar</span>
+      </a>
+    </div>
+
+    <h3>Em breve</h3>
+    <div class="cartoes">
+      <div class="cartao breve"><h2>Trem das Raízes</h2><p>Cada distrito tem um trem saindo de casa rumo a Sarzedo. Os pontos de todo mundo fazem ele andar.</p><span class="estado">Em breve</span></div>
+      <div class="cartao breve"><h2>Monta a Mesa</h2><p>Panóplia e mesa da presidência: arraste as bandeiras e as autoridades para o lugar certo.</p><span class="estado">Em breve</span></div>
+      <div class="cartao breve"><h2>De Que Distrito É?</h2><p>Uma pista, um mapa com os 31 distritos. Acerte de onde veio.</p><span class="estado">Em breve</span></div>
+      <div class="cartao breve"><h2>Memória das Raízes</h2><p>Pares de projeto e clube que ganharam o CNP.</p><span class="estado">Em breve</span></div>
+      <div class="cartao breve"><h2>Vagalumes</h2><p>Na Semana Mundial de Interact, cada ação acende uma luz no mapa do Brasil.</p><span class="estado">Em breve</span></div>
+      <div class="cartao breve"><h2>Lema Certo</h2><p>Ligue o lema presidencial ao seu ano.</p><span class="estado">Em breve</span></div>
+    </div>
+
+    <p class="rodape">Feito por interactianos, para o grupo da COMIC. Próxima palavra em <span id="contagem"></span>.</p>
   </main>
 
-  <!-- Entrada: nome, distrito e clube. Vira o "quem sou eu" do placar. -->
-  <dialog id="dlg-entrar" closedby="none" aria-labelledby="titulo-entrar">
-    <form id="form-entrar" method="dialog">
-      <h2 id="titulo-entrar">Quem é você?</h2>
-      <p class="mudo">Isso é só pra você aparecer no placar e somar pontos pro seu distrito. Sem senha, sem e-mail.</p>
-      <label>Seu nome
-        <input name="nome" required minlength="2" maxlength="24" autocomplete="given-name" placeholder="Como te chamam no clube">
-      </label>
-      <label>Distrito
-        <select name="distrito" required id="sel-distrito">
-          <option value="">Escolhe…</option>
-        </select>
-      </label>
-      <label>Clube <span class="mudo">(opcional)</span>
-        <input name="clube" maxlength="40" placeholder="Interact Club de …">
-      </label>
-      <p class="erro" id="erro-entrar"></p>
-      <button class="primario" type="submit">Entrar e jogar</button>
-    </form>
-  </dialog>
-
-  <!-- Como jogar -->
-  <dialog id="dlg-ajuda" closedby="any" aria-labelledby="titulo-ajuda">
-    <form method="dialog">
-      <h2 id="titulo-ajuda">Como jogar</h2>
-      <p>Descubra a palavra do dia em até <strong>6 tentativas</strong>. Toda palavra tem 5 letras e tem a ver com o Interact: protocolo, concursos, COMIC, projetos que ganharam o CNP, o censo…</p>
-      <div class="exemplo">
-        <div class="fileira"><span class="celula certa">C</span><span class="celula">L</span><span class="celula">U</span><span class="celula">B</span><span class="celula">E</span></div>
-        <p><strong>Verde</strong>: letra certa no lugar certo.</p>
-        <div class="fileira"><span class="celula">P</span><span class="celula perto">O</span><span class="celula">S</span><span class="celula">S</span><span class="celula">E</span></div>
-        <p><strong>Laranja</strong>: a letra existe, mas em outro lugar.</p>
-        <div class="fileira"><span class="celula">M</span><span class="celula">E</span><span class="celula fora">T</span><span class="celula">A</span><span class="celula">S</span></div>
-        <p><strong>Apagada</strong>: essa letra não está na palavra.</p>
-      </div>
-      <p>Acentos não contam: <em>PÓLIO</em> se escreve <code>POLIO</code>. Qualquer palavra do dicionário vale como palpite.</p>
-      <p><strong>Pontos:</strong> 10 · 8 · 6 · 5 · 4 · 3 conforme a tentativa em que você acerta. Errou as seis? Ganha 1 por ter jogado. Os pontos de todo mundo somam para o <strong>distrito</strong>.</p>
-      <p class="mudo">Palavra nova toda meia-noite (horário de Brasília).</p>
-      <button class="primario" type="submit">Beleza</button>
-    </form>
-  </dialog>
-
-  <!-- Fim da partida -->
-  <dialog id="dlg-fim" closedby="any" aria-labelledby="titulo-fim">
-    <form method="dialog">
-      <h2 id="titulo-fim"></h2>
-      <p class="palavra-revelada"><span id="fim-palavra"></span></p>
-      <p class="dica" id="fim-dica"></p>
-      <p class="pontos" id="fim-pontos"></p>
-      <div class="acoes">
-        <button class="primario" type="button" id="btn-compartilhar">Mandar no grupo</button>
-        <button type="button" id="btn-ver-placar">Ver placar</button>
-      </div>
-      <p class="mudo">Próxima palavra em <span id="contagem"></span></p>
-    </form>
-  </dialog>
-
-  <!-- Placar -->
-  <dialog id="dlg-placar" closedby="any" aria-labelledby="titulo-placar">
-    <form method="dialog">
-      <h2 id="titulo-placar">Placar</h2>
-      <div class="abas" role="tablist">
-        <button type="button" role="tab" data-periodo="hoje" aria-selected="true">Hoje</button>
-        <button type="button" role="tab" data-periodo="geral" aria-selected="false">Geral</button>
-        <span class="separador"></span>
-        <button type="button" role="tab" data-grupo="distritos" aria-selected="true">Distritos</button>
-        <button type="button" role="tab" data-grupo="jogadores" aria-selected="false">Jogadores</button>
-      </div>
-      <div class="tabela-caixa"><table class="tabela" id="tabela-placar"></table></div>
-      <p class="mudo" id="rodape-placar"></p>
-      <div class="acoes">
-        <button type="submit">Fechar</button>
-        <button type="button" class="discreto" id="btn-trocar">Trocar nome/distrito</button>
-      </div>
-    </form>
-  </dialog>
-
-  <script src="app.js?v=1"></script>
+  <script src="comum.js?v=3"></script>
+  <script>
+    (() => {
+      const $ = (s) => document.querySelector(s);
+      function mostrar(jogador, dados) {
+        $("#eu").hidden = false;
+        $("#eu-nome").textContent = jogador.nome;
+        $("#eu-detalhe").textContent = [jogador.clube, `Distrito ${jogador.distrito}`].filter(Boolean).join(" - ");
+        if (!dados) return;
+        $("#numero-dia").textContent = `DIA ${dados.dia}`;
+        Jogos.contagem($("#contagem"), dados.viraEmMs, () => location.reload());
+        for (const [jogo, r] of Object.entries(dados.hoje)) {
+          const estado = document.querySelector(`[data-jogo="${jogo}"] .estado`);
+          if (!estado) continue;
+          if (r.terminou) { estado.textContent = `Feito: ${r.pontos} pt${r.pontos === 1 ? "" : "s"}`; estado.className = "estado feito"; }
+          else if (r.comecou) { estado.textContent = "Continuar"; estado.className = "estado jogar"; }
+          else { estado.textContent = "Jogar"; estado.className = "estado jogar"; }
+        }
+      }
+      Jogos.garantirJogador(async (jogador, dados) => {
+        if (!dados) dados = await Jogos.api(`/api/eu?jogador=${encodeURIComponent(jogador.id)}`);
+        mostrar(jogador, dados);
+      });
+      $("#btn-eu").addEventListener("click", () => Jogos.abrirEntrada(Jogos.jogador));
+    })();
+  </script>
 </body>
 </html>

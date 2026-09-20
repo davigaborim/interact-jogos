@@ -1,0 +1,78 @@
+{
+  "fonte": "Censo Nacional Interactiano 2023-24, MDIO Interact Brasil. 4.864 respostas de 31 distritos.",
+  "grupos": [
+    { "nome": "estado", "pergunta": "interactianos que moram em", "itens": [
+      { "t": "São Paulo", "n": 1327 }, { "t": "Paraná", "n": 1082 }, { "t": "Rio Grande do Sul", "n": 988 },
+      { "t": "Minas Gerais", "n": 575 }, { "t": "Santa Catarina", "n": 280 }, { "t": "Mato Grosso do Sul", "n": 223 },
+      { "t": "Mato Grosso", "n": 130 }, { "t": "Goiás", "n": 65 }, { "t": "Rio de Janeiro", "n": 51 },
+      { "t": "Rio Grande do Norte", "n": 39 }, { "t": "Espírito Santo", "n": 21 }, { "t": "Pará", "n": 20 },
+      { "t": "Alagoas", "n": 14 }, { "t": "Paraíba", "n": 13 }, { "t": "Rondônia", "n": 12 }, { "t": "Bahia", "n": 8 }
+    ] },
+    { "nome": "idade", "pergunta": "interactianos com", "itens": [
+      { "t": "12 anos", "n": 167 }, { "t": "13 anos", "n": 390 }, { "t": "14 anos", "n": 685 }, { "t": "15 anos", "n": 943 },
+      { "t": "16 anos", "n": 1028 }, { "t": "17 anos", "n": 924 }, { "t": "18 anos ou mais", "n": 356 }
+    ] },
+    { "nome": "serie", "pergunta": "interactianos cursando", "itens": [
+      { "t": "o 6º ano", "n": 16 }, { "t": "o 7º ano", "n": 92 }, { "t": "o 8º ano", "n": 348 }, { "t": "o 9º ano", "n": 615 },
+      { "t": "o 1º ano do Ensino Médio", "n": 825 }, { "t": "o 2º ano do Ensino Médio", "n": 893 }, { "t": "o 3º ano do Ensino Médio", "n": 765 }
+    ] },
+    { "nome": "escola", "pergunta": "interactianos que estudam em", "itens": [
+      { "t": "escola pública", "n": 1866 }, { "t": "escola particular", "n": 1943 }, { "t": "escola técnica", "n": 347 },
+      { "t": "universidade pública", "n": 111 }, { "t": "universidade particular", "n": 157 }, { "t": "cursinho", "n": 68 }
+    ] },
+    { "nome": "distrito", "pergunta": "respostas ao censo vindas do distrito", "itens": [
+      { "t": "4640 (Oeste do PR)", "n": 713 }, { "t": "4660 (Noroeste e Centro do RS)", "n": 478 }, { "t": "4470 (MS)", "n": 377 },
+      { "t": "4480 (Noroeste de SP)", "n": 292 }, { "t": "4510 (Centro-Oeste de SP)", "n": 245 }, { "t": "4590", "n": 212 },
+      { "t": "4700 (Serra e Norte do RS)", "n": 198 }, { "t": "4521 (Norte e Centro de MG)", "n": 191 }, { "t": "4760 (Norte de MG)", "n": 184 },
+      { "t": "4540", "n": 160 }, { "t": "4621", "n": 154 }, { "t": "4680", "n": 149 }, { "t": "4780 (Fronteira do RS)", "n": 146 },
+      { "t": "4652 (Norte e Sul de SC)", "n": 145 }, { "t": "4440", "n": 131 }, { "t": "4740 (Serra e Oeste de SC)", "n": 129 },
+      { "t": "4710", "n": 101 }, { "t": "4560 (Sul de MG)", "n": 77 }, { "t": "4730 (Curitiba)", "n": 73 }, { "t": "4563", "n": 72 },
+      { "t": "4420", "n": 60 }, { "t": "4500 (PE, PB e RN)", "n": 56 }, { "t": "4571", "n": 48 }, { "t": "4720", "n": 37 },
+      { "t": "4391", "n": 36 }, { "t": "4751", "n": 31 }, { "t": "4670", "n": 17 }
+    ] },
+    { "nome": "evento-nacional", "pergunta": "interactianos que já foram a", "itens": [
+      { "t": "uma COMIC", "n": 293 }, { "t": "um Instituto Rotary Brasil", "n": 27 }, { "t": "um ENPIC (Encontro Paulista)", "n": 22 },
+      { "t": "um EMIC (Encontro Mineiro)", "n": 19 }, { "t": "um ENIPA (Encontro Paranaense)", "n": 10 }
+    ] },
+    { "nome": "evento-distrital", "pergunta": "interactianos que já participaram de", "itens": [
+      { "t": "Conferência Distrital", "n": 1348 }, { "t": "Assembleia Distrital", "n": 1065 }, { "t": "Jogos Distritais", "n": 979 },
+      { "t": "nenhum evento distrital", "n": 2010 }
+    ] },
+    { "nome": "barreira-nacional", "pergunta": "interactianos que dizem que o que atrapalha ir a evento nacional é", "itens": [
+      { "t": "o valor da inscrição", "n": 867 }, { "t": "a distância", "n": 840 }, { "t": "escola ou faculdade", "n": 430 },
+      { "t": "a autorização dos responsáveis", "n": 350 }, { "t": "o trabalho", "n": 206 }, { "t": "problemas internos do clube", "n": 86 },
+      { "t": "falta de conselheiros", "n": 66 }, { "t": "nada, vão numa boa", "n": 1656 }
+    ] },
+    { "nome": "barreira-reuniao", "pergunta": "interactianos que dizem que o que atrapalha ir à reunião é", "itens": [
+      { "t": "o horário", "n": 995 }, { "t": "a distância", "n": 400 }, { "t": "o trabalho", "n": 237 }, { "t": "o valor da mensalidade", "n": 214 },
+      { "t": "nada", "n": 1662 }
+    ] },
+    { "nome": "outros-grupos", "pergunta": "interactianos que também participam de", "itens": [
+      { "t": "grupos religiosos", "n": 524 }, { "t": "centros acadêmicos ou grêmios", "n": 194 }, { "t": "DeMolay", "n": 95 },
+      { "t": "escoteiros", "n": 64 }, { "t": "ONGs de animais", "n": 64 }, { "t": "ONGs de crianças", "n": 44 }, { "t": "Filhas de Jó", "n": 42 },
+      { "t": "Lions Club", "n": 18 }, { "t": "ONGs de idosos", "n": 16 }, { "t": "Arco-Íris", "n": 13 }, { "t": "voluntariado da UNICEF", "n": 13 }
+    ] },
+    { "nome": "adjetivo", "pergunta": "interactianos que descrevem o próprio clube como", "itens": [
+      { "t": "acolhedor", "n": 1860 }, { "t": "unido", "n": 764 }, { "t": "planejador", "n": 495 }, { "t": "realizador", "n": 427 },
+      { "t": "numeroso", "n": 262 }, { "t": "desmotivado", "n": 247 }, { "t": "profissional", "n": 179 }, { "t": "imaturo", "n": 164 },
+      { "t": "desunido", "n": 103 }
+    ] },
+    { "nome": "melhoria", "pergunta": "interactianos que acham que o Interact melhoraria com", "itens": [
+      { "t": "mais comprometimento dos interactianos", "n": 1506 }, { "t": "mais contato entre os distritos", "n": 957 },
+      { "t": "mais companheirismo", "n": 795 }, { "t": "mais eventos multidistritais", "n": 438 }, { "t": "mais acessibilidade", "n": 298 }
+    ] },
+    { "nome": "conhecimento", "pergunta": "interactianos que", "itens": [
+      { "t": "conhecem o Alerta Vermelho", "n": 1535 }, { "t": "nunca ouviram falar do Alerta Vermelho", "n": 1753 },
+      { "t": "já ouviram falar do Alerta Vermelho mas não sabem como funciona", "n": 1213 },
+      { "t": "conhecem a Fundação Rotária", "n": 3515 }, { "t": "não conhecem a Fundação Rotária", "n": 986 },
+      { "t": "já foram intercambistas pelo Rotary", "n": 178 }, { "t": "querem fazer intercâmbio", "n": 2100 },
+      { "t": "pretendem entrar no Rotaract", "n": 2270 }, { "t": "pretendem entrar no Rotary", "n": 2258 }
+    ] },
+    { "nome": "genero", "pergunta": "interactianos que se identificam como", "itens": [
+      { "t": "mulher cis", "n": 3111 }, { "t": "homem cis", "n": 1528 }, { "t": "não binário", "n": 46 }
+    ] },
+    { "nome": "raca", "pergunta": "interactianos que se declaram", "itens": [
+      { "t": "brancos", "n": 3693 }, { "t": "pardos", "n": 951 }, { "t": "pretos", "n": 153 }, { "t": "amarelos", "n": 55 }, { "t": "indígenas", "n": 12 }
+    ] }
+  ]
+}

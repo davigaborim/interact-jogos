@@ -1,36 +1,41 @@
-/* Termo Interactiano — paleta da COMIC Nossas Raízes: creme, marrom,
-   terracota e verde folha. Celular primeiro. */
+/* Jogos do Interact — identidade visual do Rotary/Interact.
+   Interact usa o azul Azure com o dourado do Rotary; tipografia Open Sans.
+   Cores oficiais do Brand Center: Azure #0067C8, Royal Blue #17458F,
+   Sky Blue #00A2E0, Gold #F7A81B, cinzas #58595B / #919395 / #E5E5E5.
+   Celular primeiro. Sem emoji em lugar nenhum. */
 
 :root {
-  --fundo: #f6efe4;
-  --papel: #fffaf2;
-  --tinta: #3a281c;
-  --tinta-fraca: #8a7460;
-  --linha: #d9c9b4;
-  --certa: #3f8a4a;
-  --perto: #e0782a;
-  --fora: #b3a28f;
-  --tecla: #e9dcc8;
-  --tecla-tinta: #3a281c;
-  --acento: #e0782a;
-  --acento-escuro: #b85d1c;
-  --sombra: 0 10px 30px rgba(58, 40, 28, 0.18);
+  --azure: #0067c8;
+  --royal: #17458f;
+  --sky: #00a2e0;
+  --gold: #f7a81b;
+  --gold-escuro: #d98c00;
+  --fundo: #f4f6f9;
+  --papel: #ffffff;
+  --tinta: #1b2a41;
+  --tinta-fraca: #58595b;
+  --linha: #dfe3e8;
+  --cinza: #919395;
+  --certa: var(--azure);
+  --perto: var(--gold);
+  --fora: #a6a8ab;
+  --tecla: #e5e8ec;
+  --erro: #c8102e;
+  --sombra: 0 12px 32px rgba(23, 69, 143, 0.16);
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --fundo: #1d1612;
-    --papel: #27201a;
-    --tinta: #f3e9da;
-    --tinta-fraca: #b39a80;
-    --linha: #463a2f;
-    --certa: #4f9c5a;
-    --perto: #e6863a;
-    --fora: #4a3e33;
-    --tecla: #3a2f26;
-    --tecla-tinta: #f3e9da;
-    --sombra: 0 10px 30px rgba(0, 0, 0, 0.5);
+    --fundo: #0f1a2b;
+    --papel: #172642;
+    --tinta: #f2f5f9;
+    --tinta-fraca: #a9b4c4;
+    --linha: #2b3d5c;
+    --cinza: #7f8ba0;
+    --fora: #3a4a66;
+    --tecla: #263856;
+    --sombra: 0 12px 32px rgba(0, 0, 0, 0.5);
     color-scheme: dark;
   }
 }
@@ -42,7 +47,7 @@ html, body { height: 100%; }
 
 body {
   margin: 0;
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: "Open Sans", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
   background: var(--fundo);
   color: var(--tinta);
   display: flex;
@@ -51,64 +56,161 @@ body {
   min-height: 100dvh;
   padding-bottom: env(safe-area-inset-bottom);
   -webkit-tap-highlight-color: transparent;
+  line-height: 1.45;
 }
+
+a { color: var(--azure); }
+
+/* ---- topo ---- */
 
 .topo {
   display: grid;
-  grid-template-columns: 44px 1fr 44px;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  padding: 10px 12px 6px;
-  border-bottom: 1px solid var(--linha);
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--royal);
+  color: #fff;
 }
-
-.topo h1 {
-  margin: 0;
-  text-align: center;
-  font-family: Fraunces, Georgia, serif;
-  font-weight: 800;
-  font-size: 1.35rem;
-  letter-spacing: -0.01em;
-  line-height: 1.1;
+.topo .marca {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
 }
-.topo .marca { color: var(--acento); }
-.topo .sub { font-weight: 600; }
-.topo .dia { display: block; font: 600 0.7rem Inter, sans-serif; color: var(--tinta-fraca); letter-spacing: 0.08em; }
-
-.icone {
-  width: 40px; height: 40px;
-  border-radius: 50%;
-  border: 1px solid var(--linha);
-  background: var(--papel);
-  color: var(--tinta);
-  font: 700 1rem Inter, sans-serif;
+.topo .marca .faixa { width: 6px; height: 26px; background: var(--gold); border-radius: 2px; }
+.topo .titulo { text-align: center; font-weight: 700; font-size: 0.95rem; }
+.topo .titulo .dia { display: block; font-size: 0.7rem; font-weight: 600; opacity: 0.75; letter-spacing: 0.08em; }
+.topo .acao {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: transparent;
+  color: #fff;
+  border-radius: 8px;
+  padding: 7px 12px;
+  font: 700 0.8rem "Open Sans", sans-serif;
   cursor: pointer;
 }
+.topo .acao:hover { background: rgba(255, 255, 255, 0.12); }
+
+/* ---- hub ---- */
+
+.hub {
+  flex: 1;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 20px 16px 32px;
+}
+.hub .abertura h1 {
+  font-size: 1.7rem;
+  line-height: 1.15;
+  margin: 8px 0 6px;
+  color: var(--royal);
+}
+.hub .abertura h1 span { color: var(--azure); }
+.hub .abertura p { margin: 0 0 18px; color: var(--tinta-fraca); }
+.eu {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-left: 5px solid var(--gold);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 18px;
+  font-size: 0.9rem;
+}
+.eu strong { display: block; font-size: 1rem; }
+.eu button { border: 0; background: none; color: var(--azure); font: 700 0.85rem "Open Sans", sans-serif; cursor: pointer; }
+
+.cartoes { display: grid; gap: 12px; }
+.cartao {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px 12px;
+  align-items: center;
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-radius: 12px;
+  padding: 16px;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  overflow: hidden;
+}
+.cartao::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--azure); }
+.cartao.breve::before { background: var(--cinza); }
+.cartao.breve { opacity: 0.75; }
+.cartao h2 { margin: 0; font-size: 1.1rem; color: var(--royal); }
+.cartao p { margin: 0; font-size: 0.88rem; color: var(--tinta-fraca); grid-column: 1; }
+.cartao .estado {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--fundo);
+  color: var(--tinta-fraca);
+  white-space: nowrap;
+}
+.cartao .estado.feito { background: var(--azure); color: #fff; }
+.cartao .estado.jogar { background: var(--gold); color: var(--tinta); }
+.hub h3 { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tinta-fraca); margin: 26px 0 10px; }
+.hub .rodape { margin-top: 28px; font-size: 0.8rem; color: var(--tinta-fraca); }
+
+/* ---- área de jogo ---- */
 
 .jogo {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 8px 8px 6px;
-  max-width: 520px;
+  gap: 10px;
+  padding: 10px 12px 8px;
+  max-width: 560px;
   width: 100%;
   margin: 0 auto;
 }
+.jogo.termo { justify-content: space-between; }
 
 .aviso {
   min-height: 1.4em;
   margin: 0;
   font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--acento-escuro);
+  font-weight: 700;
+  color: var(--gold-escuro);
   text-align: center;
   transition: opacity 0.2s;
 }
 .aviso:empty { opacity: 0; }
 
-/* ---- grade ---- */
+.botao {
+  display: inline-block;
+  font: 700 0.95rem "Open Sans", sans-serif;
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--linha);
+  background: var(--papel);
+  color: var(--tinta);
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+}
+.botao.primario { background: var(--azure); border-color: var(--azure); color: #fff; }
+.botao.primario:hover { background: var(--royal); }
+.botao.dourado { background: var(--gold); border-color: var(--gold); color: var(--tinta); }
+.botao.discreto { border: 0; background: none; color: var(--azure); }
+.botao:disabled { opacity: 0.5; cursor: default; }
+.botao.largo { width: 100%; }
+
+/* ---- Termo: grade e teclado ---- */
 
 .grade {
   display: grid;
@@ -116,32 +218,25 @@ body {
   gap: 6px;
   width: min(100%, 340px);
   aspect-ratio: 5 / 6;
-  flex: 0 1 auto;
   max-height: 46dvh;
 }
-
-.fileira {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 6px;
-}
-
+.fileira { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
 .celula {
   display: grid;
   place-items: center;
   border: 2px solid var(--linha);
-  border-radius: 8px;
-  font: 700 clamp(1.1rem, 6vw, 1.7rem) Inter, sans-serif;
+  border-radius: 6px;
+  font: 700 clamp(1.1rem, 6vw, 1.7rem) "Open Sans", sans-serif;
   text-transform: uppercase;
   background: var(--papel);
   color: var(--tinta);
   aspect-ratio: 1;
   transition: transform 0.1s;
 }
-.celula.digitando { border-color: var(--tinta-fraca); transform: scale(1.04); }
+.celula.digitando { border-color: var(--sky); transform: scale(1.04); }
 .celula.certa, .celula.perto, .celula.fora { color: #fff; border-color: transparent; }
 .celula.certa { background: var(--certa); }
-.celula.perto { background: var(--perto); }
+.celula.perto { background: var(--perto); color: var(--tinta); }
 .celula.fora { background: var(--fora); }
 
 .fileira.revelando .celula { animation: virar 0.5s ease both; }
@@ -149,33 +244,12 @@ body {
 .fileira.revelando .celula:nth-child(3) { animation-delay: 0.2s; }
 .fileira.revelando .celula:nth-child(4) { animation-delay: 0.3s; }
 .fileira.revelando .celula:nth-child(5) { animation-delay: 0.4s; }
-@keyframes virar {
-  0% { transform: rotateX(0); }
-  50% { transform: rotateX(90deg); }
-  100% { transform: rotateX(0); }
-}
-
+@keyframes virar { 0% { transform: rotateX(0); } 50% { transform: rotateX(90deg); } 100% { transform: rotateX(0); } }
 .fileira.tremendo { animation: tremer 0.4s; }
-@keyframes tremer {
-  20%, 60% { transform: translateX(-5px); }
-  40%, 80% { transform: translateX(5px); }
-}
+@keyframes tremer { 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
 
-/* ---- teclado ---- */
-
-.teclado {
-  width: 100%;
-  max-width: 520px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  user-select: none;
-}
-.teclado .linha {
-  display: flex;
-  justify-content: center;
-  gap: 5px;
-}
+.teclado { width: 100%; max-width: 520px; display: flex; flex-direction: column; gap: 6px; user-select: none; }
+.teclado .linha { display: flex; justify-content: center; gap: 5px; }
 .tecla {
   flex: 1 1 0;
   max-width: 46px;
@@ -183,8 +257,8 @@ body {
   border: 0;
   border-radius: 6px;
   background: var(--tecla);
-  color: var(--tecla-tinta);
-  font: 700 0.95rem Inter, sans-serif;
+  color: var(--tinta);
+  font: 700 0.95rem "Open Sans", sans-serif;
   text-transform: uppercase;
   cursor: pointer;
   touch-action: manipulation;
@@ -192,14 +266,85 @@ body {
 .tecla.larga { flex: 1.6 1 0; max-width: 74px; font-size: 0.75rem; }
 .tecla:active { filter: brightness(0.9); }
 .tecla.certa { background: var(--certa); color: #fff; }
-.tecla.perto { background: var(--perto); color: #fff; }
+.tecla.perto { background: var(--perto); color: var(--tinta); }
 .tecla.fora { background: var(--fora); color: #fff; opacity: 0.8; }
+
+/* ---- Oratória ---- */
+
+.oratoria { justify-content: flex-start; padding-top: 18px; text-align: center; }
+.oratoria .rotulo { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tinta-fraca); margin: 0; }
+.oratoria .tema {
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--royal);
+  margin: 6px 0 14px;
+  max-width: 30ch;
+}
+.oratoria .tema.oculto { color: var(--cinza); font-weight: 600; font-size: 1.1rem; }
+.relogio {
+  font-size: clamp(3.2rem, 22vw, 5rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--tinta);
+  margin: 6px 0 2px;
+}
+.relogio.preparo { color: var(--gold-escuro); }
+.relogio.falando { color: var(--azure); }
+.fase { font-size: 0.95rem; font-weight: 700; color: var(--tinta-fraca); margin: 0 0 16px; min-height: 1.4em; }
+.barra { width: min(100%, 340px); height: 8px; background: var(--linha); border-radius: 4px; overflow: hidden; margin-bottom: 18px; }
+.barra div { height: 100%; width: 0; background: var(--azure); transition: width 1s linear; }
+.barra.preparo div { background: var(--gold); }
+.modos { display: flex; gap: 8px; width: min(100%, 340px); margin-bottom: 8px; }
+.modos label {
+  flex: 1;
+  border: 2px solid var(--linha);
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  background: var(--papel);
+  font-size: 0.85rem;
+}
+.modos label strong { display: block; font-size: 1rem; }
+.modos input { display: none; }
+.modos label:has(input:checked) { border-color: var(--azure); }
+.oratoria .acoes { display: flex; flex-direction: column; gap: 8px; width: min(100%, 340px); }
+.oratoria .nota { font-size: 0.82rem; color: var(--tinta-fraca); max-width: 38ch; margin: 14px auto 0; }
+
+/* ---- Censo ---- */
+
+.censo { justify-content: flex-start; padding-top: 14px; }
+.progresso { display: flex; gap: 4px; width: min(100%, 360px); }
+.progresso span { flex: 1; height: 6px; border-radius: 3px; background: var(--linha); }
+.progresso span.certo { background: var(--azure); }
+.progresso span.errado { background: var(--gold); }
+.progresso span.atual { background: var(--cinza); }
+.pergunta { width: min(100%, 360px); text-align: center; margin-top: 8px; }
+.pergunta .rotulo { font-size: 0.8rem; color: var(--tinta-fraca); margin: 0 0 8px; }
+.pergunta .lado {
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-radius: 12px;
+  padding: 16px 14px;
+  margin: 8px 0;
+}
+.pergunta .lado .quem { font-weight: 700; font-size: 1.05rem; color: var(--royal); }
+.pergunta .lado .numero { font-size: 2rem; font-weight: 700; color: var(--azure); font-variant-numeric: tabular-nums; }
+.pergunta .lado .numero.escondido { color: var(--cinza); }
+.pergunta .versus { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; color: var(--tinta-fraca); margin: 4px 0; }
+.escolhas { display: flex; gap: 8px; margin-top: 10px; }
+.escolhas .botao { flex: 1; font-size: 1.05rem; padding: 14px; }
+.veredito { min-height: 1.5em; font-weight: 700; margin: 10px 0 0; }
+.veredito.certo { color: var(--azure); }
+.veredito.errado { color: var(--gold-escuro); }
+.censo .fonte { font-size: 0.75rem; color: var(--tinta-fraca); text-align: center; max-width: 40ch; margin-top: auto; padding-top: 12px; }
 
 /* ---- diálogos ---- */
 
 dialog {
   border: 0;
-  border-radius: 16px;
+  border-radius: 14px;
   background: var(--papel);
   color: var(--tinta);
   padding: 22px 20px;
@@ -207,74 +352,50 @@ dialog {
   max-height: 88dvh;
   box-shadow: var(--sombra);
 }
-dialog::backdrop { background: rgba(30, 20, 12, 0.55); backdrop-filter: blur(2px); }
-dialog h2 {
-  margin: 0 0 8px;
-  font-family: Fraunces, Georgia, serif;
-  font-size: 1.5rem;
-  font-weight: 800;
-  line-height: 1.1;
-}
-dialog p { margin: 8px 0; line-height: 1.45; font-size: 0.95rem; }
-dialog label { display: block; margin: 12px 0 4px; font-size: 0.85rem; font-weight: 600; }
+dialog::backdrop { background: rgba(23, 69, 143, 0.45); backdrop-filter: blur(2px); }
+dialog h2 { margin: 0 0 8px; font-size: 1.4rem; line-height: 1.15; color: var(--royal); }
+dialog p { margin: 8px 0; font-size: 0.95rem; }
+dialog label { display: block; margin: 12px 0 4px; font-size: 0.85rem; font-weight: 700; }
 dialog input, dialog select {
   display: block;
   width: 100%;
   margin-top: 4px;
   padding: 10px 12px;
-  font: 400 1rem Inter, sans-serif;
+  font: 400 1rem "Open Sans", sans-serif;
   border: 1px solid var(--linha);
-  border-radius: 10px;
+  border-radius: 8px;
   background: var(--fundo);
   color: var(--tinta);
 }
-dialog button {
-  font: 700 0.95rem Inter, sans-serif;
-  padding: 11px 16px;
-  border-radius: 10px;
-  border: 1px solid var(--linha);
-  background: var(--fundo);
-  color: var(--tinta);
-  cursor: pointer;
-}
-dialog button.primario { background: var(--acento); border-color: var(--acento); color: #fff; }
-dialog button.primario:hover { background: var(--acento-escuro); }
-dialog button.discreto { border: 0; background: none; color: var(--tinta-fraca); font-weight: 600; }
-dialog form > button.primario { width: 100%; margin-top: 14px; }
+dialog input:focus, dialog select:focus { outline: 2px solid var(--sky); outline-offset: 1px; }
+dialog form > .botao.primario { width: 100%; margin-top: 14px; }
 .acoes { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
-.acoes button { flex: 1 1 auto; }
+.acoes .botao { flex: 1 1 auto; }
 .mudo { color: var(--tinta-fraca); font-size: 0.85rem; }
-.erro { color: #b8321e; font-weight: 600; min-height: 1.2em; margin: 6px 0 0; }
+.erro { color: var(--erro); font-weight: 700; min-height: 1.2em; margin: 6px 0 0; }
 .erro:empty { display: none; }
 
 .exemplo .fileira { width: 200px; margin: 10px 0 4px; }
 .exemplo .celula { font-size: 1rem; }
 
-.palavra-revelada {
-  font-family: Fraunces, Georgia, serif;
-  font-size: 2.4rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-align: center;
-  color: var(--acento);
-  margin: 4px 0 !important;
-}
+.palavra-revelada { font-size: 2.2rem; font-weight: 700; letter-spacing: 0.1em; text-align: center; color: var(--azure); margin: 4px 0 !important; }
 .dica { text-align: center; }
-.pontos { text-align: center; font-weight: 700; font-size: 1.1rem; }
+.pontos { text-align: center; font-weight: 700; font-size: 1.1rem; color: var(--royal); }
 
 /* ---- placar ---- */
 
 .abas { display: flex; gap: 6px; align-items: center; margin: 6px 0 10px; flex-wrap: wrap; }
-.abas .separador { width: 1px; height: 22px; background: var(--linha); margin: 0 4px; }
-.abas [role="tab"] { padding: 6px 12px; font-size: 0.8rem; border-radius: 999px; }
-.abas [role="tab"][aria-selected="true"] { background: var(--tinta); color: var(--papel); border-color: var(--tinta); }
+.abas .separador { width: 1px; height: 22px; background: var(--linha); margin: 0 2px; }
+.abas [role="tab"] { padding: 5px 11px; font-size: 0.78rem; border-radius: 999px; border: 1px solid var(--linha); background: var(--papel); color: var(--tinta); font-weight: 700; cursor: pointer; }
+.abas [role="tab"][aria-selected="true"] { background: var(--azure); color: #fff; border-color: var(--azure); }
+.abas select { width: auto; margin: 0; padding: 5px 8px; font-size: 0.8rem; border-radius: 999px; }
 
 .tabela-caixa { max-height: 46dvh; overflow: auto; border: 1px solid var(--linha); border-radius: 10px; }
 .tabela { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 .tabela th, .tabela td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--linha); }
 .tabela th { font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tinta-fraca); position: sticky; top: 0; background: var(--papel); }
 .tabela td.num, .tabela th.num { text-align: right; font-variant-numeric: tabular-nums; }
-.tabela tr.eu td { background: rgba(224, 120, 42, 0.14); font-weight: 700; }
+.tabela tr.eu-linha td { background: rgba(247, 168, 27, 0.18); font-weight: 700; }
 .tabela .pos { color: var(--tinta-fraca); width: 2.2em; }
 .tabela .sub { display: block; font-size: 0.75rem; color: var(--tinta-fraca); font-weight: 400; }
 .tabela .vazio { text-align: center; color: var(--tinta-fraca); padding: 24px 10px; }
