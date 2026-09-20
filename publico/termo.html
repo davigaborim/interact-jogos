@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Termo Interactiano</title>
   <meta name="description" content="Uma palavra do Interact por dia. Seis tentativas. Placar por distrito.">
-  <meta name="theme-color" content="#17458f">
+  <meta name="theme-color" content="#0d2450">
   <link rel="icon" href="icone.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="estilo.css?v=3">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wdth,wght@75..100,400..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilo.css?v=8">
 </head>
 <body data-jogo="termo">
   <header class="topo">
@@ -27,7 +27,7 @@
 
   <dialog id="dlg-ajuda" closedby="any" aria-labelledby="titulo-ajuda">
     <form method="dialog">
-      <h2 id="titulo-ajuda">Como jogar</h2>
+      <h2 id="titulo-ajuda" class="placa">Como jogar</h2>
       <p>Descubra a palavra do dia em até <strong>6 tentativas</strong>. Toda palavra tem 5 letras e tem a ver com o Interact: protocolo, concursos, COMIC, projetos que ganharam o CNP, o censo.</p>
       <div class="exemplo">
         <div class="fileira"><span class="celula certa">C</span><span class="celula">L</span><span class="celula">U</span><span class="celula">B</span><span class="celula">E</span></div>
@@ -38,7 +38,7 @@
         <p><strong>Cinza</strong>: essa letra não está na palavra.</p>
       </div>
       <p>Acentos não contam: <em>PÓLIO</em> se escreve <code>POLIO</code>. Qualquer palavra do dicionário vale como palpite.</p>
-      <p><strong>Pontos:</strong> 10, 8, 6, 5, 4 ou 3 conforme a tentativa em que você acerta. Errou as seis? Ganha 1 por ter jogado. Os pontos somam para o seu <strong>distrito</strong>.</p>
+      <p><strong>Pontos:</strong> 10, 8, 6, 5, 4 ou 3 conforme a tentativa em que você acerta. Errou as seis? Ganha 1 por ter jogado. Cada ponto é um quilômetro para o trem do seu <strong>distrito</strong>.</p>
       <p class="mudo">Palavra nova toda meia-noite, horário de Brasília.</p>
       <button class="botao primario" type="submit">Entendi</button>
     </form>
@@ -46,19 +46,19 @@
 
   <dialog id="dlg-fim" closedby="any" aria-labelledby="titulo-fim">
     <form method="dialog">
-      <h2 id="titulo-fim"></h2>
-      <p class="palavra-revelada"><span id="fim-palavra"></span></p>
+      <h2 id="titulo-fim" class="placa"></h2>
+      <p class="palavra-revelada placa"><span id="fim-palavra"></span></p>
       <p class="dica" id="fim-dica"></p>
       <p class="pontos" id="fim-pontos"></p>
       <div class="acoes">
         <button class="botao primario" type="button" id="btn-compartilhar">Mandar no grupo</button>
         <button class="botao" type="button" id="btn-ver-placar">Ver placar</button>
       </div>
-      <p class="mudo">Próxima palavra em <span id="contagem"></span>. <a href="/">Outros jogos</a></p>
+      <p class="mudo">Próxima palavra em <span id="contagem"></span>. <a href="/">Ver a corrida</a></p>
     </form>
   </dialog>
 
-  <script src="comum.js?v=3"></script>
-  <script src="termo.js?v=3"></script>
+  <script src="comum.js?v=8"></script>
+  <script src="termo.js?v=8"></script>
 </body>
 </html>

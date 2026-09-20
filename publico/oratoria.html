@@ -3,70 +3,51 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Oratória Relâmpago</title>
-  <meta name="description" content="Tema do dia, 45 segundos de preparo e o discurso no cronômetro. Treino para o CNO.">
-  <meta name="theme-color" content="#17458f">
+  <title>Treino de Oratória</title>
+  <meta name="description" content="Treino para o CNO: tema sobre o Interact, 45 segundos de preparo e o discurso no cronômetro. Não vale ponto.">
+  <meta name="theme-color" content="#0d2450">
   <link rel="icon" href="icone.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="estilo.css?v=3">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wdth,wght@75..100,400..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilo.css?v=8">
 </head>
-<body data-jogo="oratoria">
+<body>
   <header class="topo">
     <a class="marca" href="/"><span class="faixa"></span>Jogos</a>
-    <span class="titulo">Oratória Relâmpago<span class="dia" id="numero-dia"></span></span>
+    <span class="titulo">Treino de Oratória<span class="dia">Não vale ponto</span></span>
     <button class="acao" type="button" id="btn-ajuda">Como funciona</button>
   </header>
 
-  <main class="jogo oratoria" id="jogo" hidden>
-    <p class="rotulo" id="rotulo-tema">Tema de hoje</p>
-    <p class="tema oculto" id="tema">O tema aparece quando você sortear. Aí o relógio começa.</p>
+  <main class="jogo oratoria" id="jogo">
+    <p class="selo" id="selo">Tema do dia</p>
+    <p class="tema placa" id="tema"></p>
 
     <div class="relogio" id="relogio">45</div>
-    <p class="fase" id="fase"></p>
+    <p class="fase" id="fase">Escolha o tempo e comece. O preparo é sempre de 45 segundos.</p>
     <div class="barra" id="barra"><div></div></div>
 
-    <div class="modos" id="modos">
-      <label><input type="radio" name="modo" value="relampago" checked><strong>Relâmpago</strong>45 s de preparo, 1 min de fala. 5 pontos.</label>
-      <label><input type="radio" name="modo" value="final"><strong>Final</strong>45 s de preparo, 2 min de fala. 8 pontos.</label>
-    </div>
+    <div class="opcoes" id="opcoes" role="radiogroup" aria-label="Tempo de fala"></div>
 
     <div class="acoes">
-      <button class="botao primario largo" type="button" id="btn-sortear">Sortear o tema e começar</button>
-      <button class="botao dourado largo" type="button" id="btn-terminar" hidden>Terminei</button>
-      <button class="botao largo" type="button" id="btn-treino">Treinar com outro tema (sem pontos)</button>
+      <button class="botao primario largo" type="button" id="btn-comecar">Começar o preparo</button>
+      <button class="botao dourado largo" type="button" id="btn-parar" hidden>Parar</button>
+      <button class="botao largo" type="button" id="btn-outro">Outro tema</button>
     </div>
-    <p class="nota" id="nota">Grave no seu celular se quiser mandar no grupo. Aqui só conta o tempo: o preparo e a fala, como no concurso.</p>
-    <p class="aviso" id="aviso" role="status" aria-live="polite"></p>
+    <p class="nota">Isto é só treino: nada vai para o placar. Fale em pé, em voz alta. Se gravar no celular e mandar no grupo, o grupo diz quem foi o orador destaque.</p>
   </main>
 
   <dialog id="dlg-ajuda" closedby="any" aria-labelledby="titulo-ajuda">
     <form method="dialog">
-      <h2 id="titulo-ajuda">Como funciona</h2>
+      <h2 id="titulo-ajuda" class="placa">Como funciona</h2>
       <p>É o formato da final do Concurso Nacional de Oratória: você descobre o tema e tem <strong>45 segundos</strong> para preparar. Depois o cronômetro do discurso começa.</p>
-      <p><strong>Relâmpago</strong>: 1 minuto de fala, 5 pontos. <strong>Final</strong>: 2 minutos, 8 pontos.</p>
-      <p>Fale em pé, em voz alta, para o espelho ou para a câmera. Se gravar, manda no grupo: o grupo decide quem foi o orador destaque do dia.</p>
-      <p>Conta uma vez por dia. Recomeçar antes de terminar zera o relógio. O botão "Terminei" só vale depois que o tempo passou de verdade.</p>
-      <p class="mudo">Tema novo toda meia-noite, horário de Brasília. Todo tema é sobre o Interact.</p>
+      <p><strong>Relâmpago</strong>: 1 minuto. <strong>Gonzaga</strong>: 1 minuto e meio. <strong>Final</strong>: 2 minutos.</p>
+      <p>Não vale ponto. É treino, quantas vezes quiser, com o tema do dia ou com outro tema. Todo tema é sobre o Interact.</p>
       <button class="botao primario" type="submit">Entendi</button>
     </form>
   </dialog>
 
-  <dialog id="dlg-fim" closedby="any" aria-labelledby="titulo-fim">
-    <form method="dialog">
-      <h2 id="titulo-fim">Discurso feito.</h2>
-      <p class="dica" id="fim-tema"></p>
-      <p class="pontos" id="fim-pontos"></p>
-      <div class="acoes">
-        <button class="botao primario" type="button" id="btn-compartilhar">Mandar no grupo</button>
-        <button class="botao" type="button" id="btn-ver-placar">Ver placar</button>
-      </div>
-      <p class="mudo">Próximo tema em <span id="contagem"></span>. <a href="/">Outros jogos</a></p>
-    </form>
-  </dialog>
-
-  <script src="comum.js?v=3"></script>
-  <script src="oratoria.js?v=3"></script>
+  <script src="comum.js?v=8"></script>
+  <script src="oratoria.js?v=8"></script>
 </body>
 </html>

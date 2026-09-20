@@ -1,84 +1,64 @@
-// Oratória Relâmpago — lado do navegador. O servidor guarda a hora em que
-// o tema foi sorteado; o relógio daqui é só para o orador ver. "Terminei"
-// só é aceito quando o servidor confirma que o tempo passou.
+// Treino de Oratória — só relógio e tema. Nada vai para o servidor além de
+// pedir os temas. Não precisa nem estar logado.
 
 (() => {
   const $ = (sel) => document.querySelector(sel);
   const relogio = $("#relogio");
   const fase = $("#fase");
   const barra = $("#barra");
-  const aviso = $("#aviso");
-  const dlgFim = $("#dlg-fim");
 
-  let partida = null;
+  let dados = null;
+  let temaAtual = null;
   let timer = null;
-  let treino = null; // tema de treino, sem pontos
-  let contagemLigada = false;
 
-  function modoAtual() {
-    return partida && partida.modo ? partida.modos[partida.modo] : partida.modos[$("input[name=modo]:checked").value];
+  function duracaoEscolhida() {
+    const v = Number($("input[name=duracao]:checked").value);
+    return dados.duracoes.find((d) => d.segundos === v);
   }
 
-  async function carregar() {
-    const dados = await Jogos.api(`/api/oratoria/partida?jogador=${encodeURIComponent(Jogos.jogador.id)}`);
-    partida = dados.partida;
-    $("#numero-dia").textContent = `#${partida.dia}`;
-    if (!contagemLigada) {
-      contagemLigada = true;
-      Jogos.contagem($("#contagem"), dados.viraEmMs, () => location.reload());
-    }
-    $("#jogo").hidden = false;
-    desenhar();
+  function montarOpcoes() {
+    $("#opcoes").innerHTML = dados.duracoes.map((d, i) => `
+      <label><input type="radio" name="duracao" value="${d.segundos}" ${i === 0 ? "checked" : ""}>
+        <strong>${Jogos.esc(d.nome)}</strong>${d.segundos >= 60 ? `${Math.floor(d.segundos / 60)} min${d.segundos % 60 ? " e meio" : ""}` : `${d.segundos} s`} de fala
+      </label>`).join("");
   }
 
-  function desenhar() {
+  function mostrarTema(tema, rotulo) {
+    temaAtual = tema;
+    $("#tema").textContent = tema;
+    $("#selo").textContent = rotulo;
+  }
+
+  function parado() {
     clearInterval(timer);
-    const tema = $("#tema");
-    if (partida.terminou) {
-      tema.textContent = partida.tema;
-      tema.className = "tema";
-      relogio.textContent = "0";
-      relogio.className = "relogio";
-      fase.textContent = "Feito por hoje";
-      $("#modos").hidden = true;
-      $("#btn-sortear").hidden = true;
-      $("#btn-terminar").hidden = true;
-      mostrarFim();
-      return;
-    }
-    if (partida.comecou) {
-      tema.textContent = partida.tema;
-      tema.className = "tema";
-      $("#modos").hidden = true;
-      $("#btn-sortear").hidden = true;
-      $("#btn-treino").hidden = true;
-      $("#btn-terminar").hidden = false;
-      rodarRelogio(partida.inicio, modoAtual());
-      return;
-    }
-    tema.textContent = "O tema aparece quando você sortear. Aí o relógio começa.";
-    tema.className = "tema oculto";
-    relogio.textContent = String(partida.preparoS);
+    relogio.textContent = String(dados.preparoS);
     relogio.className = "relogio";
-    fase.textContent = "";
+    fase.textContent = "Escolha o tempo e comece. O preparo é sempre de 45 segundos.";
     barra.className = "barra";
     barra.firstElementChild.style.width = "0";
-    $("#modos").hidden = false;
-    $("#btn-sortear").hidden = false;
-    $("#btn-treino").hidden = false;
-    $("#btn-terminar").hidden = true;
+    $("#opcoes").hidden = false;
+    $("#btn-comecar").hidden = false;
+    $("#btn-outro").hidden = false;
+    $("#btn-parar").hidden = true;
   }
 
   // Preparo (dourado) e depois discurso (azul). A barra enche em cada fase.
-  function rodarRelogio(inicio, modo, aoAcabar) {
-    const preparoMs = partida.preparoS * 1000;
-    const discursoMs = modo.discursoS * 1000;
+  function comecar() {
+    const duracao = duracaoEscolhida();
+    const inicio = Date.now();
+    const preparoMs = dados.preparoS * 1000;
+    const discursoMs = duracao.segundos * 1000;
+    $("#opcoes").hidden = true;
+    $("#btn-comecar").hidden = true;
+    $("#btn-outro").hidden = true;
+    $("#btn-parar").hidden = false;
+    $("#btn-parar").textContent = "Parar";
     const tique = () => {
       const passou = Date.now() - inicio;
       if (passou < preparoMs) {
         relogio.textContent = String(Math.ceil((preparoMs - passou) / 1000));
         relogio.className = "relogio preparo";
-        fase.textContent = "Preparo. Pensa na abertura e no fecho.";
+        fase.textContent = "Preparo. Pense na abertura e no fecho.";
         barra.className = "barra preparo";
         barra.firstElementChild.style.width = `${(passou / preparoMs) * 100}%`;
       } else if (passou < preparoMs + discursoMs) {
@@ -86,89 +66,38 @@
         const m = Math.floor(resta / 60000), s = Math.ceil((resta % 60000) / 1000) % 60;
         relogio.textContent = `${m}:${String(s).padStart(2, "0")}`;
         relogio.className = "relogio falando";
-        fase.textContent = "Fala. Em pé, em voz alta.";
+        fase.textContent = `Fala. Modo ${duracao.nome}.`;
         barra.className = "barra";
         barra.firstElementChild.style.width = `${((passou - preparoMs) / discursoMs) * 100}%`;
       } else {
         relogio.textContent = "0:00";
         relogio.className = "relogio";
-        fase.textContent = "Tempo. Pode apertar Terminei.";
+        fase.textContent = "Tempo. Como foi o fecho?";
         barra.firstElementChild.style.width = "100%";
+        $("#btn-parar").textContent = "De novo";
         clearInterval(timer);
-        if (aoAcabar) aoAcabar();
       }
     };
+    clearInterval(timer);
     tique();
     timer = setInterval(tique, 250);
   }
 
-  async function sortear() {
-    const modo = $("input[name=modo]:checked").value;
-    try {
-      const saida = await Jogos.api("/api/oratoria/comecar", { jogador: Jogos.jogador.id, modo });
-      partida = saida.partida;
-      treino = null;
-      desenhar();
-    } catch (erro) {
-      Jogos.avisar(aviso, erro.message);
-      if (erro.codigo === 401) Jogos.abrirEntrada(Jogos.jogador);
-    }
+  async function outroTema() {
+    const novo = await Jogos.api(`/api/oratoria/temas?exceto=${encodeURIComponent(temaAtual || "")}`);
+    mostrarTema(novo.aleatorio, "Outro tema");
+    parado();
   }
 
-  async function terminar() {
-    if (treino) { treino = null; desenhar(); return; }
-    try {
-      const saida = await Jogos.api("/api/oratoria/terminar", { jogador: Jogos.jogador.id });
-      partida = saida.partida;
-      desenhar();
-    } catch (erro) {
-      Jogos.avisar(aviso, erro.message, 3000);
-    }
-  }
-
-  // Treino: um tema qualquer, relógio igual, nada vai para o servidor.
-  async function treinar() {
-    const { tema } = await Jogos.api("/api/oratoria/treino");
-    treino = tema;
-    const modo = modoAtual();
-    $("#tema").textContent = tema;
-    $("#tema").className = "tema";
-    $("#rotulo-tema").textContent = "Treino, sem pontos";
-    $("#modos").hidden = true;
-    $("#btn-sortear").hidden = true;
-    $("#btn-treino").hidden = true;
-    $("#btn-terminar").hidden = false;
-    $("#btn-terminar").textContent = "Voltar";
-    rodarRelogio(Date.now(), modo);
-  }
-
-  function mostrarFim() {
-    $("#fim-tema").textContent = partida.tema;
-    $("#fim-pontos").textContent = `+${partida.pontos} pontos para o distrito ${Jogos.jogador.distrito}`;
-    if (!dlgFim.open) dlgFim.showModal();
-  }
-
-  $("#btn-compartilhar").addEventListener("click", async () => {
-    const modo = partida.modos[partida.modo];
-    const texto = `Oratória Relâmpago #${partida.dia} - modo ${modo.nome}\n"${partida.tema}"\nDiscurso feito. Distrito ${Jogos.jogador.distrito} - ${location.origin}/oratoria`;
-    const botao = $("#btn-compartilhar");
-    try {
-      if (navigator.share) { await navigator.share({ text: texto }); return; }
-      await navigator.clipboard.writeText(texto);
-    } catch { /* clipboard bloqueado: segue */ }
-    botao.textContent = "Copiado. Cola no grupo";
-    setTimeout(() => { botao.textContent = "Mandar no grupo"; }, 2500);
-  });
-
-  $("#btn-sortear").addEventListener("click", sortear);
-  $("#btn-terminar").addEventListener("click", terminar);
-  $("#btn-treino").addEventListener("click", treinar);
-  $("#btn-ver-placar").addEventListener("click", () => { dlgFim.close(); Jogos.abrirPlacar("oratoria"); });
+  $("#btn-comecar").addEventListener("click", comecar);
+  $("#btn-parar").addEventListener("click", parado);
+  $("#btn-outro").addEventListener("click", outroTema);
   $("#btn-ajuda").addEventListener("click", () => $("#dlg-ajuda").showModal());
 
-  Jogos.garantirJogador(async (jogador, dados) => {
-    const primeiraVez = !dados;
-    await carregar();
-    if (primeiraVez) $("#dlg-ajuda").showModal();
-  });
+  (async () => {
+    dados = await Jogos.api("/api/oratoria/temas");
+    montarOpcoes();
+    mostrarTema(dados.temaDoDia, "Tema do dia");
+    parado();
+  })();
 })();

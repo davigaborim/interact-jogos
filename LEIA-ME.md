@@ -1,22 +1,27 @@
 # Jogos do Interact
 
-Hub de jogos diários para o Interact brasileiro, com um placar só (individual
-e por distrito) somando tudo. Três jogos prontos:
+Hub de jogos diários para o Interact brasileiro. A primeira coisa da tela é
+o **Trem das Raízes**: cada ponto que alguém faz é um quilômetro para o trem
+do distrito rumo a Sarzedo/MG (COMIC Nossas Raízes, 14 a 17 de janeiro de
+2027). O trilho tem 3.000 km; as estações do caminho são as últimas COMICs
+(Uberaba 750, Bento Gonçalves 1.500, Foz do Iguaçu 2.250, Sarzedo 3.000).
 
-| Jogo | Endereço | Regra | Pontos |
+| Jogo | Endereço | Regra | Km |
 |---|---|---|---|
 | **Termo Interactiano** | `/termo` | palavra de 5 letras do universo Interact, 6 tentativas | 10, 8, 6, 5, 4, 3 por tentativa; 1 se errar |
-| **Oratória Relâmpago** | `/oratoria` | tema do dia, 45 s de preparo, discurso cronometrado | Relâmpago (1 min) 5; Final (2 min) 8 |
-| **Mais ou Menos do Censo** | `/censo` | dez comparações com números reais do Censo Nacional 2023-24 | 1 por acerto |
+| **Mais ou Menos do Censo** | `/censo` | dez duplas, "qual tem mais interactianos?", números reais do Censo 2023-24 | 1 por acerto |
+| **Treino de Oratória** | `/oratoria` | tema do dia ou aleatório, 45 s de preparo, fala de 1, 1,5 ou 2 min | **não vale ponto**, é treino para o CNO |
 
 Sem dependência nenhuma: só Node 18 ou mais novo. Sem `npm install`, sem
 build, sem banco. Mesmo padrão do `velo-reservas`, pelo mesmo motivo: é o que
 menos dá errado na Hostinger.
 
 Identidade visual: cores do Brand Center do Rotary (Azure `#0067C8`, Royal
-Blue `#17458F`, Gold `#F7A81B`), fonte Open Sans. **Nenhum emoji** em lugar
-nenhum, nem no texto de compartilhar (usa blocos `▓▒░`). O logo oficial do
-Interact não está no site; se for entrar, é pelas regras do Brand Center.
+Blue `#17458F`, Gold `#F7A81B`) e Open Sans; nos títulos, o eixo de largura
+condensada da própria Open Sans (`wdth 75`, peso 800), cara de placa de
+estação sem sair da marca. **Nenhum emoji** em lugar nenhum, nem no texto de
+compartilhar (usa blocos `▓▒░`). O logo oficial do Interact não está no
+site; se for entrar, é pelas regras do Brand Center.
 
 ## Rodar
 
@@ -32,7 +37,8 @@ PORT=4000 node servidor.js
 | `servidor.js` | HTTP: serve `publico/`, resolve `/termo` etc. e tem toda a API. Jogador, partida e placar são comuns; cada jogo tem suas rotas em `/api/<jogo>/` |
 | `lib/calendario.js` | Dia de hoje em Brasília, número do dia desde `DATA_INICIAL`, embaralhador com semente. **`DATA_INICIAL`** é o dia 1: trocar depois de publicado reembaralha tudo |
 | `lib/termo.js` | Palavra do dia, avaliação do palpite, pontos |
-| `lib/oratoria.js` | Tema do dia, modos, checagem de que o tempo passou |
+| `lib/oratoria.js` | Tema do dia e tema aleatório para o treino (sem partida, sem pontos) |
+| `lib/trem.js` | Estações do trilho e a corrida (todos os 31 distritos ordenados por km) |
 | `lib/censo.js` | As dez comparações do dia (dez grupos diferentes, nunca empate) |
 | `lib/armazem.js` | Jogadores e partidas em `dados/estado.json` (grava 300 ms depois de cada mudança e no `SIGTERM`) |
 | `dados/palavras.json` | As palavras do Termo, com forma acentuada (`mostra`) e `dica`. **É aqui que se adiciona palavra** |
@@ -41,8 +47,10 @@ PORT=4000 node servidor.js
 | `dados/censo.json` | Os números do censo em grupos comparáveis |
 | `dados/distritos.json` | Os 31 distritos; `onde` só preenchido onde tinha fonte |
 | `publico/comum.js` | O que toda página usa: jogador (localStorage), chamada à API, diálogo de entrada, placar, contagem |
-| `publico/index.html` | O hub: cartões dos jogos com o estado do dia, e os "em breve" |
-| `publico/termo.*`, `oratoria.*`, `censo.*` | Cada jogo: uma página e um script |
+| `publico/index.html` + `hub.js` | O hub: a corrida (`/api/trem`), o cartão do seu trem, os cartões dos jogos com o estado do dia e a fila |
+| `publico/termo.*`, `censo.*`, `oratoria.*` | Cada jogo: uma página e um script |
+| `ferramentas/semear-teste.js` | Enche o banco com 15 jogadores fictícios para demo (apaga o que existia; nunca no servidor publicado) |
+| `ferramentas/limpar-controle.js` | Troca caracteres de controle crus por `\uXXXX` num arquivo |
 
 `dados/estado.json` é o banco. **Não vai pro git** (`.gitignore`) e não se
 apaga sem querer: apagou, zera o placar e todo mundo entra de novo.
@@ -63,8 +71,8 @@ apaga sem querer: apagou, zera o placar e todo mundo entra de novo.
 - Distrito **soma** os pontos de todo mundo (de propósito: premia quem traz
   gente, que é o que a COMIC precisa). Empate desempata por número de
   jogadores.
-- Uma partida por jogo por dia. Na Oratória, recomeçar antes de terminar
-  zera o relógio; o modo Treino não vai para o servidor.
+- Uma partida por jogo por dia. O Treino de Oratória não fala com o servidor
+  além de pedir os temas.
 
 ## Mudar conteúdo
 
@@ -89,6 +97,6 @@ apaga sem querer: apagou, zera o placar e todo mundo entra de novo.
 - [ ] Preencher o `onde` dos distritos que faltam.
 - [ ] Lista de clubes por distrito (hoje é texto livre).
 - [ ] Sequência (streak) de dias seguidos.
-- [ ] Próximos: Trem das Raízes (camada coletiva sobre o placar), Monta a
+- [ ] Próximos: Monta a
       Mesa, De Que Distrito É?, Memória das Raízes, Vagalumes (SMI), Lema
       Certo, Bingo da COMIC, Alerta Vermelho.

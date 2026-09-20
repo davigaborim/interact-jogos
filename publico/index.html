@@ -4,15 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Jogos do Interact</title>
-  <meta name="description" content="Jogos diários para o Interact brasileiro. Placar por distrito. Rumo à COMIC Nossas Raízes.">
-  <meta name="theme-color" content="#17458f">
+  <meta name="description" content="A corrida dos 31 distritos rumo à COMIC Nossas Raízes. Cada ponto é um quilômetro.">
+  <meta name="theme-color" content="#0d2450">
   <meta property="og:title" content="Jogos do Interact">
-  <meta property="og:description" content="Uma palavra, um discurso e dez perguntas por dia. Teu distrito no placar.">
+  <meta property="og:description" content="Cada ponto é um quilômetro. Qual distrito chega primeiro em Sarzedo?">
   <link rel="icon" href="icone.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="estilo.css?v=3">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wdth,wght@75..100,400..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilo.css?v=8">
 </head>
 <body>
   <header class="topo">
@@ -21,73 +21,71 @@
     <button class="acao" type="button" data-abrir-placar>Placar</button>
   </header>
 
-  <main class="hub">
-    <section class="abertura">
-      <h1>Um pouco de <span>Interact</span> por dia, rumo à COMIC.</h1>
-      <p>Cada jogo vale pontos para você e para o seu distrito. Palavra, tema e perguntas novas toda meia-noite.</p>
-    </section>
+  <section class="painel" aria-labelledby="titulo-corrida">
+    <div class="miolo">
+      <p class="eyebrow">Trem das Raízes</p>
+      <h1 class="placa" id="titulo-corrida">Rumo a <span class="ouro">Sarzedo</span></h1>
+      <p class="sub">Cada ponto que alguém faz nos jogos é um quilômetro para o trem do distrito. As estações do caminho são as últimas COMICs. Chegada: 14 de janeiro de 2027.</p>
+      <div class="numeros">
+        <span><b id="n-km">0</b>km rodados</span>
+        <span><b id="n-jogadores">0</b>interactianos</span>
+        <span><b id="n-distritos">0</b>distritos em movimento</span>
+      </div>
+      <div class="corrida-caixa">
+        <div class="estacoes" id="estacoes"></div>
+        <ol class="corrida" id="corrida"><li class="vazio">Carregando a corrida</li></ol>
+      </div>
+      <button class="ver-todos" type="button" id="btn-todos" hidden>Ver os 31 distritos</button>
+    </div>
+  </section>
 
-    <div class="eu" id="eu" hidden>
-      <div><strong id="eu-nome"></strong><span id="eu-detalhe"></span></div>
+  <main class="hub">
+    <div class="meu-trem" id="meu-trem" hidden>
+      <div class="posicao"><span id="meu-pos">-</span><small>lugar</small></div>
+      <div class="texto"><strong id="meu-nome"></strong><span id="meu-detalhe"></span></div>
       <button type="button" id="btn-eu">Trocar</button>
     </div>
 
-    <div class="cartoes">
+    <h2 class="secao placa">Jogos de hoje <small>Palavra e perguntas novas toda meia-noite, horário de Brasília. Cada ponto vira quilômetro.</small></h2>
+    <div class="cartoes duplo">
       <a class="cartao" href="/termo" data-jogo="termo">
-        <h2>Termo Interactiano</h2>
-        <p>Uma palavra de 5 letras do universo Interact. Seis tentativas. Até 10 pontos.</p>
-        <span class="estado">Jogar</span>
-      </a>
-      <a class="cartao" href="/oratoria" data-jogo="oratoria">
-        <h2>Oratória Relâmpago</h2>
-        <p>Tema do dia, 45 segundos de preparo e o discurso no cronômetro, como no CNO. 5 ou 8 pontos.</p>
-        <span class="estado">Jogar</span>
+        <p class="eyebrow">Até 10 km</p>
+        <h3 class="placa">Termo Interactiano</h3>
+        <p>Uma palavra de 5 letras do universo Interact. Seis tentativas.</p>
+        <span class="estado jogar">Jogar</span>
       </a>
       <a class="cartao" href="/censo" data-jogo="censo">
-        <h2>Mais ou Menos do Censo</h2>
-        <p>Dez comparações tiradas do Censo Nacional Interactiano. Um ponto por acerto.</p>
-        <span class="estado">Jogar</span>
+        <p class="eyebrow">Até 10 km</p>
+        <h3 class="placa">Mais ou Menos do Censo</h3>
+        <p>Dez duplas. Qual tem mais interactianos? Números reais do Censo Nacional.</p>
+        <span class="estado jogar">Jogar</span>
       </a>
     </div>
 
-    <h3>Em breve</h3>
+    <h2 class="secao placa">Treino <small>Não vale ponto. Vale para o CNO.</small></h2>
     <div class="cartoes">
-      <div class="cartao breve"><h2>Trem das Raízes</h2><p>Cada distrito tem um trem saindo de casa rumo a Sarzedo. Os pontos de todo mundo fazem ele andar.</p><span class="estado">Em breve</span></div>
-      <div class="cartao breve"><h2>Monta a Mesa</h2><p>Panóplia e mesa da presidência: arraste as bandeiras e as autoridades para o lugar certo.</p><span class="estado">Em breve</span></div>
-      <div class="cartao breve"><h2>De Que Distrito É?</h2><p>Uma pista, um mapa com os 31 distritos. Acerte de onde veio.</p><span class="estado">Em breve</span></div>
-      <div class="cartao breve"><h2>Memória das Raízes</h2><p>Pares de projeto e clube que ganharam o CNP.</p><span class="estado">Em breve</span></div>
-      <div class="cartao breve"><h2>Vagalumes</h2><p>Na Semana Mundial de Interact, cada ação acende uma luz no mapa do Brasil.</p><span class="estado">Em breve</span></div>
-      <div class="cartao breve"><h2>Lema Certo</h2><p>Ligue o lema presidencial ao seu ano.</p><span class="estado">Em breve</span></div>
+      <a class="cartao treino" href="/oratoria">
+        <p class="eyebrow">Sem pontos</p>
+        <h3 class="placa">Treino de Oratória</h3>
+        <p>Tema sobre o Interact, 45 segundos de preparo e o discurso no cronômetro, como na final do CNO.</p>
+        <span class="estado">Treinar</span>
+      </a>
     </div>
 
-    <p class="rodape">Feito por interactianos, para o grupo da COMIC. Próxima palavra em <span id="contagem"></span>.</p>
+    <h2 class="secao placa">Na fila <small>Vão entrando aqui, um por vez.</small></h2>
+    <ul class="breve">
+      <li><div><b>Monta a Mesa</b><span>Panóplia e mesa da presidência no lugar certo.</span></div><em>Em breve</em></li>
+      <li><div><b>De Que Distrito É?</b><span>Uma pista, um mapa, 31 distritos.</span></div><em>Em breve</em></li>
+      <li><div><b>Memória das Raízes</b><span>Projeto e clube que ganharam o CNP.</span></div><em>Em breve</em></li>
+      <li><div><b>Vagalumes</b><span>Na Semana Mundial, cada ação acende uma luz no mapa.</span></div><em>Em breve</em></li>
+      <li><div><b>Lema Certo</b><span>Lema presidencial e o ano dele.</span></div><em>Em breve</em></li>
+      <li><div><b>Bingo da COMIC</b><span>O que sempre acontece na COMIC.</span></div><em>Em breve</em></li>
+    </ul>
+
+    <p class="rodape">Feito por interactianos para o grupo da COMIC. O dia vira em <span id="contagem"></span>.</p>
   </main>
 
-  <script src="comum.js?v=3"></script>
-  <script>
-    (() => {
-      const $ = (s) => document.querySelector(s);
-      function mostrar(jogador, dados) {
-        $("#eu").hidden = false;
-        $("#eu-nome").textContent = jogador.nome;
-        $("#eu-detalhe").textContent = [jogador.clube, `Distrito ${jogador.distrito}`].filter(Boolean).join(" - ");
-        if (!dados) return;
-        $("#numero-dia").textContent = `DIA ${dados.dia}`;
-        Jogos.contagem($("#contagem"), dados.viraEmMs, () => location.reload());
-        for (const [jogo, r] of Object.entries(dados.hoje)) {
-          const estado = document.querySelector(`[data-jogo="${jogo}"] .estado`);
-          if (!estado) continue;
-          if (r.terminou) { estado.textContent = `Feito: ${r.pontos} pt${r.pontos === 1 ? "" : "s"}`; estado.className = "estado feito"; }
-          else if (r.comecou) { estado.textContent = "Continuar"; estado.className = "estado jogar"; }
-          else { estado.textContent = "Jogar"; estado.className = "estado jogar"; }
-        }
-      }
-      Jogos.garantirJogador(async (jogador, dados) => {
-        if (!dados) dados = await Jogos.api(`/api/eu?jogador=${encodeURIComponent(jogador.id)}`);
-        mostrar(jogador, dados);
-      });
-      $("#btn-eu").addEventListener("click", () => Jogos.abrirEntrada(Jogos.jogador));
-    })();
-  </script>
+  <script src="comum.js?v=8"></script>
+  <script src="hub.js?v=8"></script>
 </body>
 </html>

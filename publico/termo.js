@@ -148,7 +148,7 @@
     $("#titulo-fim").textContent = !partida.venceu ? "Hoje não foi." : n === 1 ? "De primeira." : n <= 3 ? "Mandou bem." : n <= 5 ? "Fechou." : "Na última.";
     $("#fim-palavra").textContent = partida.mostra;
     $("#fim-dica").textContent = partida.dica;
-    $("#fim-pontos").textContent = `+${partida.pontos} ponto${partida.pontos === 1 ? "" : "s"} para o distrito ${Jogos.jogador.distrito}`;
+    $("#fim-pontos").textContent = `+${partida.pontos} km para o trem do distrito ${Jogos.jogador.distrito}`;
     if (!dlgFim.open) dlgFim.showModal();
   }
 

@@ -47,8 +47,8 @@ window.Jogos = (() => {
     molde.innerHTML = `
       <dialog id="dlg-entrar" closedby="none" aria-labelledby="titulo-entrar">
         <form id="form-entrar" method="dialog">
-          <h2 id="titulo-entrar">Quem é você?</h2>
-          <p class="mudo">Só para você aparecer no placar e somar pontos para o seu distrito. Sem senha, sem e-mail.</p>
+          <h2 id="titulo-entrar" class="placa">Quem é você?</h2>
+          <p class="mudo">Só para você aparecer no placar e puxar o trem do seu distrito. Sem senha, sem e-mail.</p>
           <label>Seu nome
             <input name="nome" required minlength="2" maxlength="24" autocomplete="given-name" placeholder="Como te chamam no clube">
           </label>
@@ -64,7 +64,7 @@ window.Jogos = (() => {
       </dialog>
       <dialog id="dlg-placar" closedby="any" aria-labelledby="titulo-placar">
         <form method="dialog">
-          <h2 id="titulo-placar">Placar</h2>
+          <h2 id="titulo-placar" class="placa">Placar</h2>
           <div class="abas" role="tablist">
             <button type="button" role="tab" data-periodo="hoje" aria-selected="true">Hoje</button>
             <button type="button" role="tab" data-periodo="geral" aria-selected="false">Geral</button>
@@ -75,7 +75,6 @@ window.Jogos = (() => {
             <select id="sel-placar-jogo" aria-label="Jogo">
               <option value="">Todos os jogos</option>
               <option value="termo">Termo</option>
-              <option value="oratoria">Oratória</option>
               <option value="censo">Censo</option>
             </select>
           </div>
@@ -218,7 +217,7 @@ window.Jogos = (() => {
     });
     tabela.innerHTML = cab + linhas.join("");
     $("#rodape-placar").textContent = placarGrupo === "distritos"
-      ? "O distrito soma os pontos de todo mundo que jogou. Quanto mais gente, mais alto."
+      ? "Cada ponto é um quilômetro do trem. O distrito soma todo mundo: quanto mais gente, mais longe."
       : `${placar.totalJogadores} pessoa${placar.totalJogadores === 1 ? "" : "s"} já entraram.`;
   }
 
