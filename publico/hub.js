@@ -85,6 +85,12 @@
     for (const [jogo, r] of Object.entries(hoje)) {
       const estado = document.querySelector(`[data-jogo="${jogo}"] .estado`);
       if (!estado) continue;
+      if (jogo === "vagalumes") {
+        if (r.fase === "depois") { estado.textContent = "Ver o mapa"; estado.className = "estado"; }
+        else if (r.fase === "antes") { estado.textContent = r.compromisso ? "Comprometido" : "Acender"; estado.className = r.compromisso ? "estado feito" : "estado jogar"; }
+        else { estado.textContent = r.hoje ? "Aceso hoje" : "Acender hoje"; estado.className = r.hoje ? "estado feito" : "estado jogar"; }
+        continue;
+      }
       if (r.terminou) { estado.textContent = `Feito: +${r.pontos} km`; estado.className = "estado feito"; }
       else if (r.comecou) { estado.textContent = "Continuar"; estado.className = "estado jogar"; }
       else { estado.textContent = "Jogar"; estado.className = "estado jogar"; }

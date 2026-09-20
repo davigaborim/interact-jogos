@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Vagalumes</title>
+  <meta name="description" content="Semana Mundial de Interact, 30 de outubro a 5 de novembro. Cada ação acende um vagalume no mapa do Brasil.">
+  <meta name="theme-color" content="#050d21">
+  <link rel="icon" href="icone.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wdth,wght@75..100,400..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilo.css?v=9">
+</head>
+<body data-jogo="vagalumes" class="noite">
+  <header class="topo">
+    <a class="marca" href="/"><span class="faixa"></span>Jogos</a>
+    <span class="titulo">Vagalumes<span class="dia">Semana Mundial de Interact</span></span>
+    <button class="acao" type="button" id="btn-ajuda">Como funciona</button>
+  </header>
+
+  <section class="ceu">
+    <div class="miolo">
+      <p class="eyebrow">64 anos iluminando caminhos</p>
+      <h1 class="placa">Nenhuma luz é <span class="ouro">pequena demais</span></h1>
+      <p class="sub" id="sub"></p>
+      <div class="numeros">
+        <span><b id="n-acesos">0</b>vagalumes acesos</span>
+        <span><b id="n-compromissos">0</b>comprometidos</span>
+        <span><b id="n-distritos">0</b>distritos com luz</span>
+      </div>
+      <div class="mapa-caixa">
+        <svg id="mapa" viewBox="0 0 400 400" role="img" aria-label="Mapa do Brasil com os vagalumes acesos">
+          <defs>
+            <filter id="brilho" x="-200%" y="-200%" width="500%" height="500%">
+              <feGaussianBlur stdDeviation="2.2" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <path id="brasil" d="" />
+          <g id="luzes"></g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <main class="hub">
+    <div class="acender" id="acender" hidden>
+      <p class="eyebrow" id="acender-eyebrow"></p>
+      <h2 class="placa" id="acender-titulo"></h2>
+      <p class="mudo" id="acender-texto"></p>
+      <textarea id="texto" maxlength="140" rows="2" placeholder="O que o clube fez hoje? Uma frase." hidden></textarea>
+      <button class="botao dourado largo" type="button" id="btn-acender"></button>
+      <p class="aviso" id="aviso" role="status" aria-live="polite"></p>
+    </div>
+
+    <h2 class="secao placa">Os sete dias <small>Um lema histórico do Rotary por dia, como no guia da MDIO. Toda meia-noite abre o próximo.</small></h2>
+    <ol class="dias" id="dias"></ol>
+
+    <h2 class="secao placa">Luzes acesas <small>O que os clubes fizeram, na ordem em que acenderam.</small></h2>
+    <ul class="feed" id="feed"><li class="vazio">Ninguém acendeu ainda.</li></ul>
+
+    <p class="rodape"><a href="/">Ver a corrida dos distritos</a></p>
+  </main>
+
+  <dialog id="dlg-ajuda" closedby="any" aria-labelledby="titulo-ajuda">
+    <form method="dialog">
+      <h2 id="titulo-ajuda" class="placa">Como funciona</h2>
+      <p>A <strong>Semana Mundial de Interact</strong> vai de 30 de outubro a 5 de novembro, aniversário do primeiro Interact Club, fundado em 5 de novembro de 1962. O tema de 2026 é "64 anos iluminando caminhos e guiando mudanças: um propósito partilhado", e o símbolo são os vagalumes: cada um brilha pouco, juntos iluminam.</p>
+      <p><strong>Antes da semana</strong>, diga que seu clube vai participar: um vagalume fraco aparece no seu distrito e o trem anda 2 km.</p>
+      <p><strong>Durante a semana</strong>, cada dia você conta em uma frase o que o clube fez: um vagalume forte acende e o trem anda 5 km. Um por dia.</p>
+      <p class="mudo">O mapa é de todo mundo. Quanto mais gente, mais o Brasil acende.</p>
+      <button class="botao primario" type="submit">Entendi</button>
+    </form>
+  </dialog>
+
+  <script src="comum.js?v=9"></script>
+  <script src="vagalumes.js?v=9"></script>
+</body>
+</html>

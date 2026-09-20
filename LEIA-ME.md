@@ -10,6 +10,7 @@ do distrito rumo a Sarzedo/MG (COMIC Nossas Raízes, 14 a 17 de janeiro de
 |---|---|---|---|
 | **Termo Interactiano** | `/termo` | palavra de 5 letras do universo Interact, 6 tentativas | 10, 8, 6, 5, 4, 3 por tentativa; 1 se errar |
 | **Mais ou Menos do Censo** | `/censo` | dez duplas, "qual tem mais interactianos?", números reais do Censo 2023-24 | 1 por acerto |
+| **Vagalumes** | `/vagalumes` | Semana Mundial de Interact (30/10 a 05/11): antes, "meu clube vai participar" acende um vagalume fraco; na semana, uma frase por dia acende um forte no mapa do Brasil | 2 km pelo compromisso, 5 km por dia |
 | **Treino de Oratória** | `/oratoria` | tema do dia ou aleatório, 45 s de preparo, fala de 1, 1,5 ou 2 min | **não vale ponto**, é treino para o CNO |
 
 Sem dependência nenhuma: só Node 18 ou mais novo. Sem `npm install`, sem
@@ -38,6 +39,7 @@ PORT=4000 node servidor.js
 | `lib/calendario.js` | Dia de hoje em Brasília, número do dia desde `DATA_INICIAL`, embaralhador com semente. **`DATA_INICIAL`** é o dia 1: trocar depois de publicado reembaralha tudo |
 | `lib/termo.js` | Palavra do dia, avaliação do palpite, pontos |
 | `lib/oratoria.js` | Tema do dia e tema aleatório para o treino (sem partida, sem pontos) |
+| `lib/vagalumes.js` | Datas e lemas dos 7 dias da SMI 2026, fase (antes/durante/depois), km |
 | `lib/trem.js` | Estações do trilho e a corrida (todos os 31 distritos ordenados por km) |
 | `lib/censo.js` | As dez comparações do dia (dez grupos diferentes, nunca empate) |
 | `lib/armazem.js` | Jogadores e partidas em `dados/estado.json` (grava 300 ms depois de cada mudança e no `SIGTERM`) |
@@ -45,7 +47,8 @@ PORT=4000 node servidor.js
 | `dados/dicionario-5.txt` | 13.130 palavras de 5 letras aceitas como palpite (união da lista da IME-USP com `pythonprobr/palavras`, sem acento). As de `palavras.json` entram sozinhas |
 | `dados/temas.json` | Os temas da Oratória. Regra: sempre sobre o Interact, com amor no meio, **nunca com dois-pontos** |
 | `dados/censo.json` | Os números do censo em grupos comparáveis |
-| `dados/distritos.json` | Os 31 distritos; `onde` só preenchido onde tinha fonte |
+| `dados/distritos.json` | Os 31 distritos; `onde` só preenchido onde tinha fonte; `lat`/`lon` da cidade de referência, **`aprox: true` onde foi chute** (usado só para pôr o vagalume no mapa) |
+| `dados/brasil.json` | Contorno do Brasil já projetado em SVG 400x400 (de johan/world.geo.json, equiretangular) |
 | `publico/comum.js` | O que toda página usa: jogador (localStorage), chamada à API, diálogo de entrada, placar, contagem |
 | `publico/index.html` + `hub.js` | O hub: a corrida (`/api/trem`), o cartão do seu trem, os cartões dos jogos com o estado do dia e a fila |
 | `publico/termo.*`, `censo.*`, `oratoria.*` | Cada jogo: uma página e um script |
@@ -75,6 +78,7 @@ apaga sem querer: apagou, zera o placar e todo mundo entra de novo.
 
 ## Mudar conteúdo
 
+- Palavra de um dia específico: `FIXAS` em `lib/termo.js` (dia 1 = COMIC). Troca de lugar com a que cairia ali, sem repetir.
 - Palavra nova: item em `dados/palavras.json`, `p` sem acento e em
   maiúsculas. Adicionar muda a ordem embaralhada; antes de publicar tanto
   faz, depois evitar mexer durante o dia.
@@ -96,6 +100,6 @@ apaga sem querer: apagou, zera o placar e todo mundo entra de novo.
 - [ ] Preencher o `onde` dos distritos que faltam.
 - [ ] Lista de clubes por distrito (hoje é texto livre).
 - [ ] Sequência (streak) de dias seguidos.
-- [ ] Próximos: Monta a
-      Mesa, De Que Distrito É?, Memória das Raízes, Vagalumes (SMI), Lema
+- [ ] Conferir as coordenadas marcadas `aprox` em `distritos.json` com alguém de cada distrito.
+- [ ] Próximos: Monta a Mesa, De Que Distrito É?, Memória das Raízes, Lema
       Certo, Bingo da COMIC, Alerta Vermelho.

@@ -216,6 +216,62 @@ a { color: var(--azure); }
   .fileira.revelando .celula, .fileira.tremendo { animation: none !important; }
 }
 
+/* ---- Vagalumes: céu noturno ---- */
+
+body.noite { background: #050d21; color: #eef2f8; }
+body.noite .hub h2.secao { color: #fff; }
+body.noite .hub h2.secao small, body.noite .mudo, body.noite .hub .rodape { color: rgba(255, 255, 255, 0.62); }
+.ceu {
+  flex-shrink: 0;
+  background: radial-gradient(ellipse at 50% 0%, #10306a 0%, #071633 45%, #050d21 100%);
+  color: #fff; padding: 22px 16px 10px; position: relative; overflow: hidden;
+}
+.ceu .miolo { max-width: 680px; margin: 0 auto; }
+.ceu h1 { font-size: clamp(2rem, 10vw, 3.2rem); margin: 0; }
+.ceu h1 .ouro { color: var(--gold); }
+.ceu .sub { margin: 10px 0 0; color: rgba(255, 255, 255, 0.78); font-size: 0.92rem; max-width: 46ch; }
+.ceu .numeros { display: flex; gap: 18px; flex-wrap: wrap; margin: 16px 0 6px; font-size: 0.78rem; color: rgba(255, 255, 255, 0.7); }
+.ceu .numeros b { display: block; color: #fff; font-size: 1.25rem; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.mapa-caixa { margin: 6px auto 0; max-width: 460px; }
+#mapa { width: 100%; height: auto; display: block; }
+#brasil { fill: rgba(255, 255, 255, 0.04); stroke: rgba(255, 255, 255, 0.35); stroke-width: 0.8; stroke-linejoin: round; }
+.luz { fill: var(--gold); filter: url(#brilho); animation: piscar 3s ease-in-out infinite; }
+.luz.fraca { fill: #bfe3ff; opacity: 0.75; animation-duration: 4.5s; }
+@keyframes piscar { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+.luz.fraca { animation-name: piscar-fraco; }
+@keyframes piscar-fraco { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.9; } }
+@media (prefers-reduced-motion: reduce) { .luz { animation: none; opacity: 0.9; } .luz.fraca { opacity: 0.5; } }
+
+.acender {
+  background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--raio); padding: 18px; margin-bottom: 6px;
+}
+.acender h2 { margin: 0 0 4px; font-size: 1.7rem; color: #fff; }
+.acender textarea {
+  display: block; width: 100%; margin: 10px 0; padding: 12px; border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.25); background: rgba(0, 0, 0, 0.25); color: #fff;
+  font: 400 1rem "Open Sans", sans-serif; resize: vertical;
+}
+.acender .botao { margin-top: 8px; }
+.acender .aviso { color: var(--gold); }
+
+.dias { list-style: none; margin: 0; padding: 0; border: 1px solid rgba(255, 255, 255, 0.14); border-radius: var(--raio); overflow: hidden; }
+.dias li { display: grid; grid-template-columns: 58px 1fr; gap: 12px; padding: 10px 14px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.9rem; color: rgba(255, 255, 255, 0.85); }
+.dias li:first-child { border-top: 0; }
+.dias .data { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255, 255, 255, 0.55); }
+.dias .data b { display: block; color: #fff; font-size: 1rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.dias li.hoje { background: rgba(247, 168, 27, 0.14); }
+.dias li.hoje .data b { color: var(--gold); }
+.dias li.passou { opacity: 0.55; }
+
+.feed { list-style: none; margin: 0; padding: 0; }
+.feed li { display: grid; grid-template-columns: 14px 1fr; gap: 10px; padding: 10px 0; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.9rem; }
+.feed li:first-child { border-top: 0; }
+.feed .ponto { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); margin-top: 6px; box-shadow: 0 0 10px var(--gold); }
+.feed li b { color: #fff; }
+.feed li p { margin: 2px 0 0; color: rgba(255, 255, 255, 0.85); }
+.feed .vazio { color: rgba(255, 255, 255, 0.6); padding: 12px 0; display: block; }
+
 /* ---- hub ---- */
 
 .hub { flex: 1; width: 100%; max-width: 680px; margin: 0 auto; padding: 18px 16px 36px; }

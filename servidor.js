@@ -18,20 +18,23 @@ const termo = require("./lib/termo");
 const oratoria = require("./lib/oratoria");
 const censo = require("./lib/censo");
 const trem = require("./lib/trem");
+const vagalumes = require("./lib/vagalumes");
 const { estado, agendarGravacao, gravarAgora } = require("./lib/armazem");
 
 const PORTA = Number(process.env.PORT) || 3210;
 const PUBLICO = path.join(__dirname, "publico");
 const DISTRITOS = JSON.parse(fs.readFileSync(path.join(__dirname, "dados", "distritos.json"), "utf8"));
 const NUMEROS_DE_DISTRITO = new Set(DISTRITOS.map((d) => d.n));
+const BRASIL = JSON.parse(fs.readFileSync(path.join(__dirname, "dados", "brasil.json"), "utf8"));
 
 const JOGOS = {
   termo: { nome: "Termo Interactiano" },
   censo: { nome: "Mais ou Menos do Censo" },
+  vagalumes: { nome: "Vagalumes (SMI)" },
 };
 
 // Endereços limpos: /termo abre publico/termo.html.
-const PAGINAS = { "/": "index.html", "/termo": "termo.html", "/oratoria": "oratoria.html", "/censo": "censo.html" };
+const PAGINAS = { "/": "index.html", "/termo": "termo.html", "/oratoria": "oratoria.html", "/censo": "censo.html", "/vagalumes": "vagalumes.html" };
 
 const TIPOS = {
   ".html": "text/html; charset=utf-8",
@@ -164,6 +167,7 @@ function encerrar(partida, jogador, venceu, pontos) {
 function resumoDoDia(jogador) {
   const saida = {};
   for (const jogo of Object.keys(JOGOS)) {
+    if (jogo === "vagalumes") { saida[jogo] = meuVagalume(jogador); continue; }
     const p = partidaDeHoje(jogo, jogador);
     saida[jogo] = p ? { comecou: true, terminou: p.terminou, pontos: p.terminou ? p.pontos : null } : { comecou: false, terminou: false, pontos: null };
   }
@@ -263,6 +267,99 @@ function responderCenso(corpo) {
   return { partida: visaoCenso(partida, partida.dia) };
 }
 
+// ---------- Vagalumes (SMI) ----------
+
+function projetar(lat, lon) {
+  const p = BRASIL.projecao;
+  return {
+    x: ((lon - p.lonMin) / (p.lonMax - p.lonMin)) * p.largura,
+    y: ((p.latMax - lat) / (p.latMax - p.latMin)) * p.altura,
+  };
+}
+
+function chaveCompromisso(idJogador) {
+  return `vagalumes:compromisso:${idJogador}`;
+}
+
+function meuVagalume(jogador) {
+  const f = vagalumes.fase();
+  const compromisso = !!estado.partidas[chaveCompromisso(jogador.id)];
+  const hoje = f === "durante" ? !!partidaDeHoje("vagalumes", jogador) : false;
+  return { fase: f, compromisso, hoje, comecou: compromisso || hoje, terminou: f === "durante" ? hoje : compromisso, pontos: null };
+}
+
+// Espalha os vagalumes de um mesmo distrito num raio pequeno, sempre do
+// mesmo jeito (depende do id), para o mapa não "tremer" a cada carga.
+function deslocamento(semente) {
+  let h = 0;
+  for (const c of semente) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  const angulo = (h % 360) * (Math.PI / 180);
+  const raio = 2 + ((h >>> 8) % 9);
+  return { dx: Math.cos(angulo) * raio, dy: Math.sin(angulo) * raio };
+}
+
+function visaoVagalumes(jogador) {
+  const f = vagalumes.fase();
+  const luzes = [];
+  const acoes = [];
+  const distritosAcesos = new Set();
+  let compromissos = 0, acesos = 0;
+  for (const [k, p] of Object.entries(estado.partidas)) {
+    if (p.jogo !== "vagalumes") continue;
+    const d = DISTRITOS.find((x) => x.n === p.distrito);
+    if (!d) continue;
+    const base = projetar(d.lat, d.lon);
+    const { dx, dy } = deslocamento(k);
+    luzes.push({ distrito: p.distrito, tipo: p.tipo, x: +(base.x + dx).toFixed(1), y: +(base.y + dy).toFixed(1), indiceDia: p.indiceDia ?? null });
+    distritosAcesos.add(p.distrito);
+    if (p.tipo === "compromisso") compromissos++; else acesos++;
+    if (p.tipo === "acao") {
+      const j = estado.jogadores[p.jogador];
+      if (j) acoes.push({ nome: j.nome, clube: j.clube, distrito: p.distrito, indiceDia: p.indiceDia, texto: p.texto, quando: p.fim });
+    }
+  }
+  acoes.sort((a, b) => b.quando - a.quando);
+  return {
+    fase: f,
+    hojeIndice: vagalumes.indiceDoDia(),
+    dias: vagalumes.DIAS,
+    inicio: vagalumes.INICIO,
+    fim: vagalumes.FIM,
+    comecaEmMs: vagalumes.msAteComecar(),
+    kmCompromisso: vagalumes.KM_COMPROMISSO,
+    kmAcao: vagalumes.KM_ACAO,
+    textoMax: vagalumes.TEXTO_MAX,
+    mapa: BRASIL,
+    distritos: DISTRITOS.map((d) => ({ n: d.n, onde: d.onde, ...projetar(d.lat, d.lon) })),
+    luzes,
+    totais: { acesos, compromissos, distritos: distritosAcesos.size },
+    acoes: acoes.slice(0, 40),
+    meu: jogador ? meuVagalume(jogador) : null,
+  };
+}
+
+function acender(corpo) {
+  const jogador = exigirJogador(corpo.jogador);
+  const f = vagalumes.fase();
+  if (f === "depois") throw new ErroDeJogo(409, "A Semana Mundial já passou. O mapa fica aceso como lembrança.");
+  if (f === "antes") {
+    const k = chaveCompromisso(jogador.id);
+    if (estado.partidas[k]) throw new ErroDeJogo(409, "Seu vagalume já está lá. Na semana, ele acende de verdade.");
+    const dia = calendario.numeroDoDia();
+    const partida = { jogo: "vagalumes", tipo: "compromisso", dia, jogador: jogador.id, distrito: jogador.distrito, inicio: Date.now(), fim: null, terminou: false, venceu: false, pontos: 0 };
+    estado.partidas[k] = partida;
+    encerrar(partida, jogador, true, vagalumes.KM_COMPROMISSO);
+    return { partida: visaoVagalumes(jogador) };
+  }
+  const texto = limparTexto(corpo.texto, vagalumes.TEXTO_MAX);
+  if (texto.length < vagalumes.TEXTO_MIN) throw new ErroDeJogo(400, "Conta em uma frase o que o clube fez hoje.");
+  if (/https?:\/\/|www\./i.test(texto)) throw new ErroDeJogo(400, "Sem links aqui. Só a frase.");
+  if (partidaDeHoje("vagalumes", jogador)) throw new ErroDeJogo(409, "Seu vagalume de hoje já está aceso. Amanhã tem outro dia.");
+  const partida = novaPartida("vagalumes", jogador, { tipo: "acao", indiceDia: vagalumes.indiceDoDia(), texto });
+  encerrar(partida, jogador, true, vagalumes.KM_ACAO);
+  return { partida: visaoVagalumes(jogador) };
+}
+
 // ---------- placar ----------
 
 function montarPlacar(filtroJogo) {
@@ -345,6 +442,13 @@ async function api(req, res, url) {
 
     case "GET /api/oratoria/temas":
       return json(res, 200, temasDeOratoria(url.searchParams.get("exceto")));
+    case "GET /api/vagalumes": {
+      const id = url.searchParams.get("jogador");
+      const jogador = id && estado.jogadores[id] ? estado.jogadores[id] : null;
+      return json(res, 200, visaoVagalumes(jogador));
+    }
+    case "POST /api/vagalumes/acender":
+      return json(res, 200, acender(corpo));
     case "GET /api/trem": {
       const placar = montarPlacar(null);
       return json(res, 200, { dia: placar.dia, totalJogadores: placar.totalJogadores, ...trem.corrida(DISTRITOS, placar.geral.distritos, placar.hoje.distritos) });

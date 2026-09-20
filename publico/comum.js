@@ -76,6 +76,7 @@ window.Jogos = (() => {
               <option value="">Todos os jogos</option>
               <option value="termo">Termo</option>
               <option value="censo">Censo</option>
+              <option value="vagalumes">Vagalumes</option>
             </select>
           </div>
           <div class="tabela-caixa"><table class="tabela" id="tabela-placar"></table></div>
@@ -252,6 +253,7 @@ window.Jogos = (() => {
   return {
     api,
     get jogador() { return jogador; },
+    temJogadorSalvo: () => { const s = jogadorSalvo(); return !!(s && s.id); },
     garantirJogador,
     abrirEntrada,
     abrirPlacar,
