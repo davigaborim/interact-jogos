@@ -62,6 +62,29 @@ nenhum, nem no texto de compartilhar (usa blocos `▓▒░`). **Nenhum
 mini-título em cima do título** (o "eyebrow"): o Davi cortou em 20/09. O logo oficial do
 Interact não está no site; se for entrar, é pelas regras do Brand Center.
 
+## Publicar na Hostinger
+
+No ar em **interact.velocg.com.br** desde 20/09/2026, como um site à parte
+no mesmo plano (`order 1009837828`, usuário `u692531946`). O `velocg.com.br`
+não foi tocado; para desfazer tudo é apagar o site
+`interact.velocg.com.br` no hPanel (ou `hosting_deleteWebsiteV1`).
+
+Cada publicação é um zip do `git HEAD` (sem `dados/estado.json`, sem
+`node_modules`) enviado por TUS e um build Node "other" com entrada
+`servidor.js`, Node 22, sem script de build:
+
+```
+git archive --format=zip -o app.zip HEAD
+# hosting_generateUploadURLV1 -> url, auth_key, rest_auth_key; POST + PATCH TUS de app.zip
+# hosting_startNode_jsBuildV1: app_type other, entry_file servidor.js, node 22, root ".", output ".", build_script ""
+```
+
+**O build apaga a pasta do site inteira.** Por isso o placar mora fora
+dela: variável de ambiente `ESTADO_ARQUIVO=/home/u692531946/domains/interact.velocg.com.br/dados/estado.json`
+(definida com `hosting_replaceNode_jsEnvironmentVariablesV1`; ela é
+substituição total, mandar sempre o conjunto inteiro). Sem essa variável
+um deploy zera jogadores e partidas.
+
 ## Rodar
 
 ```
