@@ -62,9 +62,8 @@ apaga sem querer: apagou, zera o placar e todo mundo entra de novo.
 - Palavra, tema e perguntas do dia são deterministas (lista embaralhada com
   semente fixa + número do dia). Reiniciar o servidor não muda nada.
 - O navegador **nunca recebe a resposta antes da hora**: o Termo avalia cada
-  palpite no servidor; o Censo manda uma pergunta por vez com um número só;
-  a Oratória guarda a hora do sorteio e recusa "Terminei" antes de
-  preparo + discurso. O placar nasce dessas partidas registradas.
+  palpite no servidor; o Censo manda os dois nomes e nenhum número. O placar
+  e a corrida nascem dessas partidas registradas.
 - Identidade: nome + distrito (+ clube opcional). O servidor devolve um `id`
   que fica no `localStorage`. Sem senha. Quem limpar o navegador vira outra
   pessoa no placar.
