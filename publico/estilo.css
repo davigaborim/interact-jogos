@@ -597,21 +597,37 @@ body.noite .ranking-lista .pos, body.noite .ranking-lista .quem small, body.noit
 .oratoria { flex: 1; justify-content: flex-start; padding: 92px 16px 30px; text-align: center; max-width: 592px; margin: 0 auto; }
 .oratoria .contexto-pagina { text-align: left; }
 .oratoria .selo { display: inline-block; font: 500 0.66rem var(--mono); letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid var(--linha); border-radius: 999px; padding: 5px 11px; color: var(--tinta-fraca); margin: 0 0 6px; }
-.oratoria .tema { font-size: 1.7rem; color: var(--royal); margin: 6px 0 14px; max-width: 26ch; font-family: var(--display); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; }
+.oratoria .tema { font-size: 1.7rem; color: var(--royal); margin: 10px 0 14px; max-width: 26ch; font-family: var(--display); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; }
 .relogio { font: 500 clamp(3.4rem, 24vw, 5.4rem) var(--mono); line-height: 1; margin: 6px 0 2px; }
 .relogio.preparo { color: var(--gold-escuro); }
 .relogio.falando { color: var(--azure); }
 .fase { font-size: 0.95rem; font-weight: 600; color: var(--tinta-fraca); margin: 0 0 16px; min-height: 1.4em; }
-.barra { width: min(100%, 340px); height: 8px; background: var(--linha); border-radius: 4px; overflow: hidden; margin-bottom: 18px; }
-.barra div { height: 100%; width: 0; background: var(--azure); transition: width 0.25s linear; }
+.barra { position: relative; width: min(100%, 340px); height: 8px; background: var(--linha); border-radius: 4px; overflow: visible; margin-bottom: 18px; }
+.barra div { height: 100%; width: 0; background: var(--azure); border-radius: 4px; transition: width 0.25s linear; }
 .barra.preparo div { background: var(--gold); }
-.opcoes { display: flex; gap: 8px; width: min(100%, 340px); margin-bottom: 8px; }
-.opcoes label { flex: 1; border: 1.5px solid var(--linha); border-radius: 14px; padding: 10px 6px; cursor: pointer; background: var(--papel); font-size: 0.76rem; color: var(--tinta-fraca); transition: border-color 0.15s, transform 0.15s var(--mola); }
+.barra i { position: absolute; top: -5px; width: 2px; height: 18px; background: var(--gold-escuro); border-radius: 1px; }
+.barra i::after { content: "mín."; position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font: 500 0.58rem var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold-escuro); }
+.etapas { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: min(100%, 420px); margin-bottom: 14px; }
+.etapas label { border: 1.5px solid var(--linha); border-radius: 16px; padding: 12px 12px 11px; cursor: pointer; background: var(--papel); text-align: left; transition: border-color 0.15s, transform 0.15s var(--mola), box-shadow 0.15s; }
+.etapas label:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(11, 29, 63, 0.08); }
+.etapas label strong { display: block; font-family: var(--display); font-size: 1.15rem; color: var(--royal); letter-spacing: -0.02em; }
+.etapas label strong small { display: block; font: 500 0.62rem var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-escuro); margin-top: 3px; }
+.etapas label span { display: block; margin-top: 4px; font-size: 0.76rem; line-height: 1.35; color: var(--tinta-fraca); }
+.etapas input { display: none; }
+.etapas label:has(input:checked) { border-color: var(--azure); box-shadow: inset 0 0 0 1px var(--azure); }
+.opcoes { display: flex; gap: 8px; width: min(100%, 420px); margin-bottom: 8px; }
+.opcoes label { flex: 1; border: 1.5px solid var(--linha); border-radius: 14px; padding: 10px 6px; cursor: pointer; background: var(--papel); font-size: 0.74rem; color: var(--tinta-fraca); transition: border-color 0.15s, transform 0.15s var(--mola); }
 .opcoes label:hover { transform: translateY(-2px); }
 .opcoes label strong { display: block; font-family: var(--display); font-size: 1rem; color: var(--tinta); letter-spacing: -0.02em; }
 .opcoes input { display: none; }
 .opcoes label:has(input:checked) { border-color: var(--azure); }
-.oratoria .acoes { display: flex; flex-direction: column; gap: 8px; width: min(100%, 340px); }
+.previa { width: min(100%, 340px); aspect-ratio: 4 / 3; object-fit: cover; border-radius: 16px; background: #000; margin-bottom: 14px; transform: scaleX(-1); }
+.gravacao { width: min(100%, 420px); margin-top: 20px; padding: 18px; border-radius: 22px; background: var(--papel); border: 1px solid var(--linha); text-align: center; animation: surgir 0.4s var(--mola) both; }
+.gravacao h2 { font-size: 1.5rem; color: var(--royal); margin: 0 0 12px; }
+.gravacao video, .gravacao audio { width: 100%; border-radius: 12px; background: #000; display: block; }
+.gravacao audio { background: transparent; }
+.gravacao .acoes { justify-content: center; }
+.oratoria .acoes { display: flex; flex-direction: column; gap: 8px; width: min(100%, 420px); }
 .oratoria .nota { font-size: 0.82rem; color: var(--tinta-fraca); max-width: 38ch; margin: 14px auto 0; }
 
 /* ---- Censo ---- */

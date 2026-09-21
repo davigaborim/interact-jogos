@@ -44,7 +44,7 @@ partida aparece no mesmo lugar, em vez de janela.
 | **Mais ou Menos do Censo** | `/jogos/censo` | dez duplas, "qual tem mais interactianos?", números reais do Censo 2023-24 | 1 por acerto |
 | **Vagalumes** | `/jogos/vagalumes` | Semana Mundial de Interact (30/10 a 05/11): antes, "meu clube vai participar" acende um vagalume fraco; na semana, uma frase por dia acende um forte no mapa do Brasil | 2 km pelo compromisso, 5 km por dia |
 | **Memória das Raízes** | `/jogos/memoria` | 4x4, oito pares de termos do Interact, ordem sorteada a cada partida; as cartas são reveladas pelo servidor, uma a uma, para o tempo valer | até 30 s vale 10; perde 1 a cada 8 s; mínimo 2. Uma por dia; "jogar de novo" é treino local |
-| **Treino de Oratória** | `/jogos/oratoria` | tema do dia ou aleatório, 45 s de preparo, fala de 1, 1,5 ou 2 min | **não vale ponto**, é treino para o CNO |
+| **Treino de Oratória** | `/jogos/oratoria` | as duas etapas do CNO: **Stan Lee** (tema é um objeto; 1 min para pensar, até 2 min de fala) e **Relâmpago**, a final (tema é o Interact; 45 s para pensar, de 3 a 5 min de fala). Grava em vídeo ou áudio no próprio aparelho (MediaRecorder), com "Salvar" e "Encaminhar" (Web Share); nada sobe para o servidor | **não vale ponto**, é treino para o CNO |
 
 Sem dependência nenhuma: só Node 18 ou mais novo. Sem `npm install`, sem
 build, sem banco. Mesmo padrão do `velo-reservas`, pelo mesmo motivo: é o que
@@ -99,7 +99,7 @@ PORT=4000 node servidor.js
 | `servidor.js` | HTTP: serve `site/` em `/`, `publico/` em `/jogos/` (resolve `/jogos/termo` etc.; `/jogos` sem barra redireciona) e tem toda a API. Jogador, partida e placar são comuns; cada jogo tem suas rotas em `/api/<jogo>/` |
 | `lib/calendario.js` | Dia de hoje em Brasília, número do dia desde `DATA_INICIAL`, embaralhador com semente. **`DATA_INICIAL`** é o dia 1: trocar depois de publicado reembaralha tudo |
 | `lib/termo.js` | Palavra do dia, avaliação do palpite, pontos |
-| `lib/oratoria.js` | Tema do dia e tema aleatório para o treino (sem partida, sem pontos) |
+| `lib/oratoria.js` | As duas etapas (tempos e lista de temas de cada uma), tema do dia e tema aleatório por etapa (sem partida, sem pontos) |
 | `lib/memoria.js` | Termos, tabuleiro sorteado, km pelo tempo |
 | `lib/vagalumes.js` | Datas e lemas dos 7 dias da SMI 2026, fase (antes/durante/depois), km |
 | `lib/trem.js` | Estações do trilho e a corrida (todos os 31 distritos ordenados por km) |
@@ -107,7 +107,8 @@ PORT=4000 node servidor.js
 | `lib/armazem.js` | Jogadores e partidas em `dados/estado.json` (grava 300 ms depois de cada mudança e no `SIGTERM`) |
 | `dados/palavras.json` | As palavras do Termo, com forma acentuada (`mostra`) e `dica`. **É aqui que se adiciona palavra** |
 | `dados/dicionario-5.txt` | 13.130 palavras de 5 letras aceitas como palpite (união da lista da IME-USP com `pythonprobr/palavras`, sem acento). As de `palavras.json` entram sozinhas |
-| `dados/temas.json` | Os temas da Oratória. Regra: sempre sobre o Interact, com amor no meio, **nunca com dois-pontos** |
+| `dados/temas.json` | Os temas da etapa Relâmpago. Regra: sempre sobre o Interact, com amor no meio, **nunca com dois-pontos** |
+| `dados/objetos.json` | Os temas da etapa Stan Lee: objetos do dia a dia ("Um guarda-chuva"). Lista minha, para o Davi cortar ou completar |
 | `dados/censo.json` | Os números do censo em grupos comparáveis |
 | `dados/distritos.json` | Os 31 distritos; `onde` só preenchido onde tinha fonte; `lat`/`lon` da cidade de referência, **`aprox: true` onde foi chute** (usado só para pôr o vagalume no mapa) |
 | `dados/brasil.json` | Contorno do Brasil já projetado em SVG 400x400 (de johan/world.geo.json, equiretangular) |

@@ -240,10 +240,8 @@ function temasDeOratoria(exceto) {
   const dia = calendario.numeroDoDia();
   return {
     dia,
-    temaDoDia: oratoria.temaDoDia(dia),
-    aleatorio: oratoria.temaAleatorio(exceto || null),
-    preparoS: oratoria.PREPARO_S,
-    duracoes: oratoria.DURACOES,
+    etapas: oratoria.etapas(),
+    temas: oratoria.temas(dia, exceto || null),
     viraEmMs: calendario.msAteVirar(),
   };
 }

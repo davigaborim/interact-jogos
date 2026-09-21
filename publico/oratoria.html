@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Treino de Oratória</title>
-  <meta name="description" content="Treino para o CNO: tema sobre o Interact, 45 segundos de preparo e o discurso no cronômetro. Não vale ponto.">
+  <meta name="description" content="Treino para o CNO nas duas etapas: Stan Lee (um objeto, 1 min para pensar, até 2 de fala) e Relâmpago (o Interact, 45 s para pensar, de 3 a 5 min de fala). Grave em vídeo ou áudio.">
   <meta name="theme-color" content="#0b1d3f">
   <link rel="icon" href="icone.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,600..800&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="estilo.css?v=18">
+  <link rel="stylesheet" href="estilo.css?v=19">
 </head>
 <body>
   <header class="topo">
@@ -26,36 +26,60 @@
       <button class="acao" type="button" id="btn-ajuda"><i class="pulso" aria-hidden="true"></i>Como funciona</button>
     </div>
   </header>
+
   <main class="jogo oratoria" id="jogo">
     <div class="contexto-pagina"><h1><span class="icone" data-icone="oratoria"></span>Oratória</h1><span class="dia">Treino, não vale ponto</span></div>
-    <p class="selo" id="selo">Tema do dia</p>
+
+    <div class="etapas" id="etapas" role="radiogroup" aria-label="Etapa"></div>
+
     <p class="tema" id="tema"></p>
 
-    <div class="relogio" id="relogio">45</div>
-    <p class="fase" id="fase">Escolha o tempo e comece. O preparo é sempre de 45 segundos.</p>
-    <div class="barra" id="barra"><div></div></div>
+    <div class="relogio" id="relogio">1:00</div>
+    <p class="fase" id="fase"></p>
+    <div class="barra" id="barra"><div></div><i id="marca-minimo" hidden></i></div>
 
-    <div class="opcoes" id="opcoes" role="radiogroup" aria-label="Tempo de fala"></div>
+    <video class="previa" id="previa" playsinline muted autoplay hidden></video>
+
+    <div class="opcoes gravar" id="gravar" role="radiogroup" aria-label="Gravar">
+      <label><input type="radio" name="gravar" value="" checked><strong>Sem gravar</strong>só o relógio</label>
+      <label><input type="radio" name="gravar" value="audio"><strong>Áudio</strong>grava a voz</label>
+      <label><input type="radio" name="gravar" value="video"><strong>Vídeo</strong>câmera e voz</label>
+    </div>
 
     <div class="acoes">
-      <button class="botao primario largo" type="button" id="btn-comecar">Começar o preparo</button>
+      <button class="botao primario largo" type="button" id="btn-comecar">Começar</button>
       <button class="botao dourado largo" type="button" id="btn-parar" hidden>Parar</button>
       <button class="botao largo" type="button" id="btn-outro">Outro tema</button>
     </div>
-    <p class="nota">Isto é só treino: nada vai para o placar. Fale em pé, em voz alta. Se gravar no celular e mandar no grupo, o grupo diz quem foi o orador destaque.</p>
+    <p class="aviso" id="aviso" role="status" aria-live="polite"></p>
+
+    <section class="gravacao" id="gravacao" hidden>
+      <h2>Sua gravação</h2>
+      <video id="gravacao-video" controls playsinline hidden></video>
+      <audio id="gravacao-audio" controls hidden></audio>
+      <div class="acoes">
+        <a class="botao primario" id="btn-salvar" download>Salvar no aparelho</a>
+        <button class="botao" type="button" id="btn-enviar" hidden>Encaminhar</button>
+        <button class="botao discreto" type="button" id="btn-descartar">Descartar</button>
+      </div>
+      <p class="mudo">A gravação fica só no seu aparelho. Nada vai para o servidor.</p>
+    </section>
+
+    <p class="nota">Fale em pé, em voz alta. Grave e manda no grupo: o grupo diz quem foi o orador destaque.</p>
   </main>
 
   <dialog id="dlg-ajuda" closedby="any" aria-labelledby="titulo-ajuda">
     <form method="dialog">
       <h2 id="titulo-ajuda">Como funciona</h2>
-      <p>É o formato da final do Concurso Nacional de Oratória: você descobre o tema e tem <strong>45 segundos</strong> para preparar. Depois o cronômetro do discurso começa.</p>
-      <p><strong>Relâmpago</strong>: 1 minuto. <strong>Gonzaga</strong>: 1 minuto e meio. <strong>Final</strong>: 2 minutos.</p>
-      <p>Não vale ponto. É treino, quantas vezes quiser, com o tema do dia ou com outro tema. Todo tema é sobre o Interact.</p>
+      <p>São as duas etapas do Concurso Nacional de Oratória.</p>
+      <p><strong>Stan Lee</strong>: o tema é um objeto qualquer. 1 minuto para pensar e até 2 minutos de fala.</p>
+      <p><strong>Relâmpago</strong>, a final: o tema é o Interact. 45 segundos para pensar e de 3 a 5 minutos de fala; a marca na barra mostra o mínimo.</p>
+      <p>Dá para gravar em vídeo ou em áudio. A gravação fica no seu aparelho: salve na galeria ou encaminhe para o grupo. Nada vale ponto.</p>
       <button class="botao primario" type="submit">Entendi</button>
     </form>
   </dialog>
 
-  <script src="comum.js?v=18"></script>
-  <script src="oratoria.js?v=18"></script>
+  <script src="comum.js?v=19"></script>
+  <script src="oratoria.js?v=19"></script>
 </body>
 </html>
