@@ -13,12 +13,14 @@
   let etapa = null;
   let temaAtual = null;
   let timer = null;
+  let rodada = null;     // { inicio, preparoMs, falaMs, minimoMs, gravando }
 
   // gravação
   let fluxo = null;      // MediaStream
   let gravador = null;   // MediaRecorder
   let pedacos = [];
   let arquivo = null;    // File pronto para salvar/encaminhar
+  let cancelando = false;
 
   const mmss = (ms) => {
     const s = Math.max(0, Math.ceil(ms / 1000));
@@ -70,20 +72,19 @@
     $("#btn-comecar").hidden = false;
     $("#btn-outro").hidden = false;
     $("#btn-parar").hidden = true;
+    $("#btn-pular").hidden = true;
     $("#previa").hidden = true;
+    rodada = null;
   }
 
   // Preparo (dourado) e depois fala (azul). A barra enche em cada fase; na
-  // Relâmpago uma marca mostra onde fica o mínimo de 3 minutos.
+  // Relâmpago uma marca mostra onde fica o mínimo de 3 minutos. Como no
+  // concurso, o candidato pode pular o preparo e encerrar a fala antes.
   async function comecar() {
     const modo = $("input[name=gravar]:checked").value;
     if (modo && !(await prepararGravacao(modo))) return;
 
-    const inicio = Date.now();
-    const preparoMs = etapa.preparoS * 1000;
-    const falaMs = etapa.falaMaxS * 1000;
-    const minimoMs = etapa.falaMinS * 1000;
-    let gravando = false;
+    rodada = { inicio: Date.now(), preparoMs: etapa.preparoS * 1000, falaMs: etapa.falaMaxS * 1000, minimoMs: etapa.falaMinS * 1000, gravando: false };
 
     $("#etapas").hidden = true;
     $("#gravar").hidden = true;
@@ -91,41 +92,73 @@
     $("#btn-outro").hidden = true;
     $("#gravacao").hidden = true;
     $("#btn-parar").hidden = false;
-    $("#btn-parar").textContent = "Parar";
-    if (minimoMs) { $("#marca-minimo").hidden = false; $("#marca-minimo").style.left = `${(minimoMs / falaMs) * 100}%`; }
+    $("#btn-parar").textContent = "Cancelar";
+    $("#btn-pular").hidden = false;
+    if (rodada.minimoMs) { $("#marca-minimo").hidden = false; $("#marca-minimo").style.left = `${(rodada.minimoMs / rodada.falaMs) * 100}%`; }
 
-    const tique = () => {
-      const passou = Date.now() - inicio;
-      if (passou < preparoMs) {
-        relogio.textContent = mmss(preparoMs - passou);
-        relogio.className = "relogio preparo";
-        fase.textContent = "Pense na abertura e no fecho.";
-        barra.className = "barra preparo";
-        barra.firstElementChild.style.width = `${(passou / preparoMs) * 100}%`;
-      } else if (passou < preparoMs + falaMs) {
-        if (!gravando) { gravando = true; iniciarGravacao(); }
-        const falando = passou - preparoMs;
-        relogio.textContent = mmss(falaMs - falando);
-        relogio.className = "relogio falando";
-        fase.textContent = minimoMs && falando < minimoMs ? `Fala. Mínimo em ${mmss(minimoMs - falando)}.` : minimoMs ? "Fala. Já passou do mínimo." : "Fala.";
-        barra.className = "barra";
-        barra.firstElementChild.style.width = `${(falando / falaMs) * 100}%`;
-      } else {
-        relogio.textContent = "0:00";
-        relogio.className = "relogio";
-        fase.textContent = "Tempo. Como foi o fecho?";
-        barra.firstElementChild.style.width = "100%";
-        $("#btn-parar").textContent = "De novo";
-        clearInterval(timer);
-        pararGravacao();
-      }
-    };
     clearInterval(timer);
     tique();
     timer = setInterval(tique, 250);
   }
 
+  function tique() {
+    const r = rodada;
+    if (!r) return;
+    const passou = Date.now() - r.inicio;
+    if (passou < r.preparoMs) {
+      relogio.textContent = mmss(r.preparoMs - passou);
+      relogio.className = "relogio preparo";
+      fase.textContent = "Pense na abertura e no fecho.";
+      barra.className = "barra preparo";
+      barra.firstElementChild.style.width = `${(passou / r.preparoMs) * 100}%`;
+      $("#btn-pular").textContent = "Começar a falar agora";
+    } else if (passou < r.preparoMs + r.falaMs) {
+      if (!r.gravando) { r.gravando = true; iniciarGravacao(); }
+      const falando = passou - r.preparoMs;
+      relogio.textContent = mmss(r.falaMs - falando);
+      relogio.className = "relogio falando";
+      fase.textContent = r.minimoMs && falando < r.minimoMs ? `Fala. Mínimo em ${mmss(r.minimoMs - falando)}.` : r.minimoMs ? "Fala. Já passou do mínimo." : "Fala.";
+      barra.className = "barra";
+      barra.firstElementChild.style.width = `${(falando / r.falaMs) * 100}%`;
+      $("#btn-pular").textContent = "Encerrar o discurso";
+    } else {
+      terminar(r.falaMs, "Tempo. Como foi o fecho?");
+    }
+  }
+
+  // Pula o que estiver rolando: no preparo, vai direto para a fala; na
+  // fala, encerra o discurso ali.
+  function pular() {
+    const r = rodada;
+    if (!r) return;
+    const passou = Date.now() - r.inicio;
+    if (passou < r.preparoMs) {
+      r.inicio -= r.preparoMs - passou;
+      tique();
+      return;
+    }
+    const falando = Math.min(passou - r.preparoMs, r.falaMs);
+    const aviso = r.minimoMs && falando < r.minimoMs ? ` Ficou abaixo do mínimo de ${r.minimoMs / 60000} min.` : "";
+    terminar(falando, `Encerrou com ${mmss(falando)} de fala.${aviso}`);
+  }
+
+  function terminar(falando, texto) {
+    clearInterval(timer);
+    const r = rodada;
+    relogio.textContent = mmss(falando);
+    relogio.className = "relogio";
+    fase.textContent = texto;
+    barra.className = "barra";
+    barra.firstElementChild.style.width = `${(falando / r.falaMs) * 100}%`;
+    $("#btn-pular").hidden = true;
+    $("#btn-parar").textContent = "De novo";
+    pararGravacao();
+    rodada = null;
+  }
+
+  // Cancelar no meio joga a gravação fora; encerrar (pular) guarda.
   function parar() {
+    if (rodada) cancelando = true;
     pararGravacao();
     parado();
   }
@@ -184,6 +217,7 @@
     const tipo = (gravador && gravador.mimeType) || (modo === "video" ? "video/webm" : "audio/webm");
     soltarFluxo();
     gravador = null;
+    if (cancelando) { cancelando = false; pedacos = []; return; }
     if (!pedacos.length) return;
     const ext = tipo.includes("mp4") ? "mp4" : "webm";
     const data = new Date().toISOString().slice(0, 10);
@@ -213,6 +247,7 @@
 
   $("#btn-comecar").addEventListener("click", comecar);
   $("#btn-parar").addEventListener("click", parar);
+  $("#btn-pular").addEventListener("click", pular);
   $("#btn-outro").addEventListener("click", outroTema);
   $("#btn-enviar").addEventListener("click", encaminhar);
   $("#btn-descartar").addEventListener("click", descartar);

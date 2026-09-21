@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,600..800&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="estilo.css?v=19">
+  <link rel="stylesheet" href="estilo.css?v=20">
 </head>
 <body>
   <header class="topo">
@@ -48,8 +48,9 @@
 
     <div class="acoes">
       <button class="botao primario largo" type="button" id="btn-comecar">Começar</button>
-      <button class="botao dourado largo" type="button" id="btn-parar" hidden>Parar</button>
+      <button class="botao dourado largo" type="button" id="btn-pular" hidden>Começar a falar agora</button>
       <button class="botao largo" type="button" id="btn-outro">Outro tema</button>
+      <button class="botao discreto largo" type="button" id="btn-parar" hidden>Cancelar</button>
     </div>
     <p class="aviso" id="aviso" role="status" aria-live="polite"></p>
 
@@ -74,12 +75,13 @@
       <p>São as duas etapas do Concurso Nacional de Oratória.</p>
       <p><strong>Stan Lee</strong>: o tema é um objeto qualquer. 1 minuto para pensar e até 2 minutos de fala.</p>
       <p><strong>Relâmpago</strong>, a final: o tema é o Interact. 45 segundos para pensar e de 3 a 5 minutos de fala; a marca na barra mostra o mínimo.</p>
+      <p>Como no concurso, dá para pular o tempo de pensar e encerrar o discurso antes do limite.</p>
       <p>Dá para gravar em vídeo ou em áudio. A gravação fica no seu aparelho: salve na galeria ou encaminhe para o grupo. Nada vale ponto.</p>
       <button class="botao primario" type="submit">Entendi</button>
     </form>
   </dialog>
 
-  <script src="comum.js?v=19"></script>
-  <script src="oratoria.js?v=19"></script>
+  <script src="comum.js?v=20"></script>
+  <script src="oratoria.js?v=20"></script>
 </body>
 </html>
