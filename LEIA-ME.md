@@ -129,6 +129,12 @@ apaga sem querer: apagou, zera o placar e todo mundo entra de novo.
 - O navegador **nunca recebe a resposta antes da hora**: o Termo avalia cada
   palpite no servidor; o Censo manda os dois nomes e nenhum número. O placar
   e a corrida nascem dessas partidas registradas.
+- Ninguém precisa entrar para olhar o hub: corrida e ranking são públicos.
+  O "Quem é você?" só abre ao entrar num jogo (ou no botão Entrar).
+- No Termo, tocar na grade abre o teclado do próprio celular (campo
+  invisível `#entrada-movel`; acento e ç viram a letra base) e o botão
+  "Usar o teclado do celular" esconde o da tela (preferência no
+  `localStorage`, chave `jogos-interact.teclado-do-celular`).
 - Identidade: nome + distrito (+ clube opcional). O servidor devolve um `id`
   que fica no `localStorage`. Sem senha. Quem limpar o navegador vira outra
   pessoa no placar.
