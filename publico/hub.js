@@ -136,8 +136,10 @@
     let pedido = 0;
     const medir = () => {
       pedido = 0;
-      const alcance = abertura.offsetHeight * 0.85;
-      const saida = Math.min(1, Math.max(0, window.scrollY / alcance));
+      // Só começa a esmaecer depois de um terço da abertura ter subido.
+      const inicio = abertura.offsetHeight * 0.33;
+      const alcance = abertura.offsetHeight * 0.55;
+      const saida = Math.min(1, Math.max(0, (window.scrollY - inicio) / alcance));
       abertura.style.setProperty("--saida", saida.toFixed(3));
     };
     const marcar = () => { if (!pedido) pedido = requestAnimationFrame(medir); };
@@ -265,10 +267,11 @@
   inclinar();
   if (!reduzido) esmaecerAbertura();
 
-  // A corrida aparece para todo mundo, mesmo antes de entrar.
+  // A corrida e o ranking aparecem para todo mundo. Ninguém precisa entrar
+  // para olhar: o "Quem é você?" só abre ao clicar num jogo ou em Entrar.
   carregarCorrida();
 
-  Jogos.garantirJogador(async (jogador, dados) => {
+  Jogos.jogadorSeHouver(async (jogador, dados) => {
     if (!dados) dados = await Jogos.api(`/api/eu?jogador=${encodeURIComponent(jogador.id)}`);
     Jogos.contagem($("#contagem"), dados.viraEmMs, () => location.reload());
     desenharQuem();

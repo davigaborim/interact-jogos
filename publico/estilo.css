@@ -206,7 +206,9 @@ button { font-family: inherit; }
   position: relative; overflow: hidden; flex-shrink: 0;
   background: #fff;
   color: #fff;
-  padding: 108px 18px 42px;
+  min-height: 100svh;
+  display: flex; align-items: center;
+  padding: 108px 18px 64px;
   --mx: 50%; --my: 30%; --saida: 0;
 }
 .abertura .fundo {
@@ -221,7 +223,7 @@ button { font-family: inherit; }
   opacity: calc(1 - var(--saida));
 }
 .abertura .miolo {
-  position: relative; max-width: 1040px; margin: 0 auto;
+  position: relative; width: 100%; max-width: 1040px; margin: 0 auto;
   opacity: calc(1 - var(--saida) * 1.15);
   transform: translateY(calc(var(--saida) * -24px));
 }
@@ -512,7 +514,8 @@ body.noite .ranking-lista .pos, body.noite .ranking-lista .quem small, body.noit
 
 /* ---- Termo ---- */
 
-.grade { display: grid; grid-template-rows: repeat(6, 1fr); gap: 6px; width: min(100%, 340px); aspect-ratio: 5 / 6; max-height: 46dvh; }
+/* a largura obedece à altura da tela: 6 linhas quadradas têm que caber com o teclado embaixo */
+.grade { display: grid; grid-template-rows: repeat(6, 1fr); gap: 6px; width: min(100%, 340px, 38dvh); aspect-ratio: 5 / 6; }
 .fileira { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
 .celula {
   display: grid; place-items: center; border: 2px solid var(--linha); border-radius: 10px;
@@ -533,20 +536,29 @@ body.noite .ranking-lista .pos, body.noite .ranking-lista .quem small, body.noit
 .fileira.tremendo { animation: tremer 0.4s; }
 @keyframes tremer { 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
 
-.teclado { width: 100%; max-width: 520px; display: flex; flex-direction: column; gap: 6px; user-select: none; margin-top: auto; }
+.teclado { width: 100%; max-width: 520px; display: flex; flex-direction: column; gap: 7px; user-select: none; margin-top: auto; padding-bottom: 6px; }
 .teclado .linha { display: flex; justify-content: center; gap: 5px; }
 .tecla {
-  flex: 1 1 0; max-width: 46px; height: 52px; border: 0; border-radius: 8px;
-  background: var(--tecla); color: var(--tinta); font: 600 0.95rem var(--corpo);
+  flex: 1 1 0; max-width: 46px; height: 54px; border: 0; border-radius: 8px;
+  background: var(--papel); color: var(--tinta); font: 600 1.02rem var(--corpo);
   text-transform: uppercase; cursor: pointer; touch-action: manipulation;
-  transition: transform 0.08s, background 0.2s;
+  box-shadow: 0 1.5px 0 #c9d3e2, 0 1px 3px rgba(11, 29, 63, 0.08);
+  transition: transform 0.08s, background 0.2s, box-shadow 0.08s;
 }
-.tecla.larga { flex: 1.6 1 0; max-width: 74px; font-size: 0.72rem; }
-.tecla:hover { background: #d5dfec; }
-.tecla:active { transform: scale(0.94); filter: brightness(0.9); }
-.tecla.certa { background: var(--certa); color: #fff; }
-.tecla.perto { background: var(--perto); color: var(--tinta); }
-.tecla.fora { background: var(--fora); color: #fff; opacity: 0.8; }
+.tecla.larga { flex: 1.55 1 0; max-width: 74px; font-size: 0.7rem; letter-spacing: 0.04em; background: var(--tecla); }
+.tecla:hover { background: #eef3fa; }
+.tecla:active { transform: translateY(1.5px); box-shadow: 0 0 0 #c9d3e2, 0 1px 2px rgba(11, 29, 63, 0.08); }
+.tecla.certa { background: var(--certa); color: #fff; box-shadow: 0 1.5px 0 #004c95; }
+.tecla.perto { background: var(--perto); color: var(--tinta); box-shadow: 0 1.5px 0 var(--gold-escuro); }
+.tecla.fora { background: #b9bcc0; color: #fff; box-shadow: 0 1.5px 0 #8f9296; }
+/* o campo invisível que chama o teclado do próprio celular */
+.entrada-movel { position: absolute; width: 1px; height: 1px; opacity: 0; left: 0; top: 0; pointer-events: none; }
+.jogo.termo { position: relative; }
+.grade { cursor: text; }
+.trocar-teclado { display: none; border: 0; background: none; color: var(--azure); font: 600 0.82rem var(--corpo); cursor: pointer; padding: 6px 10px; }
+@media (hover: none) and (pointer: coarse) { .trocar-teclado { display: inline-block; } }
+.jogo.termo.teclado-do-celular .teclado { display: none; }
+.jogo.termo.teclado-do-celular .grade { width: min(100%, 340px, 52dvh); }
 
 /* ---- Memória ---- */
 
@@ -732,7 +744,7 @@ dialog form > .botao.primario { width: 100%; margin-top: 14px; }
   .luz { opacity: 0.9; } .luz.fraca { opacity: 0.5; }
 }
 
-@media (max-height: 640px) { .tecla { height: 44px; } .grade { max-height: 40dvh; } }
+@media (max-height: 640px) { .tecla { height: 44px; } .grade { width: min(100%, 340px, 34dvh); } }
 @media (min-width: 540px) {
   .jogos { gap: 14px; margin-top: 34px; }
   .jogo-cartao { min-height: 178px; padding: 20px 20px 18px; }

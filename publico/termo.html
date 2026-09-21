@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,600..800&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="estilo.css?v=17">
+  <link rel="stylesheet" href="estilo.css?v=18">
 </head>
 <body data-jogo="termo">
   <header class="topo">
@@ -31,8 +31,10 @@
     <main class="jogo termo" id="jogo" hidden>
       <div class="contexto-pagina"><h1><span class="icone" data-icone="termo"></span>Termo</h1><span class="dia" id="numero-dia"></span></div>
       <p class="aviso" id="aviso" role="status" aria-live="polite"></p>
+      <input class="entrada-movel" id="entrada-movel" type="text" inputmode="text" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" maxlength="5" aria-label="Digite a palavra" tabindex="-1">
       <div class="grade" id="grade" aria-label="Tentativas"></div>
       <div class="teclado" id="teclado" aria-label="Teclado"></div>
+      <button class="trocar-teclado" type="button" id="btn-trocar-teclado">Usar o teclado do celular</button>
     </main>
 
     <aside class="lateral">
@@ -70,7 +72,7 @@
     </form>
   </dialog>
 
-  <script src="comum.js?v=17"></script>
-  <script src="termo.js?v=17"></script>
+  <script src="comum.js?v=18"></script>
+  <script src="termo.js?v=18"></script>
 </body>
 </html>

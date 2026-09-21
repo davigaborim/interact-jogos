@@ -29,7 +29,7 @@
     if (partida.terminou) mostrarFim();
   }
 
-  function desenharGrade() {
+  let desenharGrade = function () {
     grade.innerHTML = "";
     for (let i = 0; i < MAX; i++) {
       const fileira = document.createElement("div");
@@ -123,10 +123,43 @@
     if (/^[A-Z]$/.test(tecla) && atual.length < 5) { atual += tecla; desenharGrade(); }
   }
 
+  // A grade é a verdade; o campo invisível só reflete o que ela mostra.
+  const desenharGradeOriginal = desenharGrade;
+  desenharGrade = function () { desenharGradeOriginal(); if ($("#entrada-movel").value !== atual) $("#entrada-movel").value = atual; };
+
+  // ---------- o teclado do próprio celular ----------
+  // Um campo invisível recebe o que a pessoa digita; a grade é quem mostra.
+  // Tocar na grade abre o teclado do aparelho; o botão embaixo esconde o
+  // teclado da tela para quem prefere só o do celular (fica salvo).
+
+  const entradaMovel = $("#entrada-movel");
+  const CHAVE_TECLADO = "jogos-interact.teclado-do-celular";
+
+  function sincronizarDoCampo() {
+    if (!partida || partida.terminou || travado) { entradaMovel.value = ""; return; }
+    const limpo = entradaMovel.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z]/g, "").toUpperCase().slice(0, 5);
+    entradaMovel.value = limpo;
+    atual = limpo;
+    desenharGrade();
+  }
+  entradaMovel.addEventListener("input", sincronizarDoCampo);
+  grade.addEventListener("click", () => { entradaMovel.focus({ preventScroll: true }); });
+
+  function usarTecladoDoCelular(ligar) {
+    $("#jogo").classList.toggle("teclado-do-celular", ligar);
+    $("#btn-trocar-teclado").textContent = ligar ? "Usar o teclado da tela" : "Usar o teclado do celular";
+    try { localStorage.setItem(CHAVE_TECLADO, ligar ? "1" : ""); } catch { /* segue */ }
+    if (ligar) entradaMovel.focus({ preventScroll: true });
+  }
+  $("#btn-trocar-teclado").addEventListener("click", () => usarTecladoDoCelular(!$("#jogo").classList.contains("teclado-do-celular")));
+  try { if (localStorage.getItem(CHAVE_TECLADO)) usarTecladoDoCelular(true); } catch { /* segue */ }
+
   document.addEventListener("keydown", (evento) => {
     if (evento.ctrlKey || evento.metaKey || evento.altKey) return;
-    if (evento.key === "Enter") apertar("ENTER");
-    else if (evento.key === "Backspace") apertar("BACK");
+    if (evento.key === "Enter") { evento.preventDefault(); apertar("ENTER"); return; }
+    // Dentro do campo invisível, letras e apagar chegam pelo evento input.
+    if (evento.target === entradaMovel) return;
+    if (evento.key === "Backspace") apertar("BACK");
     else if (/^[a-zA-Z]$/.test(evento.key)) apertar(evento.key.toUpperCase());
     else if (/^[çÇ]$/.test(evento.key)) apertar("C");
   });

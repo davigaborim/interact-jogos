@@ -3,7 +3,7 @@
 // entrada, o ranking (um painel, nunca modal), os ícones dos jogos e a
 // contagem para o dia virar.
 //
-// Expõe window.Jogos = { api, jogador, garantirJogador, abrirEntrada,
+// Expõe window.Jogos = { api, jogador, garantirJogador, jogadorSeHouver, abrirEntrada,
 // montarRanking, atualizarRanking, mostrarResultado, compartilhar, icone,
 // contagem, esc, avisar, revelar }. Quando uma partida termina, o resultado
 // aparece na lateral e um convite para seguir o clube no Instagram abre.
@@ -150,6 +150,21 @@ window.Jogos = (() => {
     }
     jogador = null;
     abrirEntrada(salvo);
+  }
+
+  // Versão mansa, para o hub: se já tem jogador salvo, carrega; se não tem,
+  // não pede nada — o "Quem é você?" só abre na hora de jogar (ou no botão
+  // Entrar). `quandoPronto` também é chamado se a pessoa entrar depois.
+  async function jogadorSeHouver(quandoPronto) {
+    aoEntrar = quandoPronto;
+    const salvo = jogadorSalvo();
+    if (!salvo || !salvo.id) return;
+    try {
+      const dados = await api(`/api/eu?jogador=${encodeURIComponent(salvo.id)}`);
+      salvarJogador(dados.jogador);
+      rankings.forEach((r) => r.desenhar());
+      quandoPronto(jogador, dados);
+    } catch { jogador = null; }
   }
 
   function esc(texto) {
@@ -354,6 +369,7 @@ window.Jogos = (() => {
     get jogador() { return jogador; },
     temJogadorSalvo: () => { const s = jogadorSalvo(); return !!(s && s.id); },
     garantirJogador,
+    jogadorSeHouver,
     abrirEntrada,
     montarRanking,
     atualizarRanking,
