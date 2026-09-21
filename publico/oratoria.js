@@ -46,9 +46,15 @@
     parado();
   }
 
+  // O tema chega escondido, como no sorteio: só aparece ao clicar em Praticar.
   function mostrarTema(tema) {
     temaAtual = tema;
-    $("#tema").textContent = tema;
+    $("#tema-texto").textContent = tema;
+    $("#tema").classList.add("escondido");
+  }
+
+  function revelarTema() {
+    $("#tema").classList.remove("escondido");
   }
 
   async function outroTema() {
@@ -91,6 +97,7 @@
     if (modo && !(await prepararGravacao(modo))) return;
 
     rodada = { inicio: Date.now(), preparoMs: etapa.preparoS * 1000, falaMs: etapa.falaMaxS * 1000, minimoMs: etapa.falaMinS * 1000, gravando: false };
+    revelarTema();
 
     $("#etapas").hidden = true;
     $("#gravar").hidden = true;

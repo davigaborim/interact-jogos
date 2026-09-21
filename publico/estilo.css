@@ -597,7 +597,11 @@ body.noite .ranking-lista .pos, body.noite .ranking-lista .quem small, body.noit
 .oratoria { flex: 1; justify-content: flex-start; padding: 92px 16px 30px; text-align: center; max-width: 592px; margin: 0 auto; }
 .oratoria .contexto-pagina { text-align: left; }
 .oratoria .selo { display: inline-block; font: 500 0.66rem var(--mono); letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid var(--linha); border-radius: 999px; padding: 5px 11px; color: var(--tinta-fraca); margin: 0 0 6px; }
-.oratoria .tema { font-size: 1.7rem; color: var(--royal); margin: 10px 0 14px; max-width: 26ch; font-family: var(--display); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; }
+.oratoria .tema { position: relative; font-size: 1.7rem; color: var(--royal); margin: 10px 0 14px; min-height: 2.2em; display: grid; place-items: center; max-width: 26ch; font-family: var(--display); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; }
+.oratoria .tema > span { grid-area: 1 / 1; transition: opacity 0.5s var(--suave), filter 0.5s var(--suave), transform 0.5s var(--suave); }
+.oratoria .tema .tema-veu { font: 500 0.78rem var(--corpo); color: var(--tinta-fraca); letter-spacing: 0; border: 1.5px dashed var(--linha); border-radius: 999px; padding: 9px 16px; opacity: 0; }
+.oratoria .tema.escondido #tema-texto { opacity: 0; filter: blur(10px); transform: scale(0.96); user-select: none; pointer-events: none; }
+.oratoria .tema.escondido .tema-veu { opacity: 1; }
 .relogio { font: 500 clamp(3.4rem, 24vw, 5.4rem) var(--mono); line-height: 1; margin: 6px 0 2px; }
 .relogio.preparo { color: var(--gold-escuro); }
 .relogio.falando { color: var(--azure); }
