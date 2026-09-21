@@ -59,8 +59,14 @@
 
   // ---------- relógio ----------
 
+  // Qualquer saída da tela de resultado pausa o que estiver tocando.
+  function pausarGravacao() {
+    for (const m of [$("#gravacao-video"), $("#gravacao-audio")]) if (m && !m.paused) m.pause();
+  }
+
   function parado() {
     clearInterval(timer);
+    pausarGravacao();
     relogio.textContent = mmss(etapa.preparoS * 1000);
     relogio.className = "relogio";
     fase.textContent = `${etapa.nome}: ${minutos(etapa.preparoS)} para pensar, ${etapa.falaMinS ? `de ${etapa.falaMinS / 60} a ${etapa.falaMaxS / 60} min` : `até ${etapa.falaMaxS / 60} min`} de fala.`;
@@ -239,6 +245,7 @@
   }
 
   function descartar() {
+    pausarGravacao();
     if ($("#btn-salvar").href) URL.revokeObjectURL($("#btn-salvar").href);
     $("#gravacao-video").removeAttribute("src"); $("#gravacao-audio").removeAttribute("src");
     arquivo = null; pedacos = [];
@@ -252,7 +259,8 @@
   $("#btn-enviar").addEventListener("click", encaminhar);
   $("#btn-descartar").addEventListener("click", descartar);
   $("#btn-ajuda").addEventListener("click", () => $("#dlg-ajuda").showModal());
-  window.addEventListener("pagehide", soltarFluxo);
+  window.addEventListener("pagehide", () => { soltarFluxo(); pausarGravacao(); });
+  document.addEventListener("visibilitychange", () => { if (document.hidden) pausarGravacao(); });
 
   (async () => {
     dados = await Jogos.api("/api/oratoria/temas");
