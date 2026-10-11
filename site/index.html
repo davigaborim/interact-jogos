@@ -1,147 +1,170 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Interact Club de Campo Grande-Universidade</title>
-  <meta name="description" content="Interact Club de Campo Grande-Universidade: jovens vivendo o voluntariado em Campo Grande, MS. Projetos, quem somos e os Jogos do Interact." />
+  <meta name="description" content="Interact Club de Campo Grande-Universidade, Distrito 4470: jovens de 12 a 18 anos vivendo o voluntariado em Campo Grande, MS. Reuniões todo sábado, às 16h." />
+  <meta name="theme-color" content="#17458f" />
+  <link rel="canonical" href="https://interact.velocg.com.br/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Interact Club de Campo Grande-Universidade" />
+  <meta property="og:description" content="Jovens vivendo o voluntariado em Campo Grande, MS. Reuniões todo sábado, às 16h." />
+  <meta property="og:url" content="https://interact.velocg.com.br/" />
+  <meta property="og:image" content="https://interact.velocg.com.br/images/clube-dia-do-convidado.jpg" />
+  <meta property="og:locale" content="pt_BR" />
   <link rel="icon" href="jogos/icone.svg" type="image/svg+xml" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=2" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,600..800&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=5" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Interact Club de Campo Grande-Universidade",
+    "url": "https://interact.velocg.com.br/",
+    "logo": "https://interact.velocg.com.br/images/logo-ic-preta.png",
+    "sameAs": ["https://www.instagram.com/interactcg/"],
+    "address": { "@type": "PostalAddress", "addressLocality": "Campo Grande", "addressRegion": "MS", "addressCountry": "BR" }
+  }
+  </script>
 </head>
 <body>
-  <header>
-    <div class="top-bar">
-      <div class="logo-container">
-        <div class="logo-box">
-          <img src="images/logo-ic-preta.png" alt="Interact Club de Campo Grande Universidade" />
-        </div>
-      </div>
-      <nav>
-        <ul>
-          <li><a href="#quem-somos" class="active">Quem somos</a></li>
-          <li><a href="#projetos">Projetos</a></li>
-          <li><a href="#jogos">Jogos</a></li>
-          <li><a href="https://www.rotary.org/pt/our-causes" target="_blank" rel="noopener">Áreas de enfoque</a></li>
-        </ul>
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="topo">
+    <div class="topo__dentro">
+      <a class="topo__marca" href="#inicio">
+        <img src="images/logo-ic-preta.png" width="966" height="330" alt="Interact Club de Campo Grande-Universidade" />
+      </a>
+      <nav class="topo__menu" aria-label="Seções">
+        <a href="#quem-somos">Quem somos</a>
+        <a href="#projetos">Projetos</a>
+        <a href="#participe">Participe</a>
       </nav>
+      <a class="topo__insta" href="https://www.instagram.com/interactcg/" target="_blank" rel="noopener" aria-label="Instagram do clube, @interactcg">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg>
+      </a>
+      <a class="pilula pilula--ouro topo__jogos" href="jogos/">Jogos</a>
     </div>
   </header>
 
-  <section class="hero" id="quem-somos">
-    <img src="images/foto-grupo.jpg" alt="Grupo Interact" class="hero-bg" />
-    <div class="hero-text">
-      <h1>Jovens vivendo o voluntariado</h1>
-      <a href="jogos/" class="hero-btn">Jogar os Jogos do Interact</a>
-    </div>
-  </section>
-
-  <section class="quem-somos-texto">
-    <div class="content">
-      <img src="images/interact-logo-old.jpg" alt="Logo Interact" class="interact-logo-texto" />
-      <div class="textos">
-        <p>O Interact é um programa de voluntariado voltado para jovens de 12 a 18 anos, patrocinado pelo Rotary International. Por meio dele, adolescentes desenvolvem liderança, realizam projetos sociais e promovem ações que transformam comunidades — locais e globais.</p>
-
-        <p>Mais do que um clube, o Interact é um espaço de amizade, aprendizado e impacto. Os interactianos descobrem seu potencial enquanto fazem a diferença no mundo, com empatia, criatividade e compromisso. Onde descobrimos o real valor da frase: “Dar de si antes de pensar em si.”</p>
+  <main id="conteudo">
+    <section class="hero" id="inicio">
+      <div class="hero__dentro">
+        <div class="hero__texto">
+          <h1>Jovens vivendo o voluntariado em Campo Grande</h1>
+          <a href="jogos/" class="pilula pilula--ouro pilula--grande">Jogar os Jogos do Interact</a>
+        </div>
+        <figure class="hero__foto">
+          <div class="hero__moldura">
+            <img src="images/clube-dia-do-convidado.webp" width="477" height="320" fetchpriority="high"
+                 alt="Interactianos e convidados reunidos em volta da bandeira do Interact Club de Campo Grande Universidade" />
+          </div>
+          <figcaption>Dia do Convidado, agosto de 2026</figcaption>
+        </figure>
       </div>
-    </div>
+    </section>
 
-    <p class="final-text">Se você acredita que a juventude pode mudar o mundo, o Interact é o seu lugar.</p>
-  </section>
-
-  <section class="sobre-bloco" id="areas-enfoque">
-    <div class="sobre-container">
-      <div class="sobre-textos">
-        <p>
-          O Interact Club de Campo Grande-Universidade vem fazendo a diferença na comunidade de Campo Grande, MS, com projetos que impactam verdadeiramente a sociedade, juntamente com seu Rotary Padrinho, o Rotary Club de Campo Grande-Universidade, no distrito 4470.
-        </p>
-        <p>
-          No Interact, a liderança é vivida na prática. Ao organizar projetos, coordenar equipes e tomar decisões, os jovens aprendem a se comunicar melhor, a trabalhar em grupo e a liderar com empatia e responsabilidade. Cada desafio enfrentado é uma oportunidade de crescimento. Ao longo da jornada interactiana, os jovens descobrem suas habilidades, superam medos e aprendem a inspirar outros pelo exemplo.
-        </p>
+    <section class="quem" id="quem-somos">
+      <div class="quem__dentro">
+        <div class="quem__texto">
+          <h2>Quem somos</h2>
+          <p>O Interact é o clube do Rotary para jovens de 12 a 18 anos. Aqui a gente organiza projetos para a comunidade, aprende a liderar fazendo e faz amigos pelo caminho.</p>
+          <p>O Interact Club de Campo Grande-Universidade faz parte do Distrito 4470. Na gestão 2026-27, o nosso lema é <strong>Crie impacto duradouro</strong>.</p>
+        </div>
+        <aside class="reunioes" aria-label="Reuniões">
+          <p class="reunioes__dia">Todo sábado</p>
+          <p class="reunioes__hora">16:00</p>
+          <ul>
+            <li>Campo Grande, MS</li>
+            <li>Distrito 4470</li>
+            <li>Gestão 2026-27</li>
+          </ul>
+        </aside>
       </div>
-      <div class="sobre-imagem">
-        <img src="images/projeto-3.jpg" alt="Grupo Interact" />
+    </section>
+
+    <section class="projetos" id="projetos">
+      <div class="projetos__dentro">
+        <h2>O que a gente faz</h2>
+        <p class="projetos__intro">Ações na cidade, visitas, reuniões com os Rotary Clubs de Campo Grande e dinâmicas para aprender junto.</p>
+        <div class="galeria">
+          <figure class="galeria__item galeria__item--grande">
+            <img src="images/projeto-uaica.webp" width="486" height="350" loading="lazy" alt="Interactianos sentados em frente a um muro grafitado, com as meninas acolhidas pela Uaica atrás, de rosto desfocado" />
+            <figcaption>Visita à Uaica, espaço de acolhimento para crianças e adolescentes</figcaption>
+          </figure>
+          <figure class="galeria__item">
+            <img src="images/julho-amarelo-e-verde.webp" width="328" height="390" loading="lazy" alt="Interactiana conversando com uma frequentadora do parque" />
+            <figcaption>Julho Amarelo e Verde no Parque das Nações Indígenas</figcaption>
+          </figure>
+          <figure class="galeria__item">
+            <img src="images/dia-do-convidado-apresentacao.webp" width="388" height="310" loading="lazy" alt="Convidados assistindo a uma apresentação sobre o Interact" />
+            <figcaption>Dia do Convidado, na Casa da Amizade</figcaption>
+          </figure>
+          <figure class="galeria__item">
+            <img src="images/feijoada-rotary-sao-francisco.webp" width="367" height="494" loading="lazy" alt="Quatro interactianos atrás de uma mesa com toalha amarela e jarra de suco" />
+            <figcaption>Ajudando na feijoada do Rotary Campo Grande São Francisco</figcaption>
+          </figure>
+          <figure class="galeria__item">
+            <img src="images/dinamica-de-oratoria.webp" width="320" height="376" loading="lazy" alt="Interactiano falando atrás de um púlpito de madeira" />
+            <figcaption>Dinâmica de oratória</figcaption>
+          </figure>
+          <figure class="galeria__item">
+            <img src="images/dinamica-dqa.webp" width="407" height="377" loading="lazy" alt="Quatro interactianas apresentando diante das bandeiras na Casa da Amizade" />
+            <figcaption>Dinâmica em grupo na Casa da Amizade</figcaption>
+          </figure>
+          <figure class="galeria__item">
+            <img src="images/reuniao-rotary-pantanal.webp" width="394" height="324" loading="lazy" alt="Interactianos e rotarianos reunidos para uma foto" />
+            <figcaption>Reunião do Rotary Campo Grande Pantanal</figcaption>
+          </figure>
+        </div>
+        <a class="projetos__mais" href="https://www.instagram.com/interactcg/" target="_blank" rel="noopener">Mais no Instagram, @interactcg</a>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="projetos" id="projetos">
-    <h2>Projetos sociais e humanitários.</h2>
-    <div class="projetos-fotos">
-      <img src="images/projeto-1.JPG" alt="Projeto 1" />
-      <img src="images/projeto-4.jpeg" alt="Projeto 2" />
-      <img src="images/projeto-5.jpeg" alt="Projeto 3" />
-      <img src="images/projeto-2.jpg" alt="Projeto 4" />
-    </div>
-  </section>
-
-  <section class="jogos-bloco" id="jogos">
-    <div class="jogos-container">
-      <div class="jogos-textos">
-        <h2>Jogos do Interact</h2>
-        <p>Um jogo novo toda meia-noite: Termo, Mais ou Menos do Censo, Memória e Vagalumes. Cada partida puxa o trem do seu distrito rumo à COMIC Nossas Raízes, e o ranking mostra quem está na frente.</p>
-        <p>É de graça, não precisa de senha e abre direto do WhatsApp. Manda no grupo do seu clube.</p>
-        <a href="jogos/" class="jogos-btn">Jogar agora</a>
+    <section class="jogos" id="jogos">
+      <div class="jogos__dentro">
+        <div class="jogos__texto">
+          <h2>Jogos do Interact</h2>
+          <p>Desafio novo toda meia-noite. Cada partida puxa o trem do seu distrito rumo à COMIC Nossas Raízes.</p>
+          <p>De graça, sem senha, abre direto do WhatsApp. Manda no grupo do seu clube.</p>
+          <a href="jogos/" class="pilula pilula--azul pilula--grande">Jogar agora</a>
+        </div>
+        <ul class="jogos__lista" aria-label="Jogos disponíveis">
+          <li><a href="jogos/termo">Termo</a></li>
+          <li><a href="jogos/censo">Mais ou Menos</a></li>
+          <li><a href="jogos/memoria">Memória</a></li>
+          <li><a href="jogos/vagalumes">Vagalumes</a></li>
+        </ul>
       </div>
-      <div class="jogos-cartoes" aria-hidden="true">
-        <span>Termo</span>
-        <span>Mais ou Menos</span>
-        <span>Memória</span>
-        <span>Vagalumes</span>
+    </section>
+
+    <section class="participe" id="participe">
+      <div class="participe__dentro">
+        <h2>Venha conhecer uma reunião</h2>
+        <p>Tem entre 12 e 18 anos e mora em Campo Grande? A gente se reúne todo sábado, às 16h. Manda uma mensagem no Instagram que a gente te conta onde.</p>
+        <a class="pilula pilula--escura pilula--grande" href="https://www.instagram.com/interactcg/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg>
+          Falar no Instagram
+        </a>
       </div>
-    </div>
-  </section>
+    </section>
+  </main>
 
-  <section class="encontre">
-    <div class="encontre-container">
-      <div class="encontre-textos">
-        <h2>Encontre um Interact perto de você!</h2>
-        <p>Quer fazer a diferença, conhecer pessoas incríveis e viver experiências transformadoras? Então está na hora de encontrar um Interact perto de você!</p>
-        <p>O Interact está presente em centenas de cidades, conectando jovens que acreditam no poder do voluntariado, da amizade e da liderança. Cada clube tem seu jeito único de impactar a comunidade — e um deles pode estar esperando por você.</p>
-      </div>
-      <div class="encontre-side">
-        <img src="images/interact-logo-old.jpg" alt="Logo Interact" />
-        <p>Se você tem entre 12 e 18 anos ou conhece alguém que se encaixa nesse perfil, entre em contato! Podemos te ajudar a localizar o clube mais próximo ou até mesmo a começar um novo.</p>
-        <p><strong>Transforme sua cidade. Comece por você. Comece pelo Interact.</strong></p>
-      </div>
+  <footer class="rodape">
+    <div class="rodape__dentro">
+      <img class="rodape__logo" src="images/logo-ic-branca.png" width="966" height="330" loading="lazy" alt="Interact Club de Campo Grande-Universidade" />
+      <nav class="rodape__links" aria-label="Rodapé">
+        <a href="#quem-somos">Quem somos</a>
+        <a href="#projetos">Projetos</a>
+        <a href="jogos/">Jogos</a>
+        <a href="https://www.instagram.com/interactcg/" target="_blank" rel="noopener">@interactcg</a>
+        <a href="https://www.rotary.org/pt/our-causes" target="_blank" rel="noopener">Áreas de enfoque do Rotary</a>
+      </nav>
+      <p class="rodape__credito">Feito por Davi Gaborim</p>
     </div>
-  </section>
-
-  <section class="encontre-banner">
-    <div class="encontre-banner-images">
-      <img src="images/foto-grupo.jpg" alt="Grupo Interact 1" />
-      <img src="images/foto-grupo-2.jpeg" alt="Grupo Interact 2" />
-    </div>
-    <div class="banner-overlay"></div>
-    <div class="banner-text">
-      <h2>+10.000</h2>
-      <p>Somos mais de 10 mil jovens espalhados pelo Brasil que nos uninos para fazer o bem a sociedade, vivendo o voluntariado e tendo crescimento pessoal. Venha você também conhecer o Interact!</p>
-    </div>
-  </section>
-
-  <section class="contato-barra" id="contato">
-    <nav class="nav-footer">
-      <ul>
-        <li><a href="#quem-somos">Quem somos</a></li>
-        <li><a href="#projetos">Projetos</a></li>
-        <li><a href="jogos/">Jogos</a></li>
-        <li><a href="https://www.rotary.org/pt/our-causes" target="_blank" rel="noopener">Áreas de enfoque</a></li>
-      </ul>
-    </nav>
-    <div class="contato-btn-container">
-      <a href="https://www.instagram.com/interactcg" target="_blank" rel="noopener" class="contate-btn">Contate-nos</a>
-    </div>
-  </section>
-
-  <footer class="footer">
-    <div class="footer-icons">
-      <a href="https://www.instagram.com/interactcg" target="_blank" rel="noopener">
-        <img src="images/icone-instagram.png" alt="Instagram">
-      </a>
-    </div>
-    <p class="footer-credit">
-      Desenvolvido com muito amor pelo Interact Club de Campo Grande-Universidade e Davi Gaborim <3
-    </p>
   </footer>
 </body>
 </html>

@@ -6,16 +6,24 @@ mesmo servidor. O site tem botão para os jogos; os jogos linkam de volta.
 
 ## Site do clube
 
-`site/` é uma cópia do site do IC Bela Vista (`davigaborim/interactianamente-falando`)
-adaptada: Montserrat, mesmas seções, mais o botão "Jogar" no hero, o item
-"Jogos" no menu e a seção "Jogos do Interact". O que ainda é tapa-buraco:
+`site/` nasceu como cópia do site do IC Bela Vista (`davigaborim/interactianamente-falando`)
+e foi refeito em 11/10/2026: mesmas fontes do `/jogos` (Bricolage Grotesque,
+Instrument Sans, DM Mono), cores do Brand Center, sem JS. Seções: hero com
+foto do clube e botão "Jogar", Quem somos com o cartão "Todo sábado 16:00",
+galeria de projetos, Jogos do Interact e o convite para conhecer uma reunião.
+Também tem `404.html` (o servidor a devolve para qualquer página que não
+existe), `robots.txt` e `sitemap.xml`.
+
+O texto só diz o que está confirmado no Instagram do clube (Distrito 4470,
+gestão 2026-27, sábado 16h, lema "Crie impacto duradouro"). O que ainda falta:
 
 | O que | Onde | Trocar por |
 |---|---|---|
-| Logo do Rotary padrinho no topo do site | `site/index.html`, `.logo-container` | hoje só tem a do Interact (`images/logo-ic-preta.png`); se o clube quiser a do Rotary ao lado, é mais uma `.logo-box` |
-| Fotos de grupo e de projetos | `site/images/foto-grupo*.jpg`, `projeto-*.jpg` | fotos do IC CGU, mesmos nomes |
-| Contato | botão "Contate-nos" e rodapé | hoje vai para o Instagram; trocar por `wa.me/…` se o clube quiser |
-| Data de fundação | primeiro parágrafo do `.sobre-bloco` | não está no texto porque não sei |
+| Fotos em resolução boa | `site/images/*.webp` | hoje são recortes de 320 a 490 px das páginas dos jornais do clube no Instagram (julho e agosto de 2026); trocar pelos originais, mesmos nomes. A do hero também tem `.jpg` para o `og:image` |
+| Rotary padrinho | `#quem-somos` em `site/index.html` | não está no texto porque não foi confirmado |
+| Local das reuniões | seção `#participe` | hoje diz "a gente te conta onde" |
+| Contato | `#participe` e rodapé | hoje vai para o Instagram; trocar por `wa.me/…` se o clube quiser |
+| Data de fundação, número de membros | Quem somos | não está no texto porque não sei |
 
 ## Jogos
 
