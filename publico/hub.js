@@ -270,10 +270,12 @@
   // A corrida e o ranking aparecem para todo mundo. Ninguém precisa entrar
   // para olhar: o "Quem é você?" só abre ao clicar num jogo ou em Entrar.
   carregarCorrida();
+  // A contagem é de todo mundo; antes só ligava para quem já tinha entrado
+  // e o "O dia vira em" ficava sem número.
+  Jogos.api("/api/dia").then((d) => Jogos.contagem($("#contagem"), d.viraEmMs, () => location.reload())).catch(() => {});
 
   Jogos.jogadorSeHouver(async (jogador, dados) => {
-    if (!dados) dados = await Jogos.api(`/api/eu?jogador=${encodeURIComponent(jogador.id)}`);
-    Jogos.contagem($("#contagem"), dados.viraEmMs, () => location.reload());
+    if (!dados || !dados.hoje) dados = await Jogos.api(`/api/eu?jogador=${encodeURIComponent(jogador.id)}`);
     desenharQuem();
     desenharEstados(dados.hoje);
     if (corrida) { desenharCorrida(); desenharMeuTrem(); }

@@ -21,9 +21,14 @@
   --tinta-fraca: #5a6a84;
   --linha: #dbe4f0;
   --cinza: #919395;
+  /* Termo: três tons bem separados (escuro, médio, claro), que se distinguem
+     até em preto e branco e para quem tem daltonismo. O dourado ainda leva
+     um tracejado por dentro, então "outro lugar" não depende só da cor. */
   --certa: var(--azure);
   --perto: var(--gold);
-  --fora: #a6a8ab;
+  --fora: #e2e6ec;
+  --fora-letra: #56637a;
+  --tracejado: rgba(11, 29, 63, 0.62);
   --tecla: #e3eaf4;
   --erro: #c8102e;
   --sombra: 0 18px 44px rgba(11, 29, 63, 0.14);
@@ -175,6 +180,17 @@ button { font-family: inherit; }
 }
 .topo .acao:hover { transform: translateY(-2px); filter: brightness(1.06); box-shadow: 0 20px 44px -16px rgba(247, 168, 27, 1), inset 0 1px 0 rgba(255, 255, 255, 0.7); }
 .topo .acao:active { transform: translateY(0); }
+/* Em 320 px o botão do canto saía da tela: a pílula aperta e o nome da
+   seção é quem cede, com reticências. */
+.topo .secao { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex-shrink: 1; }
+@media (max-width: 400px) {
+  .topo__pilula { gap: 8px; padding-left: 12px; }
+  .topo .marca img { height: 32px; }
+  .topo .divisor { display: none; }
+  .topo .acao { padding: 0 14px; gap: 6px; flex-shrink: 1; min-width: 0; }
+  .topo .acao .pulso { display: none; }
+  .topo .acao b { max-width: 30vw; }
+}
 .topo .acao b { font-weight: 600; max-width: 38vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
 .topo .acao .pulso { width: 8px; height: 8px; border-radius: 50%; background: var(--royal); box-shadow: 0 0 0 0 rgba(23, 69, 143, 0.45); animation: bate 2.4s ease-out infinite; }
 .topo .quem:has(i:not([hidden])) { padding-left: 6px; }
@@ -522,11 +538,12 @@ body.noite .ranking-lista .pos, body.noite .ranking-lista .quem small, body.noit
   font: 800 clamp(1.1rem, 6vw, 1.7rem) var(--display); text-transform: uppercase;
   background: var(--papel); color: var(--tinta); aspect-ratio: 1; transition: transform 0.1s;
 }
-.celula.digitando { border-color: var(--sky); transform: scale(1.04); }
-.celula.certa, .celula.perto, .celula.fora { color: #fff; border-color: transparent; }
-.celula.certa { background: var(--certa); }
-.celula.perto { background: var(--perto); color: var(--tinta); }
-.celula.fora { background: var(--fora); }
+/* digitando fica em tinta, não em azul: azul na grade é só "lugar certo" */
+.celula.digitando { border-color: var(--tinta-fraca); transform: scale(1.04); }
+.celula.certa, .celula.perto, .celula.fora { border-color: transparent; }
+.celula.certa { background: var(--certa); color: #fff; }
+.celula.perto { background: var(--perto); color: var(--tinta); outline: 2px dashed var(--tracejado); outline-offset: -4px; }
+.celula.fora { background: var(--fora); color: var(--fora-letra); }
 .fileira.revelando .celula { animation: virar 0.5s ease both; }
 .fileira.revelando .celula:nth-child(2) { animation-delay: 0.1s; }
 .fileira.revelando .celula:nth-child(3) { animation-delay: 0.2s; }
@@ -545,12 +562,22 @@ body.noite .ranking-lista .pos, body.noite .ranking-lista .quem small, body.noit
   box-shadow: 0 1.5px 0 #c9d3e2, 0 1px 3px rgba(11, 29, 63, 0.08);
   transition: transform 0.08s, background 0.2s, box-shadow 0.08s;
 }
-.tecla.larga { flex: 1.55 1 0; max-width: 74px; font-size: 0.7rem; letter-spacing: 0.04em; background: var(--tecla); }
+.tecla.larga { flex: 1.55 1 0; max-width: 74px; font-size: 0.7rem; letter-spacing: 0.04em; }
 .tecla:hover { background: #eef3fa; }
 .tecla:active { transform: translateY(1.5px); box-shadow: 0 0 0 #c9d3e2, 0 1px 2px rgba(11, 29, 63, 0.08); }
 .tecla.certa { background: var(--certa); color: #fff; box-shadow: 0 1.5px 0 #004c95; }
-.tecla.perto { background: var(--perto); color: var(--tinta); box-shadow: 0 1.5px 0 var(--gold-escuro); }
-.tecla.fora { background: #b9bcc0; color: #fff; box-shadow: 0 1.5px 0 #8f9296; }
+.tecla.perto { background: var(--perto); color: var(--tinta); box-shadow: 0 1.5px 0 var(--gold-escuro); outline: 1.5px dashed var(--tracejado); outline-offset: -4px; }
+.tecla.fora { background: var(--fora); color: var(--fora-letra); box-shadow: none; }
+.tecla.certa:hover { background: var(--certa); }
+.tecla.perto:hover { background: var(--perto); }
+.tecla.fora:hover { background: var(--fora); }
+/* a legenda das cores, entre a grade e o teclado */
+.legenda { list-style: none; margin: 2px 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; font-size: 0.74rem; color: var(--tinta-fraca); }
+.legenda li { display: flex; align-items: center; gap: 6px; }
+.amostra { width: 14px; height: 14px; border-radius: 4px; display: block; }
+.amostra.certa { background: var(--certa); }
+.amostra.perto { background: var(--perto); outline: 1.5px dashed var(--tracejado); outline-offset: -4px; }
+.amostra.fora { background: var(--fora); box-shadow: inset 0 0 0 1px #c9d1dc; }
 /* o campo invisível que chama o teclado do próprio celular */
 .entrada-movel { position: absolute; width: 1px; height: 1px; opacity: 0; left: 0; top: 0; pointer-events: none; }
 .jogo.termo { position: relative; }
@@ -568,19 +595,20 @@ body.noite .ranking-lista .pos, body.noite .ranking-lista .quem small, body.noit
 .carta {
   aspect-ratio: 1; border: 0; background: none; padding: 0; cursor: pointer; position: relative;
   transform-style: preserve-3d; transition: transform 0.35s;
+  container-type: inline-size; /* a letra da carta acompanha a largura dela */
 }
 .carta:hover:not(.virada):not(.achada) { transform: translateY(-3px); }
 .carta.virada, .carta.achada { transform: rotateY(180deg); }
 .carta.achada { cursor: default; }
 .carta .face, .carta .verso {
   position: absolute; inset: 0; border-radius: 12px; backface-visibility: hidden;
-  display: grid; place-items: center; padding: 6px;
+  display: grid; place-items: center; padding: 4px;
 }
 .carta .verso { background: var(--royal); background-image: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.14), transparent 55%); }
 .carta .verso::after { content: ""; width: 34%; height: 34%; border-radius: 50%; border: 3px solid var(--gold); opacity: 0.9; }
 .carta .face {
   transform: rotateY(180deg); background: var(--papel); border: 2px solid var(--linha);
-  font: 800 clamp(0.72rem, 3.4vw, 0.98rem) var(--display); letter-spacing: -0.02em; text-align: center; color: var(--royal);
+  font: 800 clamp(0.62rem, 16cqi, 0.98rem) var(--display); letter-spacing: -0.02em; text-align: center; color: var(--royal);
 }
 .carta.achada .face { background: var(--azure); border-color: var(--azure); color: #fff; }
 .carta.errou .face { border-color: var(--gold); }

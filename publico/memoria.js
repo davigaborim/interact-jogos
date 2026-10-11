@@ -169,7 +169,7 @@
 
   function mostrarFim(tempos, recemTerminou) {
     const s = partida.duracaoMs / 1000;
-    $("#titulo-fim").textContent = s <= 30 ? "Rápido demais" : s <= 60 ? "Boa memória" : "Fechou";
+    $("#titulo-fim").textContent = s <= 30 ? "Memória afiada" : s <= 60 ? "Boa memória" : "Fechou";
     $("#fim-pontos").textContent = `${formatarTempo(partida.duracaoMs)} em ${partida.tentativas} jogadas. O trem do distrito ${Jogos.jogador.distrito} andou ${partida.pontos} km.`;
     $("#tempos").innerHTML = (tempos || []).map((t, i) => {
       const eu = t.nome === Jogos.jogador.nome && t.distrito === Jogos.jogador.distrito ? ' class="eu-linha"' : "";
@@ -187,7 +187,7 @@
 
   Jogos.garantirJogador(async (jogador, dados) => {
     const primeiraVez = !dados;
-    await carregar();
+    if (!(await Jogos.insistir(carregar, aviso))) return;
     if (primeiraVez) $("#dlg-ajuda").showModal();
   });
 })();

@@ -52,6 +52,8 @@ const TIPOS = {
   ".webp": "image/webp",
   ".ico": "image/x-icon",
   ".webmanifest": "application/manifest+json",
+  ".txt": "text/plain; charset=utf-8",
+  ".xml": "application/xml; charset=utf-8",
 };
 
 // ---------- utilidades HTTP ----------
@@ -101,7 +103,16 @@ function servirArquivo(res, caminhoPedido) {
   const alvo = path.normalize(path.join(raiz, relativo));
   if (!alvo.startsWith(raiz)) return json(res, 403, { erro: "fora da pasta" });
   fs.readFile(alvo, (erro, conteudo) => {
-    if (erro) return json(res, 404, { erro: "não encontrado" });
+    if (erro) {
+      // Endereço de página errado mostra a 404 do site; arquivo que falta
+      // (imagem, css) continua só com o código, sem página.
+      if (path.extname(alvo) && path.extname(alvo) !== ".html") return json(res, 404, { erro: "não encontrado" });
+      return fs.readFile(path.join(SITE, "404.html"), (e2, pagina) => {
+        if (e2) return json(res, 404, { erro: "não encontrado" });
+        res.writeHead(404, { "Content-Type": TIPOS[".html"], "Cache-Control": "no-cache" });
+        res.end(pagina);
+      });
+    }
     const ext = path.extname(alvo).toLowerCase();
     res.writeHead(200, {
       "Content-Type": TIPOS[ext] || "application/octet-stream",
@@ -120,19 +131,28 @@ class ErroDeJogo extends Error {
 
 // ---------- jogadores ----------
 
+// Tira controle e caracteres invisíveis (espaço de largura zero e afins) e
+// corta por caractere de verdade, para não partir um emoji ao meio.
 function limparTexto(valor, maximo) {
-  return String(valor || "").replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0, maximo);
+  const limpo = String(valor || "").replace(/[\p{Cc}\p{Cf}\p{Zl}\p{Zp}]/gu, "").trim();
+  return Array.from(limpo).slice(0, maximo).join("").trim();
+}
+
+// Só vale id que é chave própria da lista: "__proto__" e "constructor"
+// existem em todo objeto e passavam como se fossem jogador.
+function jogadorPeloId(id) {
+  return typeof id === "string" && Object.hasOwn(estado.jogadores, id) ? estado.jogadores[id] : null;
 }
 
 function entrar(corpo) {
   const nome = limparTexto(corpo.nome, 24);
   const clube = limparTexto(corpo.clube, 40);
   const distrito = Number(corpo.distrito);
-  if (nome.length < 2) throw new ErroDeJogo(400, "Diz teu nome (pelo menos 2 letras).");
+  if ((nome.match(/[\p{L}\p{N}]/gu) || []).length < 2) throw new ErroDeJogo(400, "Diz teu nome (pelo menos 2 letras).");
   if (!NUMEROS_DE_DISTRITO.has(distrito)) throw new ErroDeJogo(400, "Escolhe teu distrito na lista.");
 
   // Quem já tem id só atualiza o perfil; senão nasce um jogador novo.
-  let id = typeof corpo.id === "string" && estado.jogadores[corpo.id] ? corpo.id : null;
+  let id = jogadorPeloId(corpo.id) ? corpo.id : null;
   if (!id) id = crypto.randomBytes(12).toString("hex");
   const anterior = estado.jogadores[id] || { criadoEm: Date.now() };
   estado.jogadores[id] = { ...anterior, id, nome, clube, distrito };
@@ -141,7 +161,7 @@ function entrar(corpo) {
 }
 
 function exigirJogador(id) {
-  const jogador = estado.jogadores[String(id || "")];
+  const jogador = jogadorPeloId(id);
   if (!jogador) throw new ErroDeJogo(401, "Entra de novo com teu nome e distrito.");
   return jogador;
 }
@@ -270,6 +290,11 @@ function responderCenso(corpo) {
   if (!escolha) throw new ErroDeJogo(400, "Escolhe um dos dois.");
   let partida = partidaDeHoje("censo", jogador);
   if (partida && partida.terminou) throw new ErroDeJogo(409, "As dez de hoje já foram. Amanhã tem mais.");
+  // Duas abas ou o botão de voltar: a pessoa responde a pergunta que está
+  // vendo, que pode não ser a próxima. Sem conferir, a resposta caía na
+  // pergunta seguinte, que ela nunca viu.
+  const feitas = partida ? partida.respostas.length : 0;
+  if (corpo.indice !== undefined && Number(corpo.indice) !== feitas) throw new ErroDeJogo(409, "Essa já foi respondida. Carregando a próxima.");
   if (!partida) partida = novaPartida("censo", jogador, { respostas: [] });
 
   const perguntas = censo.perguntasDoDia(partida.dia);
@@ -348,7 +373,8 @@ function virarCarta(corpo) {
     }
     resultado = { indice: i, face, outra: j, faceOutra: partida.tabuleiro[j], par: bateu };
     if (partida.pares >= memoria.PARES) {
-      encerrar(partida, jogador, true, memoria.kmPeloTempo(Date.now() - partida.inicio));
+      const ms = Date.now() - partida.inicio;
+      encerrar(partida, jogador, true, ms < memoria.MINIMO_HUMANO_MS ? 0 : memoria.kmPeloTempo(ms));
     }
   }
   agendarGravacao();
@@ -359,7 +385,7 @@ function virarCarta(corpo) {
 function temposDeHoje() {
   const dia = calendario.numeroDoDia();
   return Object.values(estado.partidas)
-    .filter((p) => p.jogo === "memoria" && p.dia === dia && p.terminou && estado.jogadores[p.jogador])
+    .filter((p) => p.jogo === "memoria" && p.dia === dia && p.terminou && p.pontos > 0 && estado.jogadores[p.jogador])
     .map((p) => ({ nome: estado.jogadores[p.jogador].nome, distrito: p.distrito, duracaoMs: p.fim - p.inicio, tentativas: p.tentativas, pontos: p.pontos }))
     .sort((a, b) => a.duracaoMs - b.duracaoMs)
     .slice(0, 20);
@@ -460,7 +486,18 @@ function acender(corpo) {
 
 // ---------- placar ----------
 
-function montarPlacar(filtroJogo) {
+// Posição com empate: quem tem os mesmos km divide o lugar (1, 2, 2, 4).
+function comPosicao(lista) {
+  let anterior = null, pos = 0;
+  return lista.map((item, i) => {
+    if (item.pontos !== anterior) { pos = i + 1; anterior = item.pontos; }
+    return { ...item, pos };
+  });
+}
+
+// O placar é público e o id é a única senha do jogador, então o id nunca
+// sai daqui. Quem pede manda o próprio id em `eu` e a linha dele vem marcada.
+function montarPlacar(filtroJogo, idEu) {
   const dia = calendario.numeroDoDia();
   const porJogador = { hoje: {}, geral: {} };
   const porDistrito = { hoje: {}, geral: {} };
@@ -478,7 +515,7 @@ function montarPlacar(filtroJogo) {
     if (filtroJogo && partida.jogo !== filtroJogo) continue;
     const jogador = estado.jogadores[partida.jogador];
     if (!jogador) continue;
-    const extraJogador = { id: jogador.id, nome: jogador.nome, clube: jogador.clube, distrito: jogador.distrito };
+    const extraJogador = { eu: jogador.id === idEu, nome: jogador.nome, clube: jogador.clube, distrito: jogador.distrito };
     const extraDistrito = { distrito: partida.distrito, ids: new Set() };
     somar(porJogador.geral, jogador.id, partida, extraJogador);
     somar(porDistrito.geral, partida.distrito, partida, extraDistrito);
@@ -492,11 +529,18 @@ function montarPlacar(filtroJogo) {
 
   // Jogadores: mais pontos primeiro; empate, mais vitórias. Distritos: soma
   // de pontos, para recompensar quem traz gente; empate, mais jogadores.
-  const jogadores = (mapa) => Object.values(mapa).sort((a, b) => b.pontos - a.pontos || b.vitorias - a.vitorias).slice(0, 50);
+  // Os 50 primeiros, mais a linha de quem pediu, se ela ficou de fora.
+  const jogadores = (mapa) => {
+    const todos = comPosicao(Object.values(mapa).sort((a, b) => b.pontos - a.pontos || b.vitorias - a.vitorias));
+    const topo = todos.slice(0, 50);
+    const minha = todos.findIndex((j) => j.eu);
+    if (minha >= 50) topo.push(todos[minha]);
+    return topo;
+  };
   const distritos = (mapa) =>
-    Object.values(mapa)
+    comPosicao(Object.values(mapa)
       .map((d) => ({ ...d, ids: undefined, jogadores: d.ids.size, onde: (DISTRITOS.find((x) => x.n === d.distrito) || {}).onde || "" }))
-      .sort((a, b) => b.pontos - a.pontos || b.jogadores - a.jogadores);
+      .sort((a, b) => b.pontos - a.pontos || b.jogadores - a.jogadores));
 
   return {
     dia,
@@ -511,7 +555,9 @@ function montarPlacar(filtroJogo) {
 
 async function api(req, res, url) {
   const rota = `${req.method} ${url.pathname}`;
-  const corpo = req.method === "POST" ? await lerCorpo(req) : null;
+  // Corpo "null" ou um número viraria erro em inglês lá dentro.
+  const lido = req.method === "POST" ? await lerCorpo(req) : null;
+  const corpo = lido && typeof lido === "object" ? lido : {};
 
   switch (rota) {
     case "GET /api/dia":
@@ -527,7 +573,7 @@ async function api(req, res, url) {
     case "GET /api/placar": {
       const jogo = url.searchParams.get("jogo");
       if (jogo && !JOGOS[jogo]) throw new ErroDeJogo(400, "jogo desconhecido");
-      return json(res, 200, montarPlacar(jogo || null));
+      return json(res, 200, montarPlacar(jogo || null, url.searchParams.get("eu")));
     }
 
     case "GET /api/termo/partida": {
@@ -553,7 +599,7 @@ async function api(req, res, url) {
       return json(res, 200, { tabuleiro: memoria.novoTabuleiro() });
     case "GET /api/vagalumes": {
       const id = url.searchParams.get("jogador");
-      const jogador = id && estado.jogadores[id] ? estado.jogadores[id] : null;
+      const jogador = jogadorPeloId(id);
       return json(res, 200, visaoVagalumes(jogador));
     }
     case "POST /api/vagalumes/acender":

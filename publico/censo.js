@@ -82,7 +82,9 @@
     travado = true;
     $("#opcao-a").disabled = $("#opcao-b").disabled = true;
     try {
-      const saida = await Jogos.api("/api/censo/resposta", { jogador: Jogos.jogador.id, escolha });
+      // `indice` diz qual pergunta a pessoa está vendo: em duas abas, a
+      // resposta não cai numa pergunta que ela nunca viu.
+      const saida = await Jogos.api("/api/censo/resposta", { jogador: Jogos.jogador.id, escolha, indice: partida.indice });
       const nova = saida.partida;
       const r = nova.respostas[nova.respostas.length - 1];
       const maior = r.a.n > r.b.n ? "a" : "b";
@@ -104,6 +106,7 @@
       $("#opcao-a").disabled = $("#opcao-b").disabled = false;
       Jogos.avisar(aviso, erro.message);
       if (erro.codigo === 401) Jogos.abrirEntrada(Jogos.jogador);
+      if (erro.codigo === 409) Jogos.insistir(carregar, null);
     }
   }
 
@@ -132,7 +135,7 @@
 
   Jogos.garantirJogador(async (jogador, dados) => {
     const primeiraVez = !dados;
-    await carregar();
+    if (!(await Jogos.insistir(carregar, aviso))) return;
     if (primeiraVez) $("#dlg-ajuda").showModal();
   });
 })();

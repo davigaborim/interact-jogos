@@ -85,7 +85,7 @@
         botao.textContent = "Chamar o clube";
         botao.onclick = compartilhar;
       } else {
-        $("#acender-titulo").textContent = "Meu clube vai participar";
+        $("#acender-titulo").textContent = "Eu vou participar";
         $("#acender-texto").textContent = `Acende um vagalume fraco no seu distrito e o trem anda ${dados.kmCompromisso} km. Na semana, ele acende de verdade.`;
         botao.textContent = "Acender o meu";
         botao.onclick = () => acender();
@@ -132,7 +132,7 @@
   async function compartilhar() {
     const t = dados.totais;
     const texto = dados.fase === "antes"
-      ? `Vagalumes da Semana Mundial de Interact\n${t.compromissos} clube${t.compromissos === 1 ? "" : "s"} já se comprometeram, em ${t.distritos} distrito${t.distritos === 1 ? "" : "s"}. Acende o seu: ${location.origin}/jogos/vagalumes`
+      ? `Vagalumes da Semana Mundial de Interact\n${t.compromissos} interactiano${t.compromissos === 1 ? " já se comprometeu" : "s já se comprometeram"}, em ${t.distritos} distrito${t.distritos === 1 ? "" : "s"}. Acende o seu: ${location.origin}/jogos/vagalumes`
       : `Vagalumes da Semana Mundial de Interact\n${t.acesos} luz${t.acesos === 1 ? "" : "es"} acesa${t.acesos === 1 ? "" : "s"} em ${t.distritos} distrito${t.distritos === 1 ? "" : "s"}. Distrito ${Jogos.jogador ? Jogos.jogador.distrito : ""}: ${location.origin}/jogos/vagalumes`;
     const botao = $("#btn-acender");
     try {

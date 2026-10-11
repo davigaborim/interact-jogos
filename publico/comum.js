@@ -32,11 +32,27 @@ window.Jogos = (() => {
 
   // ---------- rede ----------
 
-  async function api(caminho, corpo) {
-    const resposta = await fetch(caminho, corpo
+  // `tempoMs` (opcional) desiste do pedido se o servidor não responder a
+  // tempo, para a página nunca ficar esperando para sempre. Sem rede ou sem
+  // resposta, o erro sai com `codigo` 0 e texto em português.
+  async function api(caminho, corpo, { tempoMs } = {}) {
+    const opcoes = corpo
       ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(corpo) }
-      : undefined);
-    const dados = await resposta.json().catch(() => ({}));
+      : {};
+    const controle = tempoMs && "AbortController" in window ? new AbortController() : null;
+    const relogio = controle ? setTimeout(() => controle.abort(), tempoMs) : null;
+    if (controle) opcoes.signal = controle.signal;
+    let resposta, dados;
+    try {
+      resposta = await fetch(caminho, opcoes);
+      dados = await resposta.json().catch((e) => { if (controle && controle.signal.aborted) throw e; return {}; });
+    } catch {
+      const erro = new Error(controle && controle.signal.aborted ? "O servidor demorou. Tenta de novo." : "Sem conexão. Tenta de novo.");
+      erro.codigo = 0;
+      throw erro;
+    } finally {
+      clearTimeout(relogio);
+    }
     if (!resposta.ok) {
       const erro = new Error(dados.erro || "Deu ruim no servidor.");
       erro.codigo = resposta.status;
@@ -74,6 +90,7 @@ window.Jogos = (() => {
           </label>
           <p class="erro" id="erro-entrar"></p>
           <button class="botao primario" type="submit">Entrar</button>
+          <button class="botao discreto" type="button" id="btn-agora-nao">Agora não</button>
         </form>
       </dialog>
       <dialog id="dlg-instagram" class="instagram" closedby="any" aria-labelledby="titulo-instagram">
@@ -90,22 +107,39 @@ window.Jogos = (() => {
       </dialog>`;
     document.body.append(...molde.children);
 
+    // Agora não: no hub só fecha; num jogo, sem jogador não há o que fazer
+    // ali, então volta para o hub.
+    $("#btn-agora-nao").addEventListener("click", () => {
+      if (/^\/jogos\/?(index\.html)?$/.test(location.pathname)) $("#dlg-entrar").close();
+      else location.href = "/jogos/";
+    });
+
     $("#form-entrar").addEventListener("submit", async (evento) => {
       evento.preventDefault();
       const form = evento.target;
+      const botao = form.querySelector("[type=submit]");
+      if (botao.disabled) return; // três toques não criam três jogadores
+      botao.disabled = true;
+      // Manda o id salvo mesmo quando a checagem falhou por rede: o servidor
+      // reaproveita o jogador em vez de criar outro com o mesmo nome.
+      const salvo = jogadorSalvo();
+      const jaExistia = !!jogador;
       try {
         const saida = await api("/api/entrar", {
-          id: jogador ? jogador.id : undefined,
+          id: jogador ? jogador.id : salvo && salvo.id,
           nome: form.nome.value,
           distrito: form.distrito.value,
           clube: form.clube.value,
         });
         salvarJogador(saida.jogador);
         $("#dlg-entrar").close();
-        rankings.forEach((r) => r.desenhar());
-        aoEntrar(jogador);
+        atualizarRanking();
+        // Quem só trocou o nome não é "primeira vez": o Como jogar não reabre.
+        aoEntrar(jogador, jaExistia ? { trocou: true } : undefined);
       } catch (erro) {
         $("#erro-entrar").textContent = erro.message;
+      } finally {
+        botao.disabled = false;
       }
     });
   }
@@ -143,10 +177,10 @@ window.Jogos = (() => {
       try {
         const dados = await api(`/api/eu?jogador=${encodeURIComponent(salvo.id)}`);
         salvarJogador(dados.jogador);
-        rankings.forEach((r) => r.desenhar());
+        atualizarRanking();
         quandoPronto(jogador, dados);
         return;
-      } catch { /* id morreu (servidor zerado): pede de novo, já preenchido */ }
+      } catch { /* id morreu (servidor zerado) ou caiu a rede: pede de novo, já preenchido e com o mesmo id */ }
     }
     jogador = null;
     abrirEntrada(salvo);
@@ -162,9 +196,26 @@ window.Jogos = (() => {
     try {
       const dados = await api(`/api/eu?jogador=${encodeURIComponent(salvo.id)}`);
       salvarJogador(dados.jogador);
-      rankings.forEach((r) => r.desenhar());
+      atualizarRanking();
       quandoPronto(jogador, dados);
     } catch { jogador = null; }
+  }
+
+  // Carrega a partida ao abrir o jogo. Sem rede, ou com o servidor fora,
+  // avisa e tenta de novo a cada 4 s, em vez de deixar a página em branco.
+  async function insistir(carregar, aviso) {
+    try {
+      await carregar();
+      if (aviso && aviso.textContent) avisar(aviso, "", 1);
+      return true;
+    } catch (erro) {
+      if (erro.codigo === 401) { abrirEntrada(jogador); return false; }
+      const passageiro = erro.codigo === 0 || erro.codigo >= 500;
+      if (aviso) avisar(aviso, passageiro ? "Sem conexão. Tentando de novo." : erro.message, passageiro ? 0 : 4000);
+      if (!passageiro) return false;
+      await new Promise((r) => setTimeout(r, 4000));
+      return insistir(carregar, aviso);
+    }
   }
 
   function esc(texto) {
@@ -216,11 +267,11 @@ window.Jogos = (() => {
       const p = maximo ? item.pontos / maximo : 0;
       if (grupo === "distritos") {
         const eu = jogador && item.distrito === jogador.distrito ? " eu" : "";
-        return `<li class="${eu}" style="--p:${p.toFixed(3)}"><span class="pos">${i + 1}</span><span class="quem"><b>Distrito ${item.distrito}</b><small>${item.onde ? `${esc(item.onde)} · ` : ""}${item.jogadores} ${item.jogadores === 1 ? "pessoa" : "pessoas"}</small></span><span class="pts">${item.pontos}<small>km</small></span></li>`;
+        return `<li class="${eu}" style="--p:${p.toFixed(3)}"><span class="pos">${item.pos || i + 1}</span><span class="quem"><b>Distrito ${item.distrito}</b><small>${item.onde ? `${esc(item.onde)} · ` : ""}${item.jogadores} ${item.jogadores === 1 ? "pessoa" : "pessoas"}</small></span><span class="pts">${item.pontos}<small>km</small></span></li>`;
       }
-      const eu = jogador && item.id === jogador.id ? " eu" : "";
+      const eu = jogador && item.eu ? " eu" : "";
       const sub = [item.clube, `D. ${item.distrito}`].filter(Boolean).join(" · ");
-      return `<li class="${eu}" style="--p:${p.toFixed(3)}"><span class="pos">${i + 1}</span><span class="quem"><b>${esc(item.nome)}</b><small>${esc(sub)}</small></span><span class="pts">${item.pontos}<small>km</small></span></li>`;
+      return `<li class="${eu}" style="--p:${p.toFixed(3)}"><span class="pos">${item.pos || i + 1}</span><span class="quem"><b>${esc(item.nome)}</b><small>${esc(sub)}</small></span><span class="pts">${item.pontos}<small>km</small></span></li>`;
     }
 
     function desenhar() {
@@ -235,7 +286,7 @@ window.Jogos = (() => {
       const maximo = todos[0].pontos;
       const topo = todos.slice(0, VISIVEIS);
       const html = topo.map((item, i) => linha(item, i, maximo));
-      const souEu = (item) => jogador && (grupo === "distritos" ? item.distrito === jogador.distrito : item.id === jogador.id);
+      const souEu = (item) => jogador && (grupo === "distritos" ? item.distrito === jogador.distrito : item.eu);
       const minha = todos.findIndex(souEu);
       if (minha >= VISIVEIS) html.push(`<li class="salto">···</li>`, linha(todos[minha], minha, maximo));
       lista.innerHTML = html.join("");
@@ -245,7 +296,13 @@ window.Jogos = (() => {
     }
 
     async function carregar() {
-      try { dados = await api(`/api/placar${jogo ? `?jogo=${jogo}` : ""}`); } catch { dados = null; }
+      // O placar não traz id de ninguém; mandando o meu, a minha linha vem marcada.
+      const meu = (jogador || jogadorSalvo() || {}).id;
+      const busca = new URLSearchParams();
+      if (jogo) busca.set("jogo", jogo);
+      if (meu) busca.set("eu", meu);
+      const q = String(busca);
+      try { dados = await api(`/api/placar${q ? `?${q}` : ""}`); } catch { dados = null; }
       desenhar();
     }
 
@@ -371,6 +428,7 @@ window.Jogos = (() => {
     garantirJogador,
     jogadorSeHouver,
     abrirEntrada,
+    insistir,
     montarRanking,
     atualizarRanking,
     mostrarResultado,

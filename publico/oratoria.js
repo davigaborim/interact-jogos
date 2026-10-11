@@ -92,9 +92,14 @@
   // Preparo (dourado) e depois fala (azul). A barra enche em cada fase; na
   // Relâmpago uma marca mostra onde fica o mínimo de 3 minutos. Como no
   // concurso, o candidato pode pular o preparo e encerrar a fala antes.
+  let iniciando = false;
   async function comecar() {
+    if (iniciando || rodada) return; // dois toques abriam o microfone duas vezes
+    iniciando = true;
     const modo = $("input[name=gravar]:checked").value;
-    if (modo && !(await prepararGravacao(modo))) return;
+    const pronto = !modo || (await prepararGravacao(modo));
+    iniciando = false;
+    if (!pronto) return;
 
     rodada = { inicio: Date.now(), preparoMs: etapa.preparoS * 1000, falaMs: etapa.falaMaxS * 1000, minimoMs: etapa.falaMinS * 1000, gravando: false };
     revelarTema();
@@ -171,7 +176,9 @@
 
   // Cancelar no meio joga a gravação fora; encerrar (pular) guarda.
   function parar() {
-    if (rodada) cancelando = true;
+    // Só há o que jogar fora se o gravador já estava rodando; senão o
+    // "cancelando" ficava preso e apagava a próxima gravação.
+    cancelando = !!(rodada && gravador && gravador.state !== "inactive");
     pararGravacao();
     parado();
   }
@@ -195,7 +202,7 @@
         ? { video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } }, audio: true }
         : { audio: true });
     } catch {
-      Jogos.avisar(aviso, "Sem permissão para a câmera ou o microfone.", 4000);
+      Jogos.avisar(aviso, "Sem permissão para gravar. Escolha Sem gravar ou libere a câmera e o microfone no navegador.", 6000);
       return false;
     }
     fluxo.modo = modo;
@@ -269,9 +276,9 @@
   window.addEventListener("pagehide", () => { soltarFluxo(); pausarGravacao(); });
   document.addEventListener("visibilitychange", () => { if (document.hidden) pausarGravacao(); });
 
-  (async () => {
+  Jogos.insistir(async () => {
     dados = await Jogos.api("/api/oratoria/temas");
     montarEtapas();
     escolherEtapa();
-  })();
+  }, aviso);
 })();
